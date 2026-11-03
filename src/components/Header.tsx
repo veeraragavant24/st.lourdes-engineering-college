@@ -340,12 +340,16 @@ const [searchOpen, setSearchOpen] = useState(false);
           </Link>
 <button
   type="button"
-  className="ml-auto inline-flex items-center justify-center p-2 text-[#d8b54c] lg:hidden"
   onClick={() => setMobileOpen((prev) => !prev)}
+  className={`ml-1 inline-flex shrink-0 items-center justify-center rounded-lg border border-gold/60 p-2 transition-colors hover:bg-white/10 hover:text-gold-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-gold xl:hidden ${iconTextColor}`}
   aria-label={mobileOpen ? "Close menu" : "Open menu"}
   aria-expanded={mobileOpen}
 >
-  {mobileOpen ? <X size={28} /> : <Menu size={28} />}
+  {mobileOpen ? (
+    <X className="h-6 w-6" />
+  ) : (
+    <Menu className="h-6 w-6" />
+  )}
 </button>
           {/* Desktop and laptop navigation */}
           <nav
