@@ -306,51 +306,52 @@ const [searchOpen, setSearchOpen] = useState(false);
   return (
     <>
       {/* Main transparent header */}
-      <header
-        data-site-header
-        className="fixed inset-x-0 top-0 z-50 bg-transparent transition-colors duration-300"
-      >
-<div className="mx-auto flex w-full max-w-7xl items-center justify-between gap-2 px-3 py-3 sm:gap-3 sm:px-5 sm:py-3.5 lg:px-8 xl:px-10">
-            {/* College logo and name */}
+   <header
+  data-site-header
+  className="fixed inset-x-0 top-0 z-50 bg-transparent transition-all duration-300"
+>
+<div
+  className={`mx-auto flex w-full max-w-7xl items-center justify-between gap-2
+    px-3 py-3
+    sm:gap-3 sm:px-5 sm:py-3.5
+    lg:px-8 xl:px-10
+    max-xl:backdrop-blur-xl
+    max-xl:border-b
+    ${
+      isDarkBackground
+        ? 'max-xl:border-white/10 max-xl:bg-[#3B0712]/65'
+        : 'max-xl:border-[#650d18]/10 max-xl:bg-white/80'
+    }`}
+>
+              {/* College logo and name */}
           <Link
             to="/"
             className="group flex min-w-0 shrink-0 items-center gap-2 sm:gap-3"
             aria-label={siteConfig.name}
           >
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border-2 border-gold bg-maroon-600 transition-transform duration-300 group-hover:scale-105 sm:h-11 sm:w-11 lg:h-12 lg:w-12">
-              <GraduationCap
-                className="h-5 w-5 text-gold sm:h-6 sm:w-6"
-                strokeWidth={1.5}
-              />
-            </div>
+  <div className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[#D8B45A]/80 bg-[#650D18] shadow-[0_0_18px_rgba(216,180,90,0.16)] transition-transform duration-300 group-hover:scale-105 sm:h-11 sm:w-11 lg:h-12 lg:w-12">
+  <div className="absolute inset-[3px] rounded-full border border-[#D8B45A]/30" />
+  <GraduationCap
+    className="relative h-5 w-5 text-[#D8B45A] sm:h-6 sm:w-6"
+    strokeWidth={1.6}
+  />
+</div>
 
             <div className="flex min-w-0 flex-col">
-              <span
-                className={`whitespace-nowrap font-serif text-xs font-bold leading-tight transition-colors duration-300 sm:text-base lg:text-lg ${headerTextColor}`}
-              >
-                ST. Lourdes
-              </span>
+           <span
+  className={`whitespace-nowrap font-serif text-[13px] font-bold leading-tight tracking-wide transition-colors duration-300 sm:text-base lg:text-lg ${headerTextColor}`}
+>
+  ST. Lourdes
+</span>
 
-              <span
-                className={`whitespace-nowrap font-sans text-[8px] uppercase tracking-[0.08em] transition-colors duration-300 sm:text-[10px] sm:tracking-[0.16em] lg:tracking-[0.2em] ${subtitleColor}`}
-              >
-                Engineering College
-              </span>
+<span
+  className={`whitespace-nowrap font-sans text-[8px] font-medium uppercase tracking-[0.1em] transition-colors duration-300 sm:text-[10px] sm:tracking-[0.16em] lg:tracking-[0.2em] ${subtitleColor}`}
+>
+  Engineering College
+</span>
             </div>
           </Link>
-<button
-  type="button"
-  onClick={() => setMobileOpen((prev) => !prev)}
-  className={`inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg p-2 text-[#D4AF37] transition-colors hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37] xl:hidden`}
-  aria-label={mobileOpen ? "Close menu" : "Open menu"}
-  aria-expanded={mobileOpen}
->
-  {mobileOpen ? (
-    <X className="h-6 w-6" />
-  ) : (
-    <Menu className="h-6 w-6" />
-  )}
-</button>
+
           {/* Desktop and laptop navigation */}
           <nav
             className="hidden xl:flex flex-1 items-center justify-center gap-1 xl:gap-1.5 2xl:gap-2 ml-4 2xl:ml-6"
@@ -440,11 +441,11 @@ const [searchOpen, setSearchOpen] = useState(false);
           </nav>
 
           {/* Search and mobile menu buttons */}
-<div className="ml-auto flex shrink-0 items-center gap-1 sm:gap-2 xl:ml-3 2xl:ml-4">
-              <button
+<div className="ml-auto flex shrink-0 items-center gap-1.5 sm:gap-2 xl:ml-3 2xl:ml-4">
+                <button
               type="button"
               onClick={() => setSearchOpen((open) => !open)}
-              className={`rounded-full p-2 transition-colors duration-200 hover:bg-white/10 hover:text-gold-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-gold sm:p-2.5 ${iconTextColor}`}
+className={`flex h-10 w-10 items-center justify-center bg-transparent p-0 transition-colors duration-200 hover:text-gold-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-gold sm:h-11 sm:w-11 ${iconTextColor}`}
               aria-label="Search"
               aria-expanded={searchOpen}
             >
@@ -506,12 +507,12 @@ className="absolute inset-0 h-full w-full bg-[#24060c]/70 backdrop-blur-sm"
           />
 
           {/* Forest-green mobile menu */}
-<div className="absolute right-0 top-0 flex h-full w-[88%] max-w-[420px] flex-col overflow-y-auto border-l border-[#D4AF37]/40 bg-[#3B0712] shadow-2xl sm:w-[80%]">            {/* Mobile menu header */}
-<div className="sticky top-0 z-10 flex items-center justify-between border-b border-[#D4AF37]/30 bg-[#4A0B18]/95 px-5 py-4 backdrop-blur-md">
+<div className="fixed inset-y-0 right-0 flex h-dvh w-[min(88vw,390px)] flex-col overflow-x-hidden overflow-y-auto overscroll-contain border-l border-[#D8B45A]/40 bg-gradient-to-b from-[#4A0B18] via-[#3B0712] to-[#26050C] pb-[env(safe-area-inset-bottom)] shadow-[-20px_0_60px_rgba(0,0,0,0.28)]">
+<div className="sticky top-0 z-10 flex w-full min-w-0 shrink-0 items-center justify-between gap-3 border-b border-[#D8B45A]/25 bg-[#4A0B18]/95 px-4 py-4 backdrop-blur-xl">
               <Link
                 to="/"
                 onClick={() => setMobileOpen(false)}
-                className="flex items-center gap-3"
+className="flex min-w-0 flex-1 items-center gap-2 overflow-hidden"
               >
                 <div className="flex h-10 w-10 items-center justify-center rounded-full border-2 border-gold bg-maroon-700">
                   <GraduationCap className="h-5 w-5 text-gold" />
@@ -540,23 +541,23 @@ className="absolute inset-0 h-full w-full bg-[#24060c]/70 backdrop-blur-sm"
            
 {/* Mobile navigation links */}
 <nav
-  className="flex-1 px-4 py-4"
+  className="flex-1 px-3 py-5 sm:px-4"
   aria-label="Mobile navigation"
 >
-  <ul className="space-y-1.5">
-    {navItems.map((item) => {
+<ul className="space-y-2">
+      {navItems.map((item) => {
       const isActive = isItemActive(item);
       const isExpanded = openDropdown === item.label;
 
       return (
-        <li key={item.label}>
-          <div
-            className={`flex items-center overflow-hidden rounded-lg border-l-4 transition-all duration-200 ${
-              isActive
-? 'border-[#D4AF37] bg-[#641426]'
-                : 'border-transparent hover:border-gold/50 hover:bg-white/5'
-            }`}
-          >
+    <li key={item.label}>
+  <div
+    className={`group flex items-center overflow-hidden rounded-xl border-l-[3px] transition-all duration-300 ${
+      isActive
+        ? 'border-[#D8B45A] bg-gradient-to-r from-[#D8B45A]/15 to-transparent shadow-[inset_0_0_18px_rgba(216,180,90,0.05)]'
+        : 'border-transparent hover:border-[#D8B45A] hover:bg-gradient-to-r hover:from-[#D8B45A]/15 hover:to-[#D8B45A]/[0.03] hover:shadow-[0_4px_18px_rgba(216,180,90,0.08)]'
+    }`}
+  >
             <Link
               to={item.to}
               onClick={() => {
@@ -566,11 +567,11 @@ className="absolute inset-0 h-full w-full bg-[#24060c]/70 backdrop-blur-sm"
                   setOpenMobileSubmenu(null);
                 }
               }}
-              className={`flex-1 px-4 py-3 text-sm font-semibold transition-colors ${
-                isActive
-                  ? 'text-gold'
-                  : 'text-white/85 hover:text-white'
-              }`}
+           className={`flex min-h-12 flex-1 items-center px-4 py-3 text-[14px] font-medium tracking-wide transition-all duration-300 ${
+  isActive
+    ? 'text-[#E8C66F]'
+    : 'text-white/85 hover:pl-5 hover:text-[#F0D48A]'
+}`}
             >
               {item.label}
             </Link>
@@ -597,7 +598,7 @@ className="absolute inset-0 h-full w-full bg-[#24060c]/70 backdrop-blur-sm"
 
           {/* First-level submenu */}
           {item.children && isExpanded && (
-<ul className="ml-5 mt-1 space-y-1 border-l border-[#D4AF37]/40 py-1 pl-3">
+<ul className="ml-5 mt-1 space-y-1 border-l border-[#D8B45A]/40 py-1 pl-3">
               {item.children.map((child) => {
                 const childSubmenuKey = `${item.label}:${child.label}`;
                 const childSubmenuOpen =
@@ -615,8 +616,11 @@ className="absolute inset-0 h-full w-full bg-[#24060c]/70 backdrop-blur-sm"
                             setOpenMobileSubmenu(null);
                           }
                         }}
-                        className="flex-1 rounded-md px-3 py-2.5 text-sm text-white/80 transition-colors hover:bg-white/5 hover:text-gold"
-                      >
+className={`flex min-h-11 flex-1 items-center rounded-lg px-3 py-2.5 text-sm transition-all duration-300 ${
+  location.pathname === child.to.split('#')[0]
+    ? 'bg-[#D8B45A]/10 text-[#E8C66F]'
+    : 'text-white/80 hover:bg-[#D8B45A]/10 hover:pl-4 hover:text-[#F0D48A]'
+}`}                      >
                         {child.label}
                       </Link>
 
@@ -645,8 +649,8 @@ className="absolute inset-0 h-full w-full bg-[#24060c]/70 backdrop-blur-sm"
 
                     {/* Nested submenu: opens when Committees is clicked */}
                     {child.children && childSubmenuOpen && (
-                      <ul className="ml-3 mt-1 space-y-1 border-l border-white/10 py-1 pl-3">
-                        {child.children.map((nested) => (
+  <ul className="ml-4 mt-1 space-y-1 border-l border-[#D8B45A]/30 py-1 pl-3">
+     {child.children.map((nested) => (
                           <li key={nested.label}>
                             <Link
                               to={nested.to}
@@ -655,8 +659,7 @@ className="absolute inset-0 h-full w-full bg-[#24060c]/70 backdrop-blur-sm"
                                 setOpenDropdown(null);
                                 setOpenMobileSubmenu(null);
                               }}
-                              className="block rounded-md px-3 py-2 text-xs leading-relaxed text-white/65 transition-colors hover:bg-white/5 hover:text-gold"
-                            >
+className="block rounded-lg px-3 py-2.5 text-xs leading-relaxed text-white/65 transition-all duration-300 hover:bg-[#D8B45A]/10 hover:pl-4 hover:text-[#F0D48A] hover:shadow-[0_3px_12px_rgba(216,180,90,0.06)]"                            >
                               {nested.label}
                             </Link>
                           </li>
@@ -682,7 +685,7 @@ className="absolute inset-0 h-full w-full bg-[#24060c]/70 backdrop-blur-sm"
       setOpenMobileSubmenu(null);
       onApplyClick();
     }}
-    className="mt-5 flex w-full items-center justify-center gap-2 rounded-xl bg-gold px-5 py-3.5 text-sm font-bold text-maroon-900 shadow-lg transition-all duration-200 hover:bg-gold-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
+className="mt-6 flex min-h-12 w-full items-center justify-center gap-3 rounded-xl border border-[#F3D98B]/70 bg-gradient-to-r from-[#D8B45A] via-[#F0D48A] to-[#C79A38] px-5 py-3.5 text-sm font-bold tracking-wide text-[#3B0712] shadow-[0_8px_25px_rgba(216,180,90,0.18)] transition-all duration-300 hover:brightness-105 active:scale-[0.98] focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
   >
     Apply Now
     <span aria-hidden="true">→</span>
