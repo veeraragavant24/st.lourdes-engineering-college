@@ -341,7 +341,7 @@ const [searchOpen, setSearchOpen] = useState(false);
 <button
   type="button"
   onClick={() => setMobileOpen((prev) => !prev)}
-  className={`ml-1 inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-gold/60 p-2 xl:hidden ${iconTextColor}`}
+  className={`inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg p-2 transition-colors hover:bg-white/10 hover:text-gold-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-gold xl:hidden ${iconTextColor}`}
   aria-label={mobileOpen ? "Close menu" : "Open menu"}
   aria-expanded={mobileOpen}
 >
