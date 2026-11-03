@@ -310,8 +310,8 @@ const [searchOpen, setSearchOpen] = useState(false);
         data-site-header
         className="fixed inset-x-0 top-0 z-50 bg-transparent transition-colors duration-300"
       >
-        <div className="mx-auto flex w-full max-w-7xl items-center justify-between gap-2 px-3 py-3 sm:gap-3 sm:px-5 sm:py-3.5 lg:px-8 xl:px-10">
-          {/* College logo and name */}
+<div className="mx-auto flex w-full max-w-7xl items-center justify-between gap-2 px-3 py-3 sm:gap-3 sm:px-5 sm:py-3.5 lg:px-8 xl:px-10">
+            {/* College logo and name */}
           <Link
             to="/"
             className="group flex min-w-0 shrink-0 items-center gap-2 sm:gap-3"
@@ -341,7 +341,7 @@ const [searchOpen, setSearchOpen] = useState(false);
 <button
   type="button"
   onClick={() => setMobileOpen((prev) => !prev)}
-  className={`ml-1 inline-flex shrink-0 items-center justify-center rounded-lg border border-gold/60 p-2 transition-colors hover:bg-white/10 hover:text-gold-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-gold xl:hidden ${iconTextColor}`}
+  className={`ml-1 inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-gold/60 p-2 xl:hidden ${iconTextColor}`}
   aria-label={mobileOpen ? "Close menu" : "Open menu"}
   aria-expanded={mobileOpen}
 >
@@ -440,8 +440,8 @@ const [searchOpen, setSearchOpen] = useState(false);
           </nav>
 
           {/* Search and mobile menu buttons */}
-          <div className="ml-4 flex shrink-0 items-center gap-1 sm:gap-2 xl:ml-3 2xl:ml-4">
-            <button
+<div className="ml-auto flex shrink-0 items-center gap-1 sm:gap-2 xl:ml-3 2xl:ml-4">
+              <button
               type="button"
               onClick={() => setSearchOpen((open) => !open)}
               className={`rounded-full p-2 transition-colors duration-200 hover:bg-white/10 hover:text-gold-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-gold sm:p-2.5 ${iconTextColor}`}
