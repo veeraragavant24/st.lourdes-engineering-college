@@ -369,18 +369,17 @@ const subtitleColor = isDarkBackground
   data-site-header
   className={`fixed inset-x-0 top-0 z-50 transition-colors duration-300 ${headerBg}`}
 >
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-3.5 sm:px-8 lg:px-12">
-          {/* Logo */}
+<div className="mx-auto flex w-full max-w-7xl items-center justify-between gap-2 px-3 py-3 sm:gap-4 sm:px-6 sm:py-3.5 lg:px-10 xl:px-12">          {/* Logo */}
           <Link
             to="/"
             className="group flex items-center gap-3"
             aria-label={siteConfig.name}
           >
-            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border-2 border-gold bg-maroon-600 transition-transform duration-300 group-hover:scale-105">
-              <GraduationCap
-                className="h-6 w-6 text-gold"
-                strokeWidth={1.5}
-              />
+<div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border-2 border-gold bg-maroon-600 transition-transform duration-300 group-hover:scale-105 sm:h-11 sm:w-11">            
+    <GraduationCap
+  className="h-5 w-5 text-gold sm:h-6 sm:w-6"
+  strokeWidth={1.5}
+/>
             </div>
 
             <div className="hidden flex-col sm:flex">
@@ -512,10 +511,9 @@ className={({ isActive }) =>
           </nav>
 
           {/* Search and mobile menu buttons */}
-          <div className="flex items-center gap-2">
-            <button
+<div className="ml-auto flex shrink-0 items-center gap-1 sm:gap-2">            <button
               onClick={() => setSearchOpen((open) => !open)}
-              className={`rounded-full p-2.5 ${iconTextColor} transition-colors duration-200 hover:bg-white/10 hover:text-gold-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-gold`}
+              className={`rounded-full p-2 ${iconTextColor} transition-colors duration-200 hover:bg-white/10 hover:text-gold-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-gold`}
               aria-label="Search"
               aria-expanded={searchOpen}
             >
@@ -566,8 +564,7 @@ className={({ isActive }) =>
             onClick={() => setMobileOpen(false)}
           />
 
-          <div className="absolute right-0 top-0 h-full w-80 max-w-[85vw] overflow-y-auto bg-maroon-800 shadow-2xl animate-slide-in-right">
-            <div className="flex items-center justify-between border-b border-gold/20 px-5 py-4">
+<div className="absolute right-0 top-0 flex h-full w-[min(20rem,90vw)] flex-col overflow-y-auto overscroll-contain bg-maroon-800 pb-[env(safe-area-inset-bottom)] shadow-2xl animate-slide-in-right">            <div className="flex items-center justify-between border-b border-gold/20 px-5 py-4">
               <span className="font-serif text-lg font-bold text-ivory">
                 Menu
               </span>
