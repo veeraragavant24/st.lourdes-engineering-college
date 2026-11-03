@@ -338,7 +338,15 @@ const [searchOpen, setSearchOpen] = useState(false);
               </span>
             </div>
           </Link>
-
+<button
+  type="button"
+  className="ml-auto inline-flex items-center justify-center p-2 text-[#d8b54c] lg:hidden"
+  onClick={() => setMobileOpen((prev) => !prev)}
+  aria-label={mobileOpen ? "Close menu" : "Open menu"}
+  aria-expanded={mobileOpen}
+>
+  {mobileOpen ? <X size={28} /> : <Menu size={28} />}
+</button>
           {/* Desktop and laptop navigation */}
           <nav
             className="hidden xl:flex flex-1 items-center justify-center gap-1 xl:gap-1.5 2xl:gap-2 ml-4 2xl:ml-6"
