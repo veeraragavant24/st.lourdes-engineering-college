@@ -341,7 +341,7 @@ const [searchOpen, setSearchOpen] = useState(false);
 <button
   type="button"
   onClick={() => setMobileOpen((prev) => !prev)}
-  className={`inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg p-2 transition-colors hover:bg-white/10 hover:text-gold-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-gold xl:hidden ${iconTextColor}`}
+  className={`inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg p-2 text-[#D4AF37] transition-colors hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37] xl:hidden`}
   aria-label={mobileOpen ? "Close menu" : "Open menu"}
   aria-expanded={mobileOpen}
 >
@@ -506,9 +506,8 @@ className="absolute inset-0 h-full w-full bg-[#24060c]/70 backdrop-blur-sm"
           />
 
           {/* Forest-green mobile menu */}
-<div className="absolute right-0 top-0 flex h-full w-[88%] max-w-[420px] flex-col overflow-y-auto border-l border-gold/30 bg-[#4a0e18] shadow-2xl sm:w-[80%]">
-            {/* Mobile menu header */}
-<div className="sticky top-0 z-10 flex items-center justify-between border-b border-gold/20 bg-[#4a0e18]/95 px-5 py-4 backdrop-blur-md">
+<div className="absolute right-0 top-0 flex h-full w-[88%] max-w-[420px] flex-col overflow-y-auto border-l border-[#D4AF37]/40 bg-[#3B0712] shadow-2xl sm:w-[80%]">            {/* Mobile menu header */}
+<div className="sticky top-0 z-10 flex items-center justify-between border-b border-[#D4AF37]/30 bg-[#4A0B18]/95 px-5 py-4 backdrop-blur-md">
               <Link
                 to="/"
                 onClick={() => setMobileOpen(false)}
@@ -554,7 +553,7 @@ className="absolute inset-0 h-full w-full bg-[#24060c]/70 backdrop-blur-sm"
           <div
             className={`flex items-center overflow-hidden rounded-lg border-l-4 transition-all duration-200 ${
               isActive
-                ? 'border-gold bg-white/10'
+? 'border-[#D4AF37] bg-[#641426]'
                 : 'border-transparent hover:border-gold/50 hover:bg-white/5'
             }`}
           >
@@ -598,7 +597,7 @@ className="absolute inset-0 h-full w-full bg-[#24060c]/70 backdrop-blur-sm"
 
           {/* First-level submenu */}
           {item.children && isExpanded && (
-            <ul className="ml-5 mt-1 space-y-1 border-l border-gold/30 py-1 pl-3">
+<ul className="ml-5 mt-1 space-y-1 border-l border-[#D4AF37]/40 py-1 pl-3">
               {item.children.map((child) => {
                 const childSubmenuKey = `${item.label}:${child.label}`;
                 const childSubmenuOpen =
