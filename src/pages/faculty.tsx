@@ -287,6 +287,13 @@ export default function Faculty() {
           padding: 48px 5% 76px;
         }
 
+        .faculty-container {
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 110px 5% 76px;
+}
+
         .faculty-heading {
           margin-bottom: 36px;
           text-align: center;
@@ -905,7 +912,7 @@ export default function Faculty() {
             right: 10px;
           }
         }
-
+      
         @media (prefers-reduced-motion: reduce) {
           .faculty-page *,
           .faculty-page *::before,
@@ -921,6 +928,17 @@ export default function Faculty() {
             transform: none;
           }
         }
+          @media (max-width: 760px) {
+  .faculty-container {
+    padding: 100px 4% 50px;
+  }
+}
+
+@media (max-width: 520px) {
+  .faculty-container {
+    padding: 90px 16px 40px;
+  }
+}
       `}</style>
 
       <div className="faculty-container">

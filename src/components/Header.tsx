@@ -20,10 +20,10 @@ const navItems: NavItem[] = [
         label: 'Committees',
         to: '/about#committees',
         children: [
-          {
-            label: 'Grievance Redressal Committee',
-            to: '/committees/grievance-redressal',
-          },
+ {
+          label: 'Grievance Redressal Committee',
+          to: '/grievance-committee',
+        },
           {
             label: 'Sexual Harassment Redressal Committee',
             to: '/committees/sexual-harassment',
@@ -97,6 +97,8 @@ const [searchOpen, setSearchOpen] = useState(false);
   const closeTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Detect whether the page background behind the transparent header is dark.
+  
+  // Detect whether the background behind the transparent header is dark.
   useEffect(() => {
     let frame = 0;
 
@@ -108,7 +110,10 @@ const [searchOpen, setSearchOpen] = useState(false);
       if (!header) return;
 
       const rect = header.getBoundingClientRect();
-      const y = Math.max(1, Math.min(rect.bottom - 2, window.innerHeight - 1));
+      const y = Math.max(
+        1,
+        Math.min(rect.bottom - 2, window.innerHeight - 1)
+      );
 
       const samplePoints = [
         window.innerWidth * 0.2,
@@ -156,7 +161,8 @@ const [searchOpen, setSearchOpen] = useState(false);
 
           while (current && current !== document.documentElement) {
             const style = window.getComputedStyle(current);
-            const match = style.backgroundColor.match(/rgba?\(([^)]+)\)/i);
+            const background = style.backgroundColor;
+            const match = background.match(/rgba?\(([^)]+)\)/i);
 
             if (match) {
               const values = match[1]
@@ -191,7 +197,9 @@ const [searchOpen, setSearchOpen] = useState(false);
           }
         }
 
-        if (luminance !== null) luminances.push(luminance);
+        if (luminance !== null) {
+          luminances.push(luminance);
+        }
       }
 
       if (luminances.length > 0) {
@@ -210,7 +218,9 @@ const [searchOpen, setSearchOpen] = useState(false);
 
     scheduleDetection();
 
-    window.addEventListener('scroll', scheduleDetection, { passive: true });
+    window.addEventListener('scroll', scheduleDetection, {
+      passive: true,
+    });
     window.addEventListener('resize', scheduleDetection);
 
     return () => {
@@ -259,21 +269,21 @@ const [searchOpen, setSearchOpen] = useState(false);
     }, 150);
   };
 
-  const headerTextColor = isDarkBackground
-    ? 'text-white'
-    : 'text-maroon-900';
+ const headerTextColor = isDarkBackground
+  ? 'text-white'
+  : 'text-[#3B101B]';
 
-  const navTextColor = isDarkBackground
-    ? 'text-white/90 hover:text-gold-100'
-    : 'text-maroon-900/90 hover:text-maroon-700';
+const navTextColor = isDarkBackground
+  ? 'text-white/95 hover:text-[#F5D77A]'
+  : 'text-[#3B101B] hover:text-[#9B6D24]';
 
-  const iconTextColor = isDarkBackground
-    ? 'text-white'
-    : 'text-maroon-900';
+const iconTextColor = isDarkBackground
+  ? 'text-white'
+  : 'text-[#3B101B]';
 
-  const subtitleColor = isDarkBackground
-    ? 'text-gold-100'
-    : 'text-maroon-700';
+const subtitleColor = isDarkBackground
+  ? 'text-[#F5D77A]'
+  : 'text-[#7A263A]';
 
   const isItemActive = (item: NavItem) => {
     if (item.to === '/') {

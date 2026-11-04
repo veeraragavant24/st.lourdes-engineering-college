@@ -72,6 +72,7 @@ export default function Admission() {
       />
 
       {/* TNEA Code banner */}
+      
       <section className="bg-gradient-to-br from-maroon-600 to-maroon-800 py-12">
         <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-12">
           <div className="flex flex-col items-center justify-between gap-6 rounded-2xl border border-gold/30 bg-maroon-900/40 p-6 sm:p-8 md:flex-row">

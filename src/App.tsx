@@ -20,6 +20,10 @@ import Academics from '@/pages/academics';
 import Management from './pages/Management';
 import Principal from '@/pages/principal';
 import Faculty from '@/pages/faculty';
+import GrievanceCommittee from './pages/GrievanceCommittee';
+import SexualHarassmentCommittee from './pages/SexualHarassmentCommittee';
+
+
 export default function App() {
   return (
     <AdmissionModalProvider>
@@ -40,11 +44,19 @@ export default function App() {
 <Route path="/faculty" element={<Faculty />} />
 <Route path="/principal" element={<Principal />} />
               <Route path="/management" element={<Management />} />
+              <Route
+  path="/committees/sexual-harassment"
+  element={<SexualHarassmentCommittee />}
+/>
 
               <Route path="/academic" element={<Academics />} />
               <Route path="/academics" element={<Academics />} />
 
               <Route path="/departments" element={<Departments />} />
+              <Route
+  path="/grievance-committee"
+  element={<GrievanceCommittee />}
+/>
             </Routes>
           </main>
 

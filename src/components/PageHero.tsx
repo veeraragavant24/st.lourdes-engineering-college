@@ -11,8 +11,11 @@ interface PageHeroProps {
 
 export default function PageHero({ eyebrow, title, description, image, breadcrumb }: PageHeroProps) {
   return (
-    <section className="relative flex min-h-[50vh] items-end overflow-hidden pt-20">
-      <img src={image} alt="" className="absolute inset-0 h-full w-full object-cover" />
+<section
+  data-header-theme="dark"
+  className="relative flex min-h-[50vh] items-end overflow-hidden pt-20"
+>
+        <img src={image} alt="" className="absolute inset-0 h-full w-full object-cover" />
       <div className="absolute inset-0 bg-gradient-to-r from-maroon-900/90 via-maroon-900/60 to-maroon-900/30" />
       <div className="absolute inset-0 bg-gradient-to-t from-maroon-900/80 to-transparent" />
 
