@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import {
   BookOpen,
   Building2,
@@ -85,6 +85,8 @@ const galleryImages: GalleryImage[] = [
   },
 ];
 
+
+
 const categories = ['All', 'Library', 'Hostel', 'Labs', 'Events', 'Campus Life', 'Campus', 'Placement'];
 
 const facilities = [
@@ -98,6 +100,8 @@ const facilities = [
 
 export default function Gallery() {
   const { openModal } = useAdmissionModal();
+  const location = useLocation();
+
   const [activeCategory, setActiveCategory] = useState('All');
   const [lightbox, setLightbox] = useState<GalleryImage | null>(null);
 
@@ -106,7 +110,48 @@ export default function Gallery() {
       ? galleryImages
       : galleryImages.filter((img) => img.category === activeCategory);
 
+  // Smooth scrolling for Gallery and Facilities navigation
+  useEffect(() => {
+    if (!location.hash) return;
+
+    const sectionId = decodeURIComponent(location.hash.slice(1));
+
+    let firstFrame = 0;
+    let secondFrame = 0;
+
+    const timer = window.setTimeout(() => {
+      firstFrame = window.requestAnimationFrame(() => {
+        secondFrame = window.requestAnimationFrame(() => {
+          const section = document.getElementById(sectionId);
+
+          if (!section) {
+            console.warn(`Section not found: ${sectionId}`);
+            return;
+          }
+
+          const headerOffset = 110;
+
+          const top =
+            section.getBoundingClientRect().top +
+            window.scrollY -
+            headerOffset;
+
+          window.scrollTo({
+            top: Math.max(0, top),
+            behavior: 'smooth',
+          });
+        });
+      });
+    }, 300);
+
+    return () => {
+      window.clearTimeout(timer);
+      window.cancelAnimationFrame(firstFrame);
+      window.cancelAnimationFrame(secondFrame);
+    };
+  }, [location.pathname, location.hash]);
   return (
+
     <>
       <PageHero
         eyebrow="Life at ST. Lourdes"
@@ -117,8 +162,11 @@ export default function Gallery() {
       />
 
       {/* Facilities overview */}
-      <section className="section-pad bg-white">
-        <div className="mx-auto max-w-7xl">
+<section
+  id="facilities"
+  className="section-pad bg-white"
+>
+          <div className="mx-auto max-w-7xl">
           <div className="mb-14 text-center">
             <p className="eyebrow">World-Class Infrastructure</p>
             <h2 className="mt-3 font-serif text-3xl font-bold text-maroon-700 sm:text-4xl lg:text-5xl">
@@ -150,8 +198,11 @@ export default function Gallery() {
       </section>
 
       {/* Gallery grid with filters */}
-      <section className="section-pad bg-ivory">
-        <div className="mx-auto max-w-7xl">
+<section
+  id="gallery"
+  className="section-pad bg-ivory"
+>
+          <div className="mx-auto max-w-7xl">
           <div className="mb-10 text-center">
             <p className="eyebrow">Moments & Memories</p>
             <h2 className="mt-3 font-serif text-3xl font-bold text-maroon-700 sm:text-4xl">
@@ -260,3 +311,13 @@ export default function Gallery() {
     </>
   );
 }
+<style>{`
+  html {
+    scroll-behavior: smooth;
+  }
+
+  #facilities,
+  #gallery {
+    scroll-margin-top: 110px;
+  }
+`}</style>

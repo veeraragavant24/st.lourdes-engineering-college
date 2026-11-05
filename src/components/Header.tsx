@@ -66,9 +66,8 @@ const navItems: NavItem[] = [
     to: '/admission',
     children: [
       { label: 'Admission Process', to: '/admission' },
-      { label: 'Eligibility Criteria', to: '/admission#eligibility' },
-      { label: 'TNEA Counselling', to: '/admission#tnea' },
-      { label: 'Enquiry Form', to: '/admission#enquiry' },
+      { label: 'Eligibility Criteria', to: '/eligibility' },
+     { label: "Scholarships", to: "/scholarships" }
     ],
   },
   { label: 'Academics', to: '/academics' },
@@ -78,8 +77,7 @@ const navItems: NavItem[] = [
     to: '/gallery',
     children: [
       { label: 'Gallery', to: '/gallery' },
-      { label: 'Library', to: '/gallery#library' },
-      { label: 'Hostel', to: '/gallery#hostel' },
+
       { label: 'Facilities', to: '/gallery#facilities' },
     ],
   },

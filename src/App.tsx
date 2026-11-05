@@ -26,7 +26,8 @@ import AntiRaggingCommittee from "./pages/AntiRaggingCommittee";
 import WomenEmpowermentCell from "./pages/WomenEmpowermentCell";
 import MandatoryDisclosure from "./pages/MandatoryDisclosure";
 import AicteDocuments from "./pages/AicteDocuments";
-
+import Eligibility from "./pages/Eligibility";
+import Scholarships from "./pages/Scholarships";
 
 export default function App() {
   return (
@@ -74,6 +75,10 @@ export default function App() {
   element={<MandatoryDisclosure />}
 />
 <Route path="/aicte-documents" element={<AicteDocuments />} />
+<Route path="/eligibility" element={<Eligibility />} />
+<Route path="/scholarships" element={<Scholarships />} />
+
+
             </Routes>
           </main>
 

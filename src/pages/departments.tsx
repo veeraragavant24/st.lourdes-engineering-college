@@ -1,9 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
-  GraduationCap,
-  Users,
-  FlaskConical,
+
   Layers3,
   Monitor,
   Cpu,
@@ -335,13 +333,16 @@ function DepartmentStyles() {
         border-radius: 50%;
       }
 
-      .dept-hero-inner {
-        display: grid;
-        grid-template-columns: 1.1fr .9fr;
-        align-items: center;
-        gap: 45px;
-      }
+    .dept-hero-inner {
+  display: grid;
+  grid-template-columns: 1fr;
+  align-items: center;
+  gap: 0;
+}
 
+.dept-hero-inner > div:first-child {
+  max-width: 850px;
+}
       .dept-eyebrow {
         display: flex;
         align-items: center;
@@ -378,12 +379,12 @@ function DepartmentStyles() {
       }
 
       .dept-hero-description {
-        max-width: 580px;
-        margin: 0;
-        color: rgba(255,255,255,.91);
-        font-size: 12px;
-        line-height: 1.8;
-      }
+  max-width: 650px;
+  margin: 0;
+  color: rgba(255,255,255,.93);
+  font-size: 16px;
+  line-height: 1.9;
+}
 
       .dept-hero-stats {
         display: grid;
@@ -701,13 +702,12 @@ function DepartmentStyles() {
         font-size: clamp(22px, 2.4vw, 30px);
         line-height: 1.15;
       }
-
-      .dept-featured-copy p {
-        margin: 0 0 22px;
-        color: rgba(255,255,255,.88);
-        font-size: 11px;
-        line-height: 1.8;
-      }
+.dept-featured-copy p {
+  margin: 0 0 22px;
+  color: rgba(255,255,255,.90);
+  font-size: 15px;
+  line-height: 1.9;
+}
 
       .dept-featured-image {
         position: relative;
@@ -811,13 +811,12 @@ function DepartmentStyles() {
         font-size: 14px;
       }
 
-      .dept-hod p {
-        margin: 0;
-        color: var(--dept-muted);
-        font-size: 11px;
-        line-height: 1.7;
-      }
-
+     .dept-hod p {
+  margin: 0;
+  color: var(--dept-muted);
+  font-size: 14px;
+  line-height: 1.8;
+}
       .dept-overview-title {
         display: flex;
         align-items: center;
@@ -835,12 +834,12 @@ function DepartmentStyles() {
         color: var(--dept-gold-dark);
       }
 
-      .dept-overview-text {
-        margin: 0;
-        color: var(--dept-muted);
-        font-size: 11px;
-        line-height: 1.8;
-      }
+     .dept-overview-text {
+  margin: 0;
+  color: var(--dept-muted);
+  font-size: 15px;
+  line-height: 1.9;
+}
 
       .dept-check-list {
         display: grid;
@@ -849,15 +848,14 @@ function DepartmentStyles() {
         padding: 0;
         list-style: none;
       }
-
-      .dept-check-list li {
-        display: flex;
-        align-items: flex-start;
-        gap: 11px;
-        color: #393138;
-        font-size: 11px;
-        line-height: 1.65;
-      }
+.dept-check-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+  color: #393138;
+  font-size: 14px;
+  line-height: 1.8;
+}
 
       .dept-check-list li svg {
         width: 17px;
@@ -1479,27 +1477,9 @@ export default function Departments() {
             </p>
           </div>
 
-          <div className="dept-hero-stats">
+        
 
-            <div className="dept-stat">
-              <GraduationCap aria-hidden="true" />
-              <strong>07</strong>
-              <span>Programmes</span>
-            </div>
-
-            <div className="dept-stat">
-              <Users aria-hidden="true" />
-              <strong>100+</strong>
-              <span>Expert Faculty</span>
-            </div>
-
-            <div className="dept-stat">
-              <FlaskConical aria-hidden="true" />
-              <strong>Modern</strong>
-              <span>Laboratories</span>
-            </div>
-
-          </div>
+         
 
         </div>
       </section>
@@ -1525,9 +1505,7 @@ export default function Departments() {
                   </h2>
                 </div>
 
-                <span className="dept-count">
-                  07 PROGRAMMES
-                </span>
+                
 
               </div>
 
