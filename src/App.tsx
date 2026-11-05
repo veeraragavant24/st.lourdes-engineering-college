@@ -22,6 +22,10 @@ import Principal from '@/pages/principal';
 import Faculty from '@/pages/faculty';
 import GrievanceCommittee from './pages/GrievanceCommittee';
 import SexualHarassmentCommittee from './pages/SexualHarassmentCommittee';
+import AntiRaggingCommittee from "./pages/AntiRaggingCommittee";
+import WomenEmpowermentCell from "./pages/WomenEmpowermentCell";
+import MandatoryDisclosure from "./pages/MandatoryDisclosure";
+import AicteDocuments from "./pages/AicteDocuments";
 
 
 export default function App() {
@@ -48,7 +52,10 @@ export default function App() {
   path="/committees/sexual-harassment"
   element={<SexualHarassmentCommittee />}
 />
-
+<Route
+  path="/committees/women-empowerment"
+  element={<WomenEmpowermentCell />}
+/>
               <Route path="/academic" element={<Academics />} />
               <Route path="/academics" element={<Academics />} />
 
@@ -56,7 +63,17 @@ export default function App() {
               <Route
   path="/grievance-committee"
   element={<GrievanceCommittee />}
+
 />
+<Route
+  path="/committees/anti-ragging"
+  element={<AntiRaggingCommittee />}
+/>
+<Route
+  path="/mandatory-disclosure"
+  element={<MandatoryDisclosure />}
+/>
+<Route path="/aicte-documents" element={<AicteDocuments />} />
             </Routes>
           </main>
 

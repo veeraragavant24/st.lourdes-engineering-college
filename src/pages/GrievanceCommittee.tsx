@@ -24,19 +24,21 @@ export default function GrievanceCommittee() {
   return (
     <main className="grc">
       <style>{`
-        .grc {
-          --wine: #671329;
-          --wine-dark: #3c0918;
-          --gold: #e5b843;
-          --cream: #fffaf3;
-          --navy: #0c1c35;
-          --muted: #696064;
-          background: var(--cream);
-          color: #35111c;
-          font-family: Inter, Arial, sans-serif;
-          overflow: hidden;
-        }
+      .grc {
+  --wine: #671329;
+  --wine-dark: #3c0918;
+  --gold: #e5b843;
+  --cream: #fffaf3;
+  --navy: #0c1c35;
+  --muted: #696064;
 
+  width: 100%;
+  padding-top: 76px;
+  background: var(--cream);
+  color: #35111c;
+  font-family: Inter, Arial, sans-serif;
+  overflow: hidden;
+}
         .grc * { box-sizing: border-box; }
 
         .grc a { text-decoration: none; }

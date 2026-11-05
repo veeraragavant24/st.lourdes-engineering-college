@@ -71,18 +71,20 @@ export default function SexualHarassmentCommittee() {
   return (
     <div className="shrc-page">
       <style>{`
-        .shrc-page {
-          --shrc-maroon: #570d24;
-          --shrc-deep: #350817;
-          --shrc-gold: #e7b83f;
-          --shrc-cream: #fffaf2;
-          --shrc-text: #4a3040;
-          width: 100%;
-          overflow: hidden;
-          background: var(--shrc-cream);
-          color: var(--shrc-text);
-          font-family: Inter, Arial, sans-serif;
-        }
+.shrc-page {
+  --shrc-maroon: #570d24;
+  --shrc-deep: #350817;
+  --shrc-gold: #e7b83f;
+  --shrc-cream: #fffaf2;
+  --shrc-text: #4a3040;
+
+  width: 100%;
+  padding-top: 72px;
+  overflow: hidden;
+  background: var(--shrc-cream);
+  color: var(--shrc-text);
+  font-family: Inter, Arial, sans-serif;
+}
 
         .shrc-page * {
           box-sizing: border-box;
@@ -597,7 +599,9 @@ export default function SexualHarassmentCommittee() {
           .shrc-hero {
             min-height: 285px;
           }
-
+.shrc-page {
+  padding-top: 64px;
+}
           .shrc-hero-inner {
             width: calc(100% - 40px);
             padding: 48px 0 36px;

@@ -1,4 +1,3 @@
-
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
@@ -9,7 +8,10 @@ import {
   Monitor,
   Cpu,
   Settings,
-  HardHat,
+  ShieldCheck,
+  Code2,
+  BrainCircuit,
+  BriefcaseBusiness,
   ArrowRight,
   CheckCircle2,
   UserRound,
@@ -18,12 +20,15 @@ import {
   Trophy,
   Wrench,
   Lightbulb,
-  BriefcaseBusiness,
+  Network,
+  Database,
 } from 'lucide-react';
+
+import type { LucideIcon } from 'lucide-react';
 
 /* =========================================================
    ST. LOURDES ENGINEERING COLLEGE
-   Departments Page
+   DEPARTMENTS PAGE
    Theme: Royal Maroon + Elegant Gold
    ========================================================= */
 
@@ -35,20 +40,22 @@ type Department = {
   focusAreas: string[];
   facilities: string[];
   outcomes: string[];
-  icon: typeof Monitor;
+  icon: LucideIcon;
+  image: string;
+  url: string;
 };
 
 const departments: Department[] = [
   {
     id: 1,
-    name: 'Computer Science & Engineering',
-    shortName: 'Computer Science & Engineering',
+    name: 'Computer Science and Engineering',
+    shortName: 'B.E. Computer Science and Engineering',
     description:
-      'Build expertise in computing, software development, artificial intelligence and emerging technologies. Develop the technical skills needed to solve real-world problems.',
+      'Build expertise in computing, software development, artificial intelligence and emerging technologies. Develop the technical skills needed to design innovative solutions and solve real-world challenges.',
     focusAreas: [
       'Software Development',
-      'Artificial Intelligence',
       'Data Structures and Algorithms',
+      'Artificial Intelligence',
       'Web and Application Development',
       'Computer Networks',
     ],
@@ -65,11 +72,44 @@ const departments: Department[] = [
       'Collaborate on innovative projects',
     ],
     icon: Monitor,
+    image:
+      'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1400&q=85',
+    url: 'https://www.slec.edu.in/departments/b-e-computer-science-and-engineering/',
   },
   {
     id: 2,
-    name: 'Electronics & Communication Engineering',
-    shortName: 'Electronics & Communication Engineering',
+    name: 'Computer Science and Engineering (Cyber Security)',
+    shortName: 'B.E. CSE (Cyber Security)',
+    description:
+      'Explore the world of cybersecurity, ethical hacking, digital forensics and information protection. Develop the skills to secure digital systems, networks and applications against evolving cyber threats.',
+    focusAreas: [
+      'Cyber Security Fundamentals',
+      'Ethical Hacking',
+      'Network Security',
+      'Digital Forensics',
+      'Cryptography and Data Protection',
+    ],
+    facilities: [
+      'Cyber Security Laboratory',
+      'Network Security Laboratory',
+      'Programming and Testing Facilities',
+      'Digital Investigation Tools',
+    ],
+    outcomes: [
+      'Identify and analyse security vulnerabilities',
+      'Understand cyber threats and prevention',
+      'Apply network and information security concepts',
+      'Develop secure computing solutions',
+    ],
+    icon: ShieldCheck,
+    image:
+      'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=1400&q=85',
+    url: 'https://www.slec.edu.in/departments/b-e-computer-science-and-engineering-cyber-security/',
+  },
+  {
+    id: 3,
+    name: 'Electronics and Communication Engineering',
+    shortName: 'B.E. Electronics and Communication Engineering',
     description:
       'Explore electronic circuits, communication technologies, embedded systems and intelligent electronic devices through theoretical and practical learning.',
     focusAreas: [
@@ -92,60 +132,129 @@ const departments: Department[] = [
       'Apply engineering principles practically',
     ],
     icon: Cpu,
-  },
-  {
-    id: 3,
-    name: 'Mechanical Engineering',
-    shortName: 'Mechanical Engineering',
-    description:
-      'Design, analyse and innovate mechanical systems for real-world applications. Explore manufacturing, thermal engineering, automation and modern mechanical design.',
-    focusAreas: [
-      'Design and Manufacturing',
-      'Thermal Engineering',
-      'Automation and Robotics',
-      'CAD / CAM / CAE',
-      'Sustainable Engineering',
-    ],
-    facilities: [
-      'Advanced Manufacturing Laboratory',
-      'CAD / CAM Laboratory',
-      'Thermal Engineering Laboratory',
-      'Material Testing Facilities',
-    ],
-    outcomes: [
-      'Apply engineering principles to real problems',
-      'Design and analyse mechanical systems',
-      'Use modern engineering tools effectively',
-      'Demonstrate innovation and teamwork',
-    ],
-    icon: Settings,
+    image:
+      'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=1400&q=85',
+    url: 'https://www.slec.edu.in/departments/b-e-electronics-and-communication-engineering/',
   },
   {
     id: 4,
-    name: 'Civil Engineering',
-    shortName: 'Civil Engineering',
+    name: 'Information Technology',
+    shortName: 'B.Tech. Information Technology',
     description:
-      'Explore the planning, design and construction of buildings and infrastructure, with a focus on structural safety, sustainable development and practical engineering.',
+      'Develop a strong foundation in information technology, software engineering, databases, cloud computing and modern digital platforms. Learn to create technology-driven solutions for businesses and society.',
     focusAreas: [
-      'Structural Engineering',
-      'Construction Technology',
-      'Geotechnical Engineering',
-      'Environmental Engineering',
-      'Surveying and Planning',
+      'Information Systems',
+      'Web Technologies',
+      'Database Management',
+      'Cloud Computing',
+      'Software Engineering',
     ],
     facilities: [
-      'Surveying Laboratory',
-      'Concrete and Material Testing',
-      'Soil Mechanics Laboratory',
-      'Environmental Engineering Facilities',
+      'Information Technology Laboratories',
+      'Database Management Laboratory',
+      'Web Development Facilities',
+      'Networking and Computing Facilities',
     ],
     outcomes: [
-      'Understand structural design principles',
-      'Evaluate construction materials',
-      'Plan sustainable infrastructure',
-      'Apply engineering standards responsibly',
+      'Design and develop modern applications',
+      'Manage information systems effectively',
+      'Work with databases and cloud platforms',
+      'Solve business and technical challenges',
     ],
-    icon: HardHat,
+    icon: Database,
+    image:
+      'https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=1400&q=85',
+    url: 'https://www.slec.edu.in/departments/b-tech-information-technology/',
+  },
+  {
+    id: 5,
+    name: 'Artificial Intelligence and Data Science',
+    shortName: 'B.Tech. Artificial Intelligence and Data Science',
+    description:
+      'Discover the power of artificial intelligence, machine learning, data analytics and intelligent systems. Gain the knowledge to transform complex data into meaningful insights and smart solutions.',
+    focusAreas: [
+      'Artificial Intelligence',
+      'Machine Learning',
+      'Data Analytics',
+      'Deep Learning',
+      'Big Data Technologies',
+    ],
+    facilities: [
+      'Artificial Intelligence Laboratory',
+      'Data Science Laboratory',
+      'Machine Learning Facilities',
+      'Computing and Research Facilities',
+    ],
+    outcomes: [
+      'Build intelligent software solutions',
+      'Analyse and interpret complex datasets',
+      'Apply machine learning techniques',
+      'Develop data-driven applications',
+    ],
+    icon: BrainCircuit,
+    image:
+      'https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=1400&q=85',
+    url: 'https://www.slec.edu.in/departments/b-tech-artificial-intelligence-and-data-science/',
+  },
+  {
+    id: 6,
+    name: 'Computer Science and Engineering',
+    shortName: 'M.E. Computer Science and Engineering',
+    description:
+      'Advance your technical knowledge through postgraduate study in computer science and engineering. Explore advanced computing concepts, research methodologies and innovative technology development.',
+    focusAreas: [
+      'Advanced Computer Science',
+      'Research and Development',
+      'Advanced Algorithms',
+      'Intelligent Computing',
+      'Emerging Technologies',
+    ],
+    facilities: [
+      'Advanced Computing Laboratories',
+      'Research and Development Facilities',
+      'Technical Project Facilities',
+      'Digital Learning Resources',
+    ],
+    outcomes: [
+      'Develop advanced technical expertise',
+      'Conduct research-oriented projects',
+      'Evaluate emerging technologies',
+      'Contribute to innovation and development',
+    ],
+    icon: Code2,
+    image:
+      'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1400&q=85',
+    url: 'https://www.slec.edu.in/departments/m-e-computer-science-and-engineering/',
+  },
+  {
+    id: 7,
+    name: 'Master of Business Administration',
+    shortName: 'Master of Business Administration (MBA)',
+    description:
+      'Develop leadership, management and strategic decision-making skills. Gain knowledge in business administration, finance, marketing, human resources and entrepreneurship.',
+    focusAreas: [
+      'Business Management',
+      'Financial Management',
+      'Marketing Management',
+      'Human Resource Management',
+      'Entrepreneurship and Strategy',
+    ],
+    facilities: [
+      'Management Learning Facilities',
+      'Seminar and Presentation Facilities',
+      'Business Case Study Resources',
+      'Collaborative Learning Spaces',
+    ],
+    outcomes: [
+      'Develop effective leadership skills',
+      'Understand business and financial operations',
+      'Make informed management decisions',
+      'Build entrepreneurial thinking',
+    ],
+    icon: BriefcaseBusiness,
+    image:
+      'https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=1400&q=85',
+    url: 'https://www.slec.edu.in/departments/master-of-business-administration-mba/',
   },
 ];
 
@@ -155,7 +264,8 @@ const departments: Department[] = [
 
 function DepartmentStyles() {
   return (
-   <style>{`
+    <style>{`
+
       .dept-page {
         --dept-maroon: #6E1832;
         --dept-maroon-dark: #4A1022;
@@ -170,6 +280,8 @@ function DepartmentStyles() {
         color: var(--dept-text);
         min-height: 100vh;
         overflow: clip;
+        position: relative;
+        isolation: isolate;
       }
 
       .dept-page *,
@@ -183,13 +295,13 @@ function DepartmentStyles() {
         margin-inline: auto;
       }
 
-      /* HERO */
+      /* ================= HERO ================= */
 
       .dept-hero {
         position: relative;
         overflow: hidden;
         isolation: isolate;
-        padding: 54px 0 58px;
+        padding: 85px 0 58px;
         color: #fff;
         background: linear-gradient(
           112deg,
@@ -236,7 +348,7 @@ function DepartmentStyles() {
         gap: 13px;
         margin-bottom: 16px;
         color: var(--dept-gold);
-        font-size: 11px;
+        font-size: 10px;
         font-weight: 800;
         letter-spacing: 3px;
         text-transform: uppercase;
@@ -245,7 +357,7 @@ function DepartmentStyles() {
       .dept-eyebrow::before,
       .dept-eyebrow::after {
         content: "";
-        width: 40px;
+        width: 36px;
         height: 2px;
         background: var(--dept-gold);
       }
@@ -254,10 +366,10 @@ function DepartmentStyles() {
         max-width: 650px;
         margin: 0 0 17px;
         font-family: Georgia, "Times New Roman", serif;
-        font-size: clamp(36px, 4.5vw, 58px);
+        font-size: clamp(30px, 3.2vw, 44px);
         font-weight: 700;
-        line-height: .99;
-        letter-spacing: -1.5px;
+        line-height: 1.08;
+        letter-spacing: -1px;
       }
 
       .dept-hero h1 span {
@@ -269,15 +381,14 @@ function DepartmentStyles() {
         max-width: 580px;
         margin: 0;
         color: rgba(255,255,255,.91);
-        font-size: 11px;
-        line-height: 1.9;
+        font-size: 12px;
+        line-height: 1.8;
       }
 
       .dept-hero-stats {
         display: grid;
         grid-template-columns: repeat(3, minmax(0, 1fr));
         align-items: center;
-        gap: 0;
       }
 
       .dept-stat {
@@ -293,8 +404,8 @@ function DepartmentStyles() {
 
       .dept-stat svg {
         display: block;
-        width: 37px;
-        height: 37px;
+        width: 35px;
+        height: 35px;
         margin: 0 auto 8px;
         color: var(--dept-gold);
         stroke-width: 1.7;
@@ -304,18 +415,18 @@ function DepartmentStyles() {
         display: block;
         margin-bottom: 3px;
         font-family: Georgia, "Times New Roman", serif;
-        font-size: clamp(18px, 2vw, 25px);
-        line-height: 1.1;
+        font-size: 21px;
+        line-height: 1.2;
       }
 
       .dept-stat span {
         display: block;
         color: rgba(255,255,255,.88);
-        font-size: 11px;
+        font-size: 10px;
         line-height: 1.5;
       }
 
-      /* BUTTONS */
+      /* ================= BUTTONS ================= */
 
       .dept-button {
         display: inline-flex;
@@ -331,12 +442,7 @@ function DepartmentStyles() {
         font-size: 11px;
         font-weight: 700;
         text-decoration: none;
-        transition:
-          background 250ms ease,
-          color 250ms ease,
-          border-color 250ms ease,
-          box-shadow 250ms ease,
-          gap 250ms ease;
+        transition: all 250ms ease;
       }
 
       .dept-button svg {
@@ -370,7 +476,7 @@ function DepartmentStyles() {
         color: var(--dept-maroon-dark);
       }
 
-      /* DEPARTMENT SELECTOR */
+      /* ================= DEPARTMENT SELECTOR ================= */
 
       .dept-selector-section {
         position: relative;
@@ -401,8 +507,8 @@ function DepartmentStyles() {
       }
 
       .dept-selector-title > svg {
-        width: 34px;
-        height: 34px;
+        width: 32px;
+        height: 32px;
         color: var(--dept-maroon);
         stroke-width: 1.8;
       }
@@ -411,13 +517,13 @@ function DepartmentStyles() {
         margin: 0;
         color: var(--dept-maroon);
         font-family: Georgia, "Times New Roman", serif;
-        font-size: clamp(18px, 2vw, 25px);
+        font-size: 21px;
       }
 
       .dept-count {
         flex-shrink: 0;
         color: var(--dept-maroon);
-        font-size: 11px;
+        font-size: 10px;
         font-weight: 800;
         letter-spacing: .5px;
       }
@@ -425,16 +531,15 @@ function DepartmentStyles() {
       .dept-grid {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 16px 22px;
+        gap: 15px 20px;
       }
 
-      .dept-card {
-        --card-x: -75px;
+      /* ================= DEPARTMENT CARDS ================= */
 
-        position: relative;
+      .dept-card {
         min-width: 0;
         opacity: 0;
-        transform: translate3d(var(--card-x), 0, 0);
+        transform: translate3d(-65px, 0, 0);
         transition:
           opacity 700ms ease,
           transform 900ms cubic-bezier(.22, 1, .36, 1);
@@ -442,7 +547,7 @@ function DepartmentStyles() {
       }
 
       .dept-card.from-right {
-        --card-x: 75px;
+        transform: translate3d(65px, 0, 0);
       }
 
       .dept-card.is-visible {
@@ -452,12 +557,12 @@ function DepartmentStyles() {
 
       .dept-card-link {
         display: grid;
-        grid-template-columns: 72px minmax(0, 1fr) 32px;
+        grid-template-columns: 62px minmax(0, 1fr) 30px;
         align-items: center;
-        gap: 16px;
+        gap: 15px;
         width: 100%;
-        min-height: 108px;
-        padding: 16px 18px;
+        min-height: 96px;
+        padding: 14px 16px;
         border: 1px solid #E8D5B5;
         border-radius: 12px;
         background: #fff;
@@ -478,60 +583,69 @@ function DepartmentStyles() {
         box-shadow: 0 12px 24px rgba(74,16,34,.09);
       }
 
+      .dept-card-link.selected {
+        border-color: var(--dept-gold-dark);
+        background: #FFFCF5;
+        box-shadow: 0 0 0 2px rgba(216,181,76,.16);
+      }
+
       .dept-card-icon {
         display: grid;
         place-items: center;
-        width: 68px;
-        height: 68px;
-        border-radius: 15px;
-        background: linear-gradient(
-          145deg,
-          #8B1C3B,
-          var(--dept-maroon)
-        );
+        width: 60px;
+        height: 60px;
+        border-radius: 14px;
+        background: linear-gradient(145deg, #8B1C3B, var(--dept-maroon));
         color: var(--dept-gold);
-        transition:
-          transform 300ms ease,
-          background 300ms ease;
+        transition: transform 300ms ease, background 300ms ease;
       }
 
       .dept-card-icon svg {
-        width: 35px;
-        height: 35px;
+        width: 31px;
+        height: 31px;
         stroke-width: 1.9;
       }
 
       .dept-card-link:hover .dept-card-icon {
-        transform: scale(1.05);
+        transform: scale(1.06);
         background: var(--dept-maroon-dark);
       }
 
       .dept-card-title {
+        display: block;
         margin: 0;
         color: #211321;
         font-family: Georgia, "Times New Roman", serif;
-        font-size: clamp(13px, 1.35vw, 18px);
+        font-size: 14px;
         font-weight: 700;
-        line-height: 1.3;
+        line-height: 1.45;
+      }
+
+      .dept-card-subtitle {
+        display: block;
+        margin-top: 5px;
+        color: #8B7B78;
+        font-family: Arial, sans-serif;
+        font-size: 9px;
+        font-weight: 600;
+        letter-spacing: .5px;
+        text-transform: uppercase;
       }
 
       .dept-card-arrow {
         display: grid;
         place-items: center;
-        width: 30px;
-        height: 30px;
+        width: 29px;
+        height: 29px;
         border: 2px solid var(--dept-gold-dark);
         border-radius: 50%;
         color: var(--dept-gold-dark);
-        transition:
-          color 250ms ease,
-          background 250ms ease,
-          transform 250ms ease;
+        transition: all 250ms ease;
       }
 
       .dept-card-arrow svg {
-        width: 17px;
-        height: 17px;
+        width: 16px;
+        height: 16px;
       }
 
       .dept-card-link:hover .dept-card-arrow {
@@ -540,10 +654,10 @@ function DepartmentStyles() {
         color: var(--dept-maroon-dark);
       }
 
-      /* FEATURED DEPARTMENT */
+      /* ================= FEATURED DEPARTMENT ================= */
 
       .dept-featured-section {
-        padding-top: 32px;
+        padding-top: 30px;
       }
 
       .dept-featured {
@@ -563,11 +677,7 @@ function DepartmentStyles() {
         align-items: flex-start;
         justify-content: center;
         padding: 35px 32px;
-        background: linear-gradient(
-          140deg,
-          #77152F,
-          var(--dept-maroon-dark)
-        );
+        background: linear-gradient(140deg, #77152F, var(--dept-maroon-dark));
         color: #fff;
       }
 
@@ -579,7 +689,7 @@ function DepartmentStyles() {
         border-radius: 30px;
         background: var(--dept-gold);
         color: var(--dept-maroon-dark);
-        font-size: 11px;
+        font-size: 9px;
         font-weight: 800;
         letter-spacing: .7px;
         text-transform: uppercase;
@@ -588,8 +698,8 @@ function DepartmentStyles() {
       .dept-featured-copy h2 {
         margin: 0 0 13px;
         font-family: Georgia, "Times New Roman", serif;
-        font-size: clamp(24px, 2.8vw, 36px);
-        line-height: 1.08;
+        font-size: clamp(22px, 2.4vw, 30px);
+        line-height: 1.15;
       }
 
       .dept-featured-copy p {
@@ -619,7 +729,7 @@ function DepartmentStyles() {
         transform: scale(1.035);
       }
 
-      /* DETAILS GRID */
+      /* ================= DETAILS GRID ================= */
 
       .dept-details-section {
         padding-top: 28px;
@@ -633,6 +743,7 @@ function DepartmentStyles() {
 
       .dept-panel {
         min-width: 0;
+        height: 100%;
         padding: 27px;
         border: 1px solid #E8D5B5;
         border-radius: 15px;
@@ -652,8 +763,8 @@ function DepartmentStyles() {
       }
 
       .dept-panel-heading svg {
-        width: 28px;
-        height: 28px;
+        width: 27px;
+        height: 27px;
         flex-shrink: 0;
         color: var(--dept-gold-dark);
         stroke-width: 1.8;
@@ -687,7 +798,7 @@ function DepartmentStyles() {
       .dept-hod-label {
         margin: 0 0 5px;
         color: var(--dept-gold-dark);
-        font-size: 10px;
+        font-size: 9px;
         font-weight: 800;
         letter-spacing: 1.5px;
         text-transform: uppercase;
@@ -697,7 +808,7 @@ function DepartmentStyles() {
         margin: 0 0 5px;
         color: var(--dept-maroon);
         font-family: Georgia, "Times New Roman", serif;
-        font-size: 16px;
+        font-size: 14px;
       }
 
       .dept-hod p {
@@ -714,12 +825,12 @@ function DepartmentStyles() {
         margin: 0 0 10px;
         color: var(--dept-maroon);
         font-family: Georgia, "Times New Roman", serif;
-        font-size: 18px;
+        font-size: 16px;
       }
 
       .dept-overview-title svg {
-        width: 25px;
-        height: 25px;
+        width: 24px;
+        height: 24px;
         flex-shrink: 0;
         color: var(--dept-gold-dark);
       }
@@ -728,7 +839,7 @@ function DepartmentStyles() {
         margin: 0;
         color: var(--dept-muted);
         font-size: 11px;
-        line-height: 1.9;
+        line-height: 1.8;
       }
 
       .dept-check-list {
@@ -756,7 +867,7 @@ function DepartmentStyles() {
         color: var(--dept-gold-dark);
       }
 
-      /* LOWER INFORMATION PANELS */
+      /* ================= LOWER PANELS ================= */
 
       .dept-lower-grid {
         display: grid;
@@ -768,6 +879,7 @@ function DepartmentStyles() {
 
       .dept-lower-panel {
         min-width: 0;
+        height: 100%;
         padding: 26px;
         border: 1px solid var(--dept-gold-dark);
         border-radius: 15px;
@@ -777,16 +889,8 @@ function DepartmentStyles() {
 
       .dept-lower-panel-maroon {
         border-color: var(--dept-gold);
-        background: linear-gradient(
-          135deg,
-          #6E1832,
-          #8B1737
-        );
+        background: linear-gradient(135deg, #6E1832, #8B1737);
         color: #fff;
-      }
-
-      .dept-lower-panel .dept-panel-heading {
-        margin-bottom: 20px;
       }
 
       .dept-lower-panel-maroon .dept-panel-heading {
@@ -805,7 +909,7 @@ function DepartmentStyles() {
         color: var(--dept-gold);
       }
 
-      /* SCROLL REVEALS */
+      /* ================= SCROLL REVEALS ================= */
 
       .dept-reveal {
         opacity: 0;
@@ -815,6 +919,14 @@ function DepartmentStyles() {
           transform 750ms cubic-bezier(.22, 1, .36, 1);
       }
 
+      .dept-reveal.dept-from-left:not(.is-visible) {
+        transform: translate3d(-75px, 22px, 0);
+      }
+
+      .dept-reveal.dept-from-right:not(.is-visible) {
+        transform: translate3d(75px, 22px, 0);
+      }
+
       .dept-reveal.is-visible {
         opacity: 1;
         transform: translate3d(0, 0, 0);
@@ -822,10 +934,10 @@ function DepartmentStyles() {
 
       .dept-reveal-child {
         opacity: 0;
-        transform: translate3d(0, 15px, 0);
+        transform: translate3d(0, 18px, 0);
         transition:
-          opacity 550ms ease,
-          transform 650ms cubic-bezier(.22, 1, .36, 1);
+          opacity 650ms ease,
+          transform 750ms cubic-bezier(.22, 1, .36, 1);
       }
 
       .dept-reveal.is-visible .dept-reveal-child {
@@ -833,11 +945,45 @@ function DepartmentStyles() {
         transform: translate3d(0, 0, 0);
       }
 
-      /* RESPONSIVE TABLET */
+      .dept-hero-inner > div:first-child {
+        animation: deptHeroLeft 900ms cubic-bezier(.22, 1, .36, 1) both;
+      }
+
+      .dept-hero-stats {
+        animation: deptHeroRight 1000ms 150ms cubic-bezier(.22, 1, .36, 1) both;
+      }
+
+      @keyframes deptHeroLeft {
+        from {
+          opacity: 0;
+          transform: translate3d(-45px, 0, 0);
+        }
+        to {
+          opacity: 1;
+          transform: translate3d(0, 0, 0);
+        }
+      }
+
+      @keyframes deptHeroRight {
+        from {
+          opacity: 0;
+          transform: translate3d(45px, 0, 0);
+        }
+        to {
+          opacity: 1;
+          transform: translate3d(0, 0, 0);
+        }
+      }
+
+      /* ================= TABLET ================= */
 
       @media (max-width: 900px) {
         .dept-container {
           width: min(100% - 40px, 760px);
+        }
+
+        .dept-hero {
+          padding-top: 100px;
         }
 
         .dept-hero-inner {
@@ -863,97 +1009,27 @@ function DepartmentStyles() {
         }
 
         .dept-card-link {
-          grid-template-columns: 58px minmax(0, 1fr) 28px;
+          grid-template-columns: 54px minmax(0, 1fr) 27px;
           gap: 12px;
-          padding: 14px;
+          padding: 13px;
         }
 
         .dept-card-icon {
-          width: 56px;
-          height: 56px;
+          width: 52px;
+          height: 52px;
         }
 
         .dept-card-icon svg {
-          width: 29px;
-          height: 29px;
+          width: 27px;
+          height: 27px;
+        }
+
+        .dept-card-title {
+          font-size: 12px;
         }
       }
 
-/* ===== ADVANCED LEFT / RIGHT SCROLL REVEALS ===== */
-
-/* Content enters from the left */
-.dept-reveal.dept-from-left:not(.is-visible) {
-  opacity: 0;
-  transform: translate3d(-85px, 22px, 0);
-}
-
-/* Content enters from the right */
-.dept-reveal.dept-from-right:not(.is-visible) {
-  opacity: 0;
-  transform: translate3d(85px, 22px, 0);
-}
-
-/* Smooth reveal when the element enters the viewport */
-.dept-reveal.is-visible {
-  opacity: 1;
-  transform: translate3d(0, 0, 0);
-}
-
-/* Reveal text and list items gradually */
-.dept-reveal-child {
-  opacity: 0;
-  transform: translate3d(0, 18px, 0);
-  transition:
-    opacity 650ms ease,
-    transform 750ms cubic-bezier(.22, 1, .36, 1);
-}
-
-.dept-reveal.is-visible .dept-reveal-child {
-  opacity: 1;
-  transform: translate3d(0, 0, 0);
-}
-
-/* Subtle entrance for the hero when the page loads */
-.dept-hero-inner > div:first-child {
-  animation: deptHeroLeft 900ms cubic-bezier(.22, 1, .36, 1) both;
-}
-
-.dept-hero-stats {
-  animation: deptHeroRight 1000ms 150ms
-    cubic-bezier(.22, 1, .36, 1) both;
-}
-
-@keyframes deptHeroLeft {
-  from {
-    opacity: 0;
-    transform: translate3d(-45px, 0, 0);
-  }
-  to {
-    opacity: 1;
-    transform: translate3d(0, 0, 0);
-  }
-}
-
-@keyframes deptHeroRight {
-  from {
-    opacity: 0;
-    transform: translate3d(45px, 0, 0);
-  }
-  to {
-    opacity: 1;
-    transform: translate3d(0, 0, 0);
-  }
-}
-
-/* Respect accessibility preferences */
-@media (prefers-reduced-motion: reduce) {
-  .dept-hero-inner > div:first-child,
-  .dept-hero-stats {
-    animation: none !important;
-  }
-}
-
-      /* RESPONSIVE MOBILE */
+      /* ================= MOBILE ================= */
 
       @media (max-width: 600px) {
         .dept-container {
@@ -961,17 +1037,17 @@ function DepartmentStyles() {
         }
 
         .dept-hero {
-          padding: 38px 0 36px;
+          padding: 90px 0 36px;
         }
 
         .dept-hero-inner {
-          gap: 25px;
+          gap: 24px;
         }
 
         .dept-eyebrow {
           gap: 9px;
           margin-bottom: 13px;
-          font-size: 10px;
+          font-size: 9px;
           letter-spacing: 2px;
         }
 
@@ -981,8 +1057,8 @@ function DepartmentStyles() {
         }
 
         .dept-hero h1 {
-          font-size: clamp(32px, 9vw, 44px);
-          letter-spacing: -1px;
+          font-size: 30px;
+          letter-spacing: -.5px;
         }
 
         .dept-hero-description {
@@ -999,8 +1075,8 @@ function DepartmentStyles() {
         }
 
         .dept-stat svg {
-          width: 28px;
-          height: 28px;
+          width: 27px;
+          height: 27px;
           margin-bottom: 7px;
         }
 
@@ -1009,7 +1085,7 @@ function DepartmentStyles() {
         }
 
         .dept-stat span {
-          font-size: 10px;
+          font-size: 9px;
         }
 
         .dept-selector-section {
@@ -1036,12 +1112,12 @@ function DepartmentStyles() {
         }
 
         .dept-selector-title h2 {
-          font-size: 18px;
+          font-size: 17px;
         }
 
         .dept-count {
           padding-top: 6px;
-          font-size: 9px;
+          font-size: 8px;
         }
 
         .dept-grid {
@@ -1049,40 +1125,36 @@ function DepartmentStyles() {
           gap: 11px;
         }
 
-        .dept-card {
-          --card-x: -38px;
-        }
-
-        .dept-card.from-right {
-          --card-x: 38px;
-        }
-
         .dept-card-link {
-          grid-template-columns: 54px minmax(0, 1fr) 27px;
-          min-height: 82px;
-          gap: 12px;
-          padding: 11px;
+          grid-template-columns: 52px minmax(0, 1fr) 27px;
+          min-height: 78px;
+          gap: 11px;
+          padding: 10px;
           border-radius: 10px;
         }
 
         .dept-card-icon {
-          width: 52px;
-          height: 52px;
-          border-radius: 11px;
+          width: 49px;
+          height: 49px;
+          border-radius: 10px;
         }
 
         .dept-card-icon svg {
-          width: 27px;
-          height: 27px;
+          width: 25px;
+          height: 25px;
         }
 
         .dept-card-title {
-          font-size: 11px;
+          font-size: 12px;
+        }
+
+        .dept-card-subtitle {
+          font-size: 8px;
         }
 
         .dept-card-arrow {
-          width: 27px;
-          height: 27px;
+          width: 26px;
+          height: 26px;
         }
 
         .dept-featured-section {
@@ -1098,13 +1170,8 @@ function DepartmentStyles() {
           padding: 25px 20px;
         }
 
-        .dept-featured-label {
-          margin-bottom: 11px;
-          font-size: 10px;
-        }
-
         .dept-featured-copy h2 {
-          font-size: 27px;
+          font-size: 23px;
         }
 
         .dept-featured-copy p {
@@ -1135,7 +1202,7 @@ function DepartmentStyles() {
 
         .dept-panel-heading {
           gap: 10px;
-          font-size: 18px;
+          font-size: 16px;
         }
 
         .dept-hod {
@@ -1148,11 +1215,11 @@ function DepartmentStyles() {
         }
 
         .dept-hod h3 {
-          font-size: 11px;
+          font-size: 13px;
         }
 
         .dept-overview-title {
-          font-size: 16px;
+          font-size: 15px;
         }
 
         .dept-overview-text {
@@ -1173,7 +1240,7 @@ function DepartmentStyles() {
         }
       }
 
-      /* ACCESSIBILITY */
+      /* ================= ACCESSIBILITY ================= */
 
       @media (prefers-reduced-motion: reduce) {
         .dept-page *,
@@ -1192,149 +1259,6 @@ function DepartmentStyles() {
           transform: none !important;
         }
       }
-        /* FIX: DEPARTMENTS PAGE OVERLAPPING THE HEADER */
-
-.dept-page {
-  position: relative;
-  isolation: isolate;
-  padding-top: 0;
-}
-
-/* Give the hero content more breathing room */
-.dept-page .dept-hero {
-  position: relative;
-  z-index: 0;
-  padding-top: 85px;
-}
-
-/* Keep the hero content below the header */
-.dept-page .dept-hero-inner {
-  position: relative;
-  z-index: 1;
-}
-
-/* Prevent the page from covering the header */
-header,
-nav {
-  position: relative;
-  z-index: 100;
-}
-
-/* Responsive spacing */
-@media (max-width: 900px) {
-  .dept-page .dept-hero {
-    padding-top: 100px;
-  }
-}
-
-@media (max-width: 600px) {
-  .dept-page .dept-hero {
-    padding-top: 90px;
-  }
-}
-
-/* ===== DEPARTMENTS PAGE: REDUCED FONT SIZES ===== */
-
-/* Hero heading */
-.dept-page .dept-hero h1 {
-  font-size: clamp(30px, 3.2vw, 44px);
-  line-height: 1.08;
-}
-
-/* Hero description */
-.dept-page .dept-hero p {
-  font-size: 12px;
-  line-height: 1.6;
-}
-
-/* Hero label */
-.dept-page .dept-eyebrow {
-  font-size: 9px;
-}
-
-/* Statistics */
-.dept-page .dept-stat strong {
-  font-size: 21px;
-}
-
-.dept-page .dept-stat span {
-  font-size: 10px;
-}
-
-/* Choose a Department heading */
-.dept-page .dept-selector-title h2 {
-  font-size: 20px;
-}
-
-/* Department count */
-.dept-page .dept-count {
-  font-size: 9px;
-}
-
-/* Department card names */
-.dept-page .dept-card-title {
-  font-size: 14px;
-  line-height: 1.4;
-}
-
-/* Featured department heading */
-.dept-page .dept-featured-copy h2 {
-  font-size: clamp(22px, 2.4vw, 30px);
-}
-
-/* Featured descriptions */
-.dept-page .dept-featured-copy p,
-.dept-page .dept-overview-text,
-.dept-page .dept-check-list li {
-  font-size: 11px;
-  line-height: 1.6;
-}
-
-/* Other section headings */
-.dept-page .dept-panel-heading {
-  font-size: 16px;
-}
-
-.dept-page .dept-overview-title {
-  font-size: 16px;
-}
-
-/* HOD information */
-.dept-page .dept-hod h3 {
-  font-size: 14px;
-}
-
-.dept-page .dept-hod p {
-  font-size: 11px;
-}
-
-/* Buttons and labels */
-.dept-page .dept-button {
-  font-size: 11px;
-}
-
-.dept-page .dept-featured-label {
-  font-size: 9px;
-}
-
-/* Mobile font sizes */
-@media (max-width: 600px) {
-  .dept-page .dept-hero h1 {
-    font-size: 30px;
-  }
-
-  .dept-page .dept-selector-title h2 {
-    font-size: 17px;
-  }
-
-  .dept-page .dept-card-title {
-    font-size: 12px;
-  }
-
-  .dept-page .dept-featured-copy h2 {
-    font-size: 23px;
-  }
-}
 
     `}</style>
   );
@@ -1366,8 +1290,6 @@ function Reveal({
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        // Reset when the element leaves the viewport.
-        // It will animate again when the user scrolls back.
         setVisible(entry.isIntersecting);
       },
       {
@@ -1415,9 +1337,13 @@ function Reveal({
 function DepartmentCard({
   department,
   index,
+  selected,
+  onSelect,
 }: {
   department: Department;
   index: number;
+  selected: boolean;
+  onSelect: () => void;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
@@ -1432,7 +1358,7 @@ function DepartmentCard({
         setVisible(entry.isIntersecting);
       },
       {
-        threshold: 0.15,
+        threshold: 0.12,
         rootMargin: '0px 0px -25px 0px',
       }
     );
@@ -1454,23 +1380,32 @@ function DepartmentCard({
         transitionDelay: visible ? `${(index % 2) * 120}ms` : '0ms',
       }}
     >
-      <Link
-        to="/admission"
-        className="dept-card-link"
-        aria-label={`Apply for admission to ${department.name}`}
+      <a
+        href={department.url}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={`dept-card-link ${selected ? 'selected' : ''}`}
+        aria-label={`View ${department.shortName} department page`}
+        onClick={onSelect}
       >
         <span className="dept-card-icon">
           <Icon aria-hidden="true" />
         </span>
 
-        <span className="dept-card-title">
-          {department.name}
+        <span>
+          <span className="dept-card-title">
+            {department.name}
+          </span>
+
+          <span className="dept-card-subtitle">
+            {department.shortName}
+          </span>
         </span>
 
         <span className="dept-card-arrow">
           <ArrowRight aria-hidden="true" />
         </span>
-      </Link>
+      </a>
     </div>
   );
 }
@@ -1503,27 +1438,33 @@ function CheckList({
 }
 
 /* =========================================================
-   MAIN PAGE
+   MAIN DEPARTMENTS PAGE
    ========================================================= */
 
 export default function Departments() {
   const [selectedDepartment, setSelectedDepartment] =
-    useState<Department>(departments[2]);
+    useState<Department>(departments[0]);
 
   const featured = selectedDepartment;
   const FeaturedIcon = featured.icon;
 
   return (
     <div className="dept-page">
+
       <DepartmentStyles />
 
-      {/* HERO */}
-<section
-  className="dept-hero"
-  data-header-theme="dark"
->        <div className="dept-container dept-hero-inner">
+      {/* ================= HERO ================= */}
+
+      <section
+        className="dept-hero"
+        data-header-theme="dark"
+      >
+        <div className="dept-container dept-hero-inner">
+
           <div>
-            <div className="dept-eyebrow">Academics</div>
+            <div className="dept-eyebrow">
+              Academics
+            </div>
 
             <h1>
               Explore Our
@@ -1531,17 +1472,19 @@ export default function Departments() {
             </h1>
 
             <p className="dept-hero-description">
-              Four vibrant departments offering industry-oriented
-              education, research and innovation for a successful
-              engineering career.
+              Discover our diverse academic programmes designed
+              to develop knowledge, technical expertise, research
+              capabilities and professional excellence for a
+              successful career.
             </p>
           </div>
 
           <div className="dept-hero-stats">
+
             <div className="dept-stat">
               <GraduationCap aria-hidden="true" />
-              <strong>04</strong>
-              <span>Departments</span>
+              <strong>07</strong>
+              <span>Programmes</span>
             </div>
 
             <div className="dept-stat">
@@ -1555,161 +1498,222 @@ export default function Departments() {
               <strong>Modern</strong>
               <span>Laboratories</span>
             </div>
+
           </div>
+
         </div>
       </section>
 
-      {/* DEPARTMENT SELECTOR */}
+      {/* ================= DEPARTMENT SELECTOR ================= */}
+
       <section
         className="dept-selector-section"
         id="all-departments"
       >
         <div className="dept-container">
+
           <Reveal>
             <div className="dept-selector">
+
               <div className="dept-selector-heading">
+
                 <div className="dept-selector-title">
                   <Layers3 aria-hidden="true" />
-                  <h2>Choose a Department</h2>
+
+                  <h2>
+                    Choose a Department
+                  </h2>
                 </div>
 
-                <span className="dept-count">04 DEPARTMENTS</span>
+                <span className="dept-count">
+                  07 PROGRAMMES
+                </span>
+
               </div>
 
               <div className="dept-grid">
+
                 {departments.map((department, index) => (
                   <DepartmentCard
                     key={department.id}
                     department={department}
                     index={index}
+                    selected={selectedDepartment.id === department.id}
+                    onSelect={() => setSelectedDepartment(department)}
                   />
                 ))}
+
               </div>
+
             </div>
           </Reveal>
+
         </div>
       </section>
 
-      {/* FEATURED DEPARTMENT */}
+      {/* ================= FEATURED DEPARTMENT ================= */}
+
       <section className="dept-featured-section">
+
         <div className="dept-container">
+
           <Reveal>
             <div className="dept-featured">
+
               <div className="dept-featured-copy">
+
                 <span className="dept-featured-label">
-                  Department {String(featured.id).padStart(2, '0')}
+                  Programme {String(featured.id).padStart(2, '0')}
                 </span>
 
-                <h2>{featured.name}</h2>
+                <h2>
+                  {featured.shortName}
+                </h2>
 
-                <p>{featured.description}</p>
+                <p>
+                  {featured.description}
+                </p>
 
-                <Link
-                  to="/admission"
+                <a
+                  href={featured.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="dept-button dept-button-gold"
                 >
-                  Apply for Admission
+                  Explore Department
                   <ArrowRight aria-hidden="true" />
-                </Link>
+                </a>
+
               </div>
 
               <div className="dept-featured-image">
                 <img
-                  src={
-                    featured.id === 1
-                      ? 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&q=85'
-                      : featured.id === 2
-                        ? 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=1200&q=85'
-                        : featured.id === 3
-                          ? 'https://images.unsplash.com/photo-1581092160562-40aa08e78837?auto=format&fit=crop&w=1200&q=85'
-                          : 'https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=1200&q=85'
-                  }
-                  alt={`${featured.name} laboratory and practical learning`}
+                  src={featured.image}
+                  alt={`${featured.name} academic programme`}
                   loading="lazy"
                 />
               </div>
+
             </div>
           </Reveal>
+
         </div>
+
       </section>
 
-      {/* DEPARTMENT OVERVIEW AND FOCUS AREAS */}
+      {/* ================= OVERVIEW AND FOCUS AREAS ================= */}
+
       <section className="dept-details-section">
+
         <div className="dept-container dept-details-grid">
+
           <Reveal direction="left">
+
             <div className="dept-panel">
+
               <div className="dept-hod">
+
                 <div className="dept-hod-icon">
-                  <UserRound aria-hidden="true" />
+                  <FeaturedIcon aria-hidden="true" />
                 </div>
 
                 <div>
                   <p className="dept-hod-label">
-                    Department Leadership
+                    Academic Programme
                   </p>
-                  <h3>Head of Department</h3>
+
+                  <h3>
+                    {featured.shortName}
+                  </h3>
+
                   <p>
-                    Faculty details can be added here
+                    St. Lourdes Engineering College
                   </p>
                 </div>
+
               </div>
 
               <h3 className="dept-overview-title">
                 <BookOpen aria-hidden="true" />
-                Department Overview
+                Programme Overview
               </h3>
 
               <p className="dept-overview-text">
-                {featured.description} The department focuses on
-                academic excellence, practical experience, technical
-                skills and professional development to prepare students
-                for engineering careers.
+                {featured.description}
+
+                {' '}The programme focuses on academic excellence,
+                practical experience, professional skills and
+                continuous learning to prepare students for
+                future career opportunities.
               </p>
+
             </div>
+
           </Reveal>
 
           <Reveal direction="right" delay={100}>
+
             <div className="dept-panel">
+
               <h3 className="dept-panel-heading">
                 <Target aria-hidden="true" />
                 Key Focus Areas
               </h3>
 
               <CheckList items={featured.focusAreas} />
+
             </div>
+
           </Reveal>
+
         </div>
+
       </section>
 
-      {/* FACILITIES AND LEARNING OUTCOMES */}
+      {/* ================= FACILITIES AND OUTCOMES ================= */}
+
       <section className="dept-container dept-lower-grid">
+
         <Reveal direction="left">
+
           <div className="dept-lower-panel">
+
             <h3 className="dept-panel-heading">
               <Wrench aria-hidden="true" />
-              Facilities
+              Learning Facilities
             </h3>
 
             <CheckList items={featured.facilities} />
+
           </div>
+
         </Reveal>
 
         <Reveal direction="right" delay={100}>
+
           <div className="dept-lower-panel dept-lower-panel-maroon">
+
             <h3 className="dept-panel-heading">
               <Trophy aria-hidden="true" />
               Learning Outcomes
             </h3>
 
             <CheckList items={featured.outcomes} />
+
           </div>
+
         </Reveal>
+
       </section>
 
-      {/* ADDITIONAL OPPORTUNITIES */}
+      {/* ================= ADDITIONAL OPPORTUNITIES ================= */}
+
       <section className="dept-container dept-lower-grid">
+
         <Reveal direction="left">
+
           <div className="dept-lower-panel">
+
             <h3 className="dept-panel-heading">
               <Lightbulb aria-hidden="true" />
               Innovation & Research
@@ -1718,13 +1722,19 @@ export default function Departments() {
             <p className="dept-overview-text">
               Encourage creative thinking, technical projects,
               collaborative learning and exploration of emerging
-              engineering technologies.
+              technologies. Students are motivated to develop
+              practical solutions through academic projects
+              and research activities.
             </p>
+
           </div>
+
         </Reveal>
 
         <Reveal direction="right" delay={100}>
+
           <div className="dept-lower-panel">
+
             <h3 className="dept-panel-heading">
               <BriefcaseBusiness aria-hidden="true" />
               Career Opportunities
@@ -1733,9 +1743,12 @@ export default function Departments() {
             <p className="dept-overview-text">
               Build professional skills through practical learning,
               projects, internships and career preparation activities.
+              Explore opportunities in industry, research,
+              entrepreneurship and higher education.
             </p>
 
             <div style={{ marginTop: 20 }}>
+
               <Link
                 to="/admission"
                 className="dept-button"
@@ -1743,10 +1756,15 @@ export default function Departments() {
                 Apply for Admission
                 <ArrowRight aria-hidden="true" />
               </Link>
+
             </div>
+
           </div>
+
         </Reveal>
+
       </section>
+
     </div>
   );
 }
