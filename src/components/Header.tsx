@@ -102,6 +102,7 @@ export default function Header({
 
   // Detect the actual background behind the fixed header,
   // including solid colours and CSS gradients.
+   // Detect the actual background behind the fixed header.
   useEffect(() => {
     let frame = 0;
 
@@ -127,7 +128,9 @@ export default function Header({
           alpha = parseInt(value.slice(6, 8), 16) / 255;
         }
 
-        if (value.length !== 6 && value.length !== 8) return null;
+        if (value.length !== 6 && value.length !== 8) {
+          return null;
+        }
 
         r = parseInt(value.slice(0, 2), 16);
         g = parseInt(value.slice(2, 4), 16);
@@ -139,12 +142,16 @@ export default function Header({
 
         const values = rgb[1].split(',').map((v) => {
           const cleaned = v.trim();
+
           return cleaned.endsWith('%')
             ? (parseFloat(cleaned) / 100) * 255
             : parseFloat(cleaned);
         });
 
-        if (values.length < 3 || !values.slice(0, 3).every(Number.isFinite)) {
+        if (
+          values.length < 3 ||
+          !values.slice(0, 3).every(Number.isFinite)
+        ) {
           return null;
         }
 
@@ -173,13 +180,17 @@ export default function Header({
     };
 
     const detectBackground = () => {
-      const header = document.querySelector<HTMLElement>('[data-site-header]');
+      const header =
+        document.querySelector<HTMLElement>('[data-site-header]');
+
       if (!header) return;
 
       const rect = header.getBoundingClientRect();
 
-      // Sample the visible area directly behind the fixed header.
-      const y = Math.max(1, Math.min(rect.bottom - 3, window.innerHeight - 1));
+      const y = Math.max(
+        1,
+        Math.min(rect.bottom - 3, window.innerHeight - 1)
+      );
 
       const samplePoints = [
         window.innerWidth * 0.2,
@@ -206,50 +217,60 @@ export default function Header({
         let current: Element | null = target;
         let detectedLuminance: number | null = null;
 
-        while (current && current !== document.documentElement) {
-          // Explicit page-section theme takes priority.
-          const theme = current.getAttribute('data-header-theme');
+        // Explicit page theme takes priority.
+        const explicitTheme = target
+          .closest('[data-header-theme]')
+          ?.getAttribute('data-header-theme');
 
-          if (theme === 'dark') {
-            detectedLuminance = 0.1;
-            break;
-          }
+        if (explicitTheme === 'dark') {
+          detectedLuminance = 0.1;
+        } else if (explicitTheme === 'light') {
+          detectedLuminance = 0.9;
+        } else {
+          // Automatically detect gradients and solid backgrounds.
+          while (
+            current &&
+            current !== document.documentElement
+          ) {
+            const style = window.getComputedStyle(current);
 
-          if (theme === 'light') {
-            detectedLuminance = 0.9;
-            break;
-          }
+            if (
+              style.backgroundImage &&
+              style.backgroundImage !== 'none'
+            ) {
+              const colorMatches =
+                style.backgroundImage.match(
+                  /#[0-9a-f]{3,8}\b|rgba?\([^)]+\)/gi
+                ) || [];
 
-          const style = window.getComputedStyle(current);
+              const gradientLuminances = colorMatches
+                .map(getLuminance)
+                .filter(
+                  (value): value is number => value !== null
+                );
 
-          // Detect CSS gradient colours.
-          if (style.backgroundImage && style.backgroundImage !== 'none') {
-            const colorMatches =
-              style.backgroundImage.match(
-                /#[0-9a-f]{3,8}\b|rgba?\([^)]+\)/gi
-              ) || [];
+              if (gradientLuminances.length > 0) {
+                detectedLuminance =
+                  gradientLuminances.reduce(
+                    (sum, value) => sum + value,
+                    0
+                  ) / gradientLuminances.length;
 
-            const gradientLuminances = colorMatches
-              .map(getLuminance)
-              .filter((value): value is number => value !== null);
+                break;
+              }
+            }
 
-            if (gradientLuminances.length > 0) {
-              detectedLuminance =
-                gradientLuminances.reduce((sum, value) => sum + value, 0) /
-                gradientLuminances.length;
+            const solidLuminance = getLuminance(
+              style.backgroundColor
+            );
+
+            if (solidLuminance !== null) {
+              detectedLuminance = solidLuminance;
               break;
             }
+
+            current = current.parentElement;
           }
-
-          // Detect normal solid backgrounds.
-          const solidLuminance = getLuminance(style.backgroundColor);
-
-          if (solidLuminance !== null) {
-            detectedLuminance = solidLuminance;
-            break;
-          }
-
-          current = current.parentElement;
         }
 
         if (detectedLuminance !== null) {
@@ -267,13 +288,19 @@ export default function Header({
     };
 
     const scheduleDetection = () => {
-      if (frame) cancelAnimationFrame(frame);
+      if (frame) {
+        cancelAnimationFrame(frame);
+      }
+
       frame = requestAnimationFrame(detectBackground);
     };
 
     scheduleDetection();
 
-    window.addEventListener('scroll', scheduleDetection, { passive: true });
+    window.addEventListener('scroll', scheduleDetection, {
+      passive: true,
+    });
+
     window.addEventListener('resize', scheduleDetection);
     window.addEventListener('load', scheduleDetection);
 
@@ -282,16 +309,10 @@ export default function Header({
       window.removeEventListener('resize', scheduleDetection);
       window.removeEventListener('load', scheduleDetection);
 
-      if (frame) cancelAnimationFrame(frame);
+      if (frame) {
+        cancelAnimationFrame(frame);
+      }
     };
-  }, [location.pathname]);
-
-  // Close menus when the route changes.
-  useEffect(() => {
-    setMobileOpen(false);
-    setOpenDropdown(null);
-    setOpenDesktopSubmenu(null);
-    setOpenMobileSubmenu(null);
   }, [location.pathname]);
 
   // Prevent background scrolling while the mobile drawer is open.
@@ -400,24 +421,20 @@ export default function Header({
             className="group flex min-w-0 shrink-0 items-center gap-2 sm:gap-3"
             aria-label={siteConfig.name}
           >
-            <div className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[#D8B45A]/80 bg-[#650D18] shadow-[0_0_18px_rgba(216,180,90,0.16)] transition-transform duration-300 group-hover:scale-105 sm:h-11 sm:w-11 lg:h-12 lg:w-12">
-              <div className="absolute inset-[3px] rounded-full border border-[#D8B45A]/30" />
-              <GraduationCap
-                className="relative h-5 w-5 text-[#D8B45A] sm:h-6 sm:w-6"
-                strokeWidth={1.6}
-              />
-            </div>
+           <img
+  src="/logos/logo.png"
+  alt="St. Lourdes Engineering College Logo"
+className="h-16 w-16 shrink-0 object-contain transition-transform duration-300 group-hover:scale-105 sm:h-20 sm:w-20 lg:h-24 lg:w-24"/>
 
             <div className="flex min-w-0 flex-col">
               <span
-                className={`whitespace-nowrap font-serif text-[13px] font-bold leading-tight tracking-wide transition-colors duration-300 sm:text-base lg:text-lg ${headerTextColor}`}
+                className={`whitespace-nowrap font-serif text-base font-bold leading-tight tracking-wide transition-colors duration-300 sm:text-xl lg:text-2xl ${headerTextColor}`}
               >
                 ST. Lourdes
               </span>
 
               <span
-                className={`whitespace-nowrap font-sans text-[8px] font-medium uppercase tracking-[0.1em] transition-colors duration-300 sm:text-[10px] sm:tracking-[0.16em] lg:tracking-[0.2em] ${subtitleColor}`}
-              >
+className={`whitespace-nowrap font-sans text-[10px] font-semibold uppercase tracking-[0.1em] transition-colors duration-300 sm:text-xs lg:text-sm sm:tracking-[0.16em] lg:tracking-[0.2em] ${subtitleColor}`}              >
                 Engineering College
               </span>
             </div>

@@ -1,5 +1,4 @@
-
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import {
   ShieldCheck,
   Scale,
@@ -87,8 +86,61 @@ const members: CommitteeMember[] = [
 ];
 
 export default function AntiRaggingCommittee() {
+  const pageRef = useRef<HTMLDivElement | null>(null);
+
+  // SCROLL REVEAL EFFECT
+  useEffect(() => {
+    const page = pageRef.current;
+    if (!page) return;
+
+    const revealElements = page.querySelectorAll<HTMLElement>(
+      ".ar-hero-content, .ar-about-content, .ar-feature-card, .ar-section-heading, .ar-table-container, .ar-table tbody tr, .ar-report-left, .ar-safety-message, .ar-footer"
+    );
+
+    if (!("IntersectionObserver" in window)) {
+      revealElements.forEach((element) =>
+        element.classList.add("ar-reveal-visible")
+      );
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("ar-reveal-visible");
+          } else {
+            entry.target.classList.remove("ar-reveal-visible");
+          }
+        });
+      },
+      {
+        threshold: 0.12,
+        rootMargin: "0px 0px -35px 0px",
+      }
+    );
+
+    revealElements.forEach((element, index) => {
+      element.classList.add("ar-reveal");
+
+      if (element.classList.contains("ar-feature-card")) {
+        element.style.transitionDelay = `${(index % 3) * 100}ms`;
+      } else if (element.closest(".ar-table")) {
+        element.style.transitionDelay = `${(index % 5) * 45}ms`;
+      }
+
+      observer.observe(element);
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
   return (
-<div className="anti-ragging-page" data-header-theme="dark">
+    <div
+      ref={pageRef}
+      className="anti-ragging-page"
+      data-header-theme="dark"
+    >
       {/* HERO SECTION */}
 
       <section className="ar-hero">
@@ -1070,9 +1122,136 @@ export default function AntiRaggingCommittee() {
           }
         }
 
+        /* SCROLL REVEAL ANIMATIONS */
+
+        .anti-ragging-page .ar-reveal {
+          opacity: 0;
+          transform: translateY(34px);
+          transition:
+            opacity .75s ease,
+            transform .75s cubic-bezier(.2, .7, .2, 1);
+          will-change: opacity, transform;
+        }
+
+        .anti-ragging-page .ar-reveal-visible {
+          opacity: 1;
+          transform: translateY(0);
+        }
+
+        .anti-ragging-page .ar-hero-content.ar-reveal {
+          transform: translateX(-38px);
+        }
+
+        .anti-ragging-page .ar-hero-content.ar-reveal-visible {
+          transform: translateX(0);
+        }
+
+        /* FEATURE CARD HOVER */
+
+        .anti-ragging-page .ar-feature-card {
+          transition:
+            transform .35s ease,
+            box-shadow .35s ease,
+            border-color .35s ease,
+            background .35s ease;
+        }
+
+        .anti-ragging-page .ar-feature-card:hover {
+          transform: translateY(-9px);
+          border-color: var(--ar-gold);
+          box-shadow: 0 16px 34px rgba(77,10,25,.15);
+        }
+
+        .anti-ragging-page .ar-feature-card:hover .ar-feature-icon {
+          transform: scale(1.08) rotate(-5deg);
+          box-shadow: 0 7px 18px rgba(101,11,25,.15);
+        }
+
+        .anti-ragging-page .ar-feature-icon {
+          transition: transform .35s ease, box-shadow .35s ease;
+        }
+
+        /* TABLE HOVER */
+
+        .anti-ragging-page .ar-table-container {
+          transition: box-shadow .35s ease, border-color .35s ease;
+        }
+
+        .anti-ragging-page .ar-table-container:hover {
+          border-color: #c99b45;
+          box-shadow: 0 13px 34px rgba(66,6,16,.12);
+        }
+
+        .anti-ragging-page .ar-table tbody tr {
+          transition: background .25s ease, box-shadow .25s ease;
+        }
+
+        .anti-ragging-page .ar-table tbody tr:hover {
+          background: #f5e1bd;
+          box-shadow: inset 4px 0 0 var(--ar-gold);
+        }
+
+        .anti-ragging-page .ar-position {
+          transition: transform .25s ease, box-shadow .25s ease;
+        }
+
+        .anti-ragging-page .ar-table tbody tr:hover .ar-position {
+          transform: translateY(-2px);
+          box-shadow: 0 4px 10px rgba(0,0,0,.08);
+        }
+
+        /* REPORTING STEPS HOVER */
+
+        .anti-ragging-page .ar-step {
+          transition: transform .3s ease;
+        }
+
+        .anti-ragging-page .ar-step:hover {
+          transform: translateY(-6px);
+        }
+
+        .anti-ragging-page .ar-step-number {
+          transition: transform .3s ease, box-shadow .3s ease;
+        }
+
+        .anti-ragging-page .ar-step:hover .ar-step-number {
+          transform: scale(1.1);
+          box-shadow: 0 6px 18px rgba(213,168,63,.25);
+        }
+
+        /* SAFETY ICON HOVER */
+
+        .anti-ragging-page .ar-safety-message > svg {
+          transition: transform .35s ease;
+        }
+
+        .anti-ragging-page .ar-safety-message:hover > svg {
+          transform: translateY(-5px) rotate(-6deg);
+        }
+
+        /* BADGE HOVER */
+
+        .anti-ragging-page .ar-policy-badge,
+        .anti-ragging-page .ar-free-badge {
+          transition: transform .3s ease, box-shadow .3s ease;
+        }
+
+        .anti-ragging-page .ar-policy-badge:hover,
+        .anti-ragging-page .ar-free-badge:hover {
+          transform: translateY(-3px);
+          box-shadow: 0 9px 24px rgba(0,0,0,.22);
+        }
+
         /* REDUCED MOTION */
 
         @media(prefers-reduced-motion: reduce) {
+          .anti-ragging-page .ar-reveal,
+          .anti-ragging-page .ar-reveal-visible {
+            opacity: 1 !important;
+            transform: none !important;
+            transition: none !important;
+          }
+
           .anti-ragging-page *,
           .anti-ragging-page *::before,
           .anti-ragging-page *::after {

@@ -47,17 +47,23 @@ export default function Footer() {
         <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-4">
           {/* About */}
           <div>
-            <div className="flex items-center gap-3">
-              <div className="flex h-12 w-12 items-center justify-center rounded-full border-2 border-gold bg-maroon-600">
-                <GraduationCap className="h-7 w-7 text-gold" strokeWidth={1.5} />
-              </div>
-              <div>
-                <p className="font-serif text-lg font-bold text-ivory">ST. Lourdes</p>
-                <p className="font-sans text-[10px] uppercase tracking-[0.2em] text-gold-100">
-                  Engineering College
-                </p>
-              </div>
-            </div>
+           <div className="flex items-center gap-4">
+  <img
+    src="/logos/logo.png"
+    alt="St. Lourdes Engineering College Logo"
+    className="h-20 w-20 shrink-0 object-contain"
+  />
+
+  <div className="flex flex-col">
+    <p className="font-serif text-xl font-bold text-ivory">
+      ST. Lourdes
+    </p>
+
+    <p className="font-sans text-xs font-semibold uppercase tracking-[0.15em] text-gold-100">
+      Engineering College
+    </p>
+  </div>
+</div>
             <p className="mt-4 text-sm leading-relaxed text-ivory/60">
               A pioneering engineering institution in Chennai, committed to quality education,
               innovation, and industry-relevant skills since {siteConfig.established}.

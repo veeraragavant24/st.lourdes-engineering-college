@@ -1,4 +1,5 @@
 
+import { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import {
   ArrowRight,
@@ -21,8 +22,60 @@ const members = [
 ];
 
 export default function GrievanceCommittee() {
+  const pageRef = useRef<HTMLElement | null>(null);
+
+  // Scroll reveal: cards alternate left/right and settle into position.
+  useEffect(() => {
+    const page = pageRef.current;
+    if (!page) return;
+
+    const revealElements = page.querySelectorAll<HTMLElement>(
+      '.grc-hero .grc-container, .grc-heading, .grc-member, .grc-concern'
+    );
+
+    if (!('IntersectionObserver' in window)) {
+      revealElements.forEach((element) =>
+        element.classList.add('grc-reveal-visible')
+      );
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('grc-reveal-visible');
+          } else {
+            entry.target.classList.remove('grc-reveal-visible');
+          }
+        });
+      },
+      {
+        threshold: 0.12,
+        rootMargin: '0px 0px -35px 0px',
+      }
+    );
+
+    revealElements.forEach((element, index) => {
+      if (element.classList.contains('grc-member')) {
+        element.classList.add(
+          index % 2 === 0 ? 'grc-reveal-left' : 'grc-reveal-right'
+        );
+        element.style.transitionDelay = `${(index % 4) * 90}ms`;
+      } else if (element.classList.contains('grc-concern')) {
+        element.classList.add('grc-reveal-right');
+      } else {
+        element.classList.add('grc-reveal-up');
+      }
+
+      observer.observe(element);
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <main className="grc">
+    <main ref={pageRef} className="grc">
       <style>{`
       .grc {
   --wine: #671329;
@@ -467,6 +520,150 @@ export default function GrievanceCommittee() {
           .grc *,
           .grc *::before,
           .grc *::after {
+            transition: none !important;
+          }
+        }
+
+        /* SCROLL REVEAL: FADE + LEFT/RIGHT SLIDE */
+
+        .grc .grc-reveal-left,
+        .grc .grc-reveal-right,
+        .grc .grc-reveal-up {
+          opacity: 0;
+          transition:
+            opacity .8s ease,
+            transform .8s cubic-bezier(.2, .75, .25, 1);
+          will-change: opacity, transform;
+        }
+
+        .grc .grc-reveal-left {
+          transform: translateX(-65px);
+        }
+
+        .grc .grc-reveal-right {
+          transform: translateX(65px);
+        }
+
+        .grc .grc-reveal-up {
+          transform: translateY(30px);
+        }
+
+        .grc .grc-reveal-visible {
+          opacity: 1;
+          transform: translate(0, 0);
+        }
+
+        /* CARD HOVER EFFECTS */
+
+        .grc .grc-member {
+          position: relative;
+          overflow: hidden;
+          transition:
+            transform .3s ease,
+            border-color .3s ease,
+            box-shadow .3s ease,
+            background .3s ease;
+        }
+
+        .grc .grc-member::before {
+          content: "";
+          position: absolute;
+          left: 0;
+          top: 0;
+          width: 3px;
+          height: 100%;
+          background: linear-gradient(180deg, #f4d477, #c58a22);
+          transform: scaleY(0);
+          transform-origin: bottom;
+          transition: transform .3s ease;
+        }
+
+        .grc .grc-member:hover {
+          transform: translateY(-5px);
+          border-color: #d9ab42;
+          box-shadow: 0 12px 25px rgba(57, 21, 25, .15);
+        }
+
+        .grc .grc-member:hover::before {
+          transform: scaleY(1);
+          transform-origin: top;
+        }
+
+        .grc .grc-avatar {
+          transition: transform .35s ease, box-shadow .35s ease;
+        }
+
+        .grc .grc-member:hover .grc-avatar {
+          transform: scale(1.09) rotate(-5deg);
+          box-shadow: 0 5px 13px rgba(229, 184, 67, .25);
+        }
+
+        .grc .grc-role {
+          transition: transform .3s ease, box-shadow .3s ease;
+        }
+
+        .grc .grc-member:hover .grc-role {
+          transform: translateY(-2px);
+          box-shadow: 0 4px 10px rgba(0, 0, 0, .12);
+        }
+
+        /* CONCERN PANEL HOVER */
+
+        .grc .grc-concern {
+          transition:
+            transform .35s ease,
+            box-shadow .35s ease,
+            border-color .35s ease;
+        }
+
+        .grc .grc-concern:hover {
+          transform: translateY(-5px);
+          border-color: rgba(244, 201, 91, .75);
+          box-shadow: 0 15px 32px rgba(60, 9, 24, .2);
+        }
+
+        .grc .grc-concern-icon svg {
+          transition: transform .35s ease;
+        }
+
+        .grc .grc-concern:hover .grc-concern-icon svg:first-child {
+          transform: translateY(-3px) rotate(-7deg);
+        }
+
+        .grc .grc-concern:hover .grc-concern-icon svg:last-child {
+          transform: translate(3px, 2px) rotate(7deg);
+        }
+
+        .grc .grc-contact-link {
+          transition:
+            transform .25s ease,
+            box-shadow .25s ease,
+            filter .25s ease;
+        }
+
+        .grc .grc-contact-link:hover {
+          transform: translateY(-3px) scale(1.03);
+          box-shadow: 0 7px 18px rgba(0, 0, 0, .22);
+          filter: brightness(1.05);
+        }
+
+        /* ACCESSIBILITY */
+
+        @media (prefers-reduced-motion: reduce) {
+          .grc .grc-reveal-left,
+          .grc .grc-reveal-right,
+          .grc .grc-reveal-up,
+          .grc .grc-reveal-visible {
+            opacity: 1 !important;
+            transform: none !important;
+            transition: none !important;
+          }
+
+          .grc .grc-member,
+          .grc .grc-concern,
+          .grc .grc-avatar,
+          .grc .grc-role,
+          .grc .grc-contact-link {
             transition: none !important;
           }
         }

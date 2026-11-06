@@ -4,7 +4,7 @@ type ManagementMember = {
   name: string;
   role: string;
   image: string;
-  qualification: string;
+  qualification?: string[];
   experience: string;
   vision: string;
   bio: string;
@@ -13,53 +13,73 @@ type ManagementMember = {
 
 const managementTeam: ManagementMember[] = [
   {
-    name: "Chairman Name",
-    role: "Chairman",
+    name: "Dr.Ln.S.Peter",
+    role: "Chancellor",
     image: "/management/image2.png",
-    qualification: "Add qualification",
+    qualification: [""],
     experience: "Institutional Leadership",
     vision:
-      "Inspiring innovation, integrity and excellence in engineering education.",
+      "A pioneer in education and institutional development in Tamil Nadu",
     bio:
-      "Add the chairman's official biography, leadership experience and contributions to the development of the institution.",
+      "Dr. Ln. S. Peter is one of the early pioneers in the field of education in Tamil Nadu. He began his journey in his hometown of Thirumaiyam, Pudukkottai District.His journey in education began in 1995 with the establishment of the Engineering College under the Soosaiya Peter Educational Trust. Since then, he has established several educational institutions across Medicine, Dentistry, Physiotherapy, Nursing, Management, Arts and Sciences, along with CBSE and Matriculation schools across Chennai.",
     focus: [
-      "Institutional Development",
-      "Strategic Leadership",
-      "Engineering Education",
+      "Educational Institution Development",
+      "Multidisciplinary Education",
+      "Educational Leadership",
+      "Expansion of Educational Institutions",
     ],
   },
   {
-    name: "Secretary Name",
-    role: "Secretary",
-    image: "/management/image 1.png",
-    qualification: "Add qualification",
-    experience: "Institutional Administration",
-    vision:
-      "Supporting quality education, innovation and student development.",
-    bio:
-      "Add the secretary's official biography, administrative responsibilities and contributions to the college.",
-    focus: [
-      "Institutional Administration",
-      "Academic Development",
-      "Student Welfare",
-    ],
-  },
-  {
-    name: "Correspondent Name",
-    role: "Correspondent",
+    name: "Ms. Mercy Florence Peter,",
+    role: "Vice Chancellor",
     image: "/management/image3.png",
-    qualification: "Add qualification",
-    experience: "Educational Management",
+    qualification:[
+      "Bachelor’s Degree in Electronics and Communication Engineering",
+      "Master of Science (M.S.) in Management Information Systems",
+      " New Jersey Institute of Technology, USA",
+    ],
+    experience: "Academic Administration & Strategic Management",
     vision:
-      "Creating opportunities for professional growth and future-ready learning.",
+      "Empowering students to become skilled, compassionate and future-ready healthcare professionals.",
     bio:
-      "Add the correspondent's official profile, professional background and vision for the institution.",
+      "An accomplished professional with expertise combining technology, innovation and strategic management, bringing a global perspective to academic administration.",
     focus: [
-      "Institutional Planning",
-      "Quality Improvement",
-      "Professional Development",
+      "Academic Excellence",
+      "Technology and Innovation",
+      "Strategic Academic Management",
+      "Quality Education",
+      "Student Empowerment and Holistic Development",
     ],
   },
+  
+{
+  name: "Mr. Ajay Ravindra Kumar",
+  role: "Managing Director",
+  image: "/management/image 1.png",
+
+  experience: "Corporate Experience – Tesla, Inc., California, USA",
+
+  vision:
+    "Bringing global corporate experience, engineering innovation and multidisciplinary expertise to institutional development.",
+
+  bio:
+    "Mr. Ajay Ravindra Kumar was one of the early employees of Tesla, Inc., in California, USA, and worked with the company during its startup days. He brings corporate experience from Tesla, where he worked with the Engineering Team in the development of the Roadster, Model S and Model X vehicle programmes.",
+
+qualification: [
+  "Undergraduate Degree in Electronics and Communication Engineering",
+  "Master of Science (MS) in Information Technology Management – University of Texas at Dallas, USA",
+  "Bachelor of Laws (LLB) – The Tamil Nadu Dr. Ambedkar Law University",
+],
+
+  focus: [
+    "Engineering Innovation",
+    "Automotive Technology",
+    "Information Technology Management",
+    "Corporate Leadership",
+    "Legal and Multidisciplinary Knowledge",
+  ],
+},
+
 ];
 
 export default function Management() {
@@ -583,17 +603,17 @@ export default function Management() {
           font-size: 14px;
         }
 
-        .lm-modal-content p,
-        .lm-modal-content li {
-          overflow-wrap: anywhere;
-        }
+    .lm-modal-content p,
+.lm-modal-content li {
+  overflow-wrap: anywhere;
+}
 
-        .lm-modal-content ul {
-          padding-left: 20px;
-          color: #f0e5e5;
-          font-size: 13px;
-          line-height: 1.9;
-        }
+.lm-modal-content ul {
+  padding-left: 20px;
+  color: #f0e5e5;
+  font-size: 11px;
+  line-height: 1.7;
+}
 
         .lm-modal-content li::marker {
           color: var(--gold);
@@ -735,7 +755,26 @@ export default function Management() {
             transition-duration: 0.01ms !important;
           }
         }
-          
+/* QUALIFICATIONS - SMALLER FONT */
+
+.lm-modal-content .lm-qualification-section h4 {
+  margin: 18px 0 6px;
+  font-size: 12px;
+}
+
+.lm-modal-content .lm-qualification-list {
+  padding-left: 18px;
+  margin: 0;
+  color: #f0e5e5;
+  font-size: 10px !important;
+  line-height: 1.5;
+}
+
+.lm-modal-content .lm-qualification-list li {
+  font-size: 12px !important;
+  line-height: 1.5;
+  margin-bottom: 3px;
+}
       `}</style>
 
       {/* PAGE HEADING */}
@@ -871,34 +910,47 @@ export default function Management() {
             </div>
 
             <div className="lm-modal-content">
-              <span className="lm-modal-label">
-                LEADERSHIP PROFILE
-              </span>
+  <span className="lm-modal-label">
+    LEADERSHIP PROFILE
+  </span>
 
-              <h2>{selected.name}</h2>
+  <h2>{selected.name}</h2>
 
-              <h3>{selected.role}</h3>
+  <h3>{selected.role}</h3>
 
-              <p className="lm-vision">
-                {selected.vision}
-              </p>
+  <p className="lm-vision">
+    {selected.vision}
+  </p>
 
-              <p className="lm-bio">
-                {selected.bio}
-              </p>
+  <p className="lm-bio">
+    {selected.bio}
+  </p>
 
-              <h4>Qualifications</h4>
+  {/* QUALIFICATIONS */}
+  {(selected.qualification ?? []).filter(item => item.trim() !== "").length > 0 && (
+    <div className="lm-qualification-section">
+      <h4>Qualifications</h4>
 
-              <p>{selected.qualification}</p>
+      <ul className="lm-qualification-list">
+        {(selected.qualification ?? [])
+          .filter(item => item.trim() !== "")
+          .map((item, index) => (
+            <li key={index}>{item}</li>
+          ))}
+      </ul>
+    </div>
+  )}
 
-              <h4>Areas of Focus</h4>
+  {/* AREAS OF FOCUS */}
+  <h4>Areas of Focus</h4>
 
-              <ul>
-                {selected.focus.map((item) => (
-                  <li key={item}>{item}</li>
-                ))}
-              </ul>
-            </div>
+  <ul>
+    {selected.focus.map((item) => (
+      <li key={item}>{item}</li>
+    ))}
+  </ul>
+
+</div>
           </section>
         </div>
       )}

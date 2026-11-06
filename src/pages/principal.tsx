@@ -2,10 +2,10 @@
 import React, { useEffect } from "react";
 
 const principal = {
-  name: "Mr. D. Madhan",
+  name: "Dr. B. R. RAMESH BAPU",
   role: "Principal",
   college: "ST. Lourdes Engineering College",
-  image: "/managementand faculty/Dr D. Mythili.png",
+  image: "public/management/principal.png",
 };
 
 const academicDetails = [
@@ -13,9 +13,8 @@ const academicDetails = [
     icon: "🎓",
     title: "Qualifications",
     items: [
-      "Relevant Undergraduate Degree",
-      "Postgraduate Qualification",
-      "Doctoral / Research Qualification",
+      "B.E., M.E., M.S (Engg). AMIE., MISTE., Ph.D. ",
+      
     ],
   },
   {
@@ -367,6 +366,29 @@ export default function Principal() {
           margin-bottom: 17px;
         }
 
+
+/* SHARP CARD TEXT RENDERING */
+
+.principal-info-card h3,
+.principal-info-card p,
+.principal-info-card li {
+  filter: none;
+  text-shadow: none;
+  opacity: 1;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+.principal-card-heading h3 {
+  font-weight: 700;
+}
+
+.principal-info-card li {
+  font-weight: 400;
+}
+
+
+
         .principal-card-icon {
           display: flex;
           flex: 0 0 54px;
@@ -429,49 +451,63 @@ export default function Principal() {
 
         /* SCROLL ANIMATIONS */
 
-        .principal-reveal {
-          opacity: 0;
-          transform: translate3d(0, 35px, 0);
-          transition:
-            opacity 950ms ease,
-            transform 1100ms cubic-bezier(0.22, 1, 0.36, 1);
-          will-change: opacity, transform;
-        }
+        
+/* =====================================
+   SCROLL ANIMATIONS - SHARP TEXT FIX
+===================================== */
 
-        /* Move from left to right */
+.principal-reveal {
+  opacity: 0;
+  transform: translate(0, 35px);
 
-        .principal-reveal.from-left {
-          transform: translate3d(-65px, 20px, 0);
-        }
+  transition:
+    opacity 800ms ease,
+    transform 900ms cubic-bezier(0.22, 1, 0.36, 1);
 
-        /* Move from right to left */
+  /* Prevent unnecessary GPU text compositing */
+  will-change: auto;
+}
 
-        .principal-reveal.from-right {
-          transform: translate3d(65px, 20px, 0);
-        }
+/* Move from left to right */
 
-        /* Slowly rise from below */
+.principal-reveal.from-left {
+  transform: translate(-65px, 20px);
+}
 
-        .principal-reveal.rise-up {
-          transform: translate3d(0, 42px, 0);
-        }
+/* Move from right to left */
 
-        .principal-reveal.is-visible {
-          opacity: 1;
-          transform: translate3d(0, 0, 0);
-        }
+.principal-reveal.from-right {
+  transform: translate(65px, 20px);
+}
 
-        .principal-reveal.delay-1 {
-          transition-delay: 100ms;
-        }
+/* Rise from below */
 
-        .principal-reveal.delay-2 {
-          transition-delay: 220ms;
-        }
+.principal-reveal.rise-up {
+  transform: translate(0, 42px);
+}
 
-        .principal-reveal.delay-3 {
-          transition-delay: 340ms;
-        }
+/* Final visible state */
+
+.principal-reveal.is-visible {
+  opacity: 1;
+  transform: none;
+  will-change: auto;
+}
+
+/* Animation delays */
+
+.principal-reveal.delay-1 {
+  transition-delay: 100ms;
+}
+
+.principal-reveal.delay-2 {
+  transition-delay: 220ms;
+}
+
+.principal-reveal.delay-3 {
+  transition-delay: 340ms;
+}
+
 
         /* LARGE SCREENS */
 
@@ -602,22 +638,24 @@ export default function Principal() {
             padding-left: 0;
           }
 
-          .principal-reveal.from-left {
-            transform: translate3d(-28px, 20px, 0);
-          }
+         
+.principal-reveal.from-left {
+  transform: translate(-28px, 20px);
+}
 
-          .principal-reveal.from-right {
-            transform: translate3d(28px, 20px, 0);
-          }
+.principal-reveal.from-right {
+  transform: translate(28px, 20px);
+}
 
-          .principal-reveal.rise-up {
-            transform: translate3d(0, 28px, 0);
-          }
+.principal-reveal.rise-up {
+  transform: translate(0, 28px);
+}
 
-          .principal-reveal.is-visible {
-            transform: translate3d(0, 0, 0);
-          }
-        }
+.principal-reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
 
         /* ACCESSIBILITY */
 
@@ -673,7 +711,7 @@ export default function Principal() {
           </p>
 
           <h1 className="principal-title">
-            Mr. D. <span>Madhan</span>
+            Dr. B. R.  <span>RAMESH BAPU</span>
           </h1>
 
           <p className="principal-qualifications">
@@ -707,19 +745,18 @@ export default function Principal() {
           <div className="principal-heading-underline" />
 
           <p>
-            At ST. Lourdes Engineering College, we are committed
-            to nurturing skilled, innovative and ethical engineers
-            who can contribute meaningfully to society and the
-            rapidly evolving world of technology.
+           Welcome to St. Lourdes Engineering College, a centre of excellence committed to academic quality, innovation, and holistic student development
           </p>
 
           <p>
-            Our focus is on academic excellence, practical
-            learning, research and the holistic development of
-            our students. We aim to create an environment where
-            learning goes beyond the classroom, shaping
-            confident professionals who are ready to meet
-            industry and societal challenges.
+           With over two decades of experience in engineering education, research, and academic leadership, I firmly believe that technical education must go beyond classroom learning. Our focus is on nurturing competent engineers who are industry-ready, socially responsible, and capable of lifelong learning in a rapidly evolving technological world.
+          </p>
+          The institution places strong emphasis on outcome-based education, quality teaching–learning practices, industry collaboration, research culture, and entrepreneurship development. We strive to provide students with ample opportunities for hands-on learning, internships, innovation, and skill enhancement, ensuring they are well prepared for professional careers as well as higher studies.Our faculty members are dedicated educators and researchers who continuously update their knowledge to meet global standards. Through a structured academic system, robust placement training, and close industry interaction, we aim to empower our students to achieve their full potential.
+           <p>
+           I invite students, parents, faculty, alumni, and industry partners to join us in our mission to create a vibrant academic ecosystem that contributes meaningfully to society and the nation.
+          </p>
+          <p><b>Together, let us strive for excellence in engineering education and innovation.</b>
+
           </p>
         </section>
 

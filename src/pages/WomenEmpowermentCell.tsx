@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import {
   Users,
   GraduationCap,
@@ -97,8 +97,61 @@ const objectives = [
 ];
 
 export default function WomenEmpowermentCell() {
+  const pageRef = useRef<HTMLElement | null>(null);
+
+useEffect(() => {
+  const page = pageRef.current;
+  if (!page) return;
+
+  const revealElements = page.querySelectorAll<HTMLElement>(
+    ".wec-hero-content, .wec-hero-symbol, .wec-about-image, .wec-about-content, .wec-heading-center, .wec-objective-card, .wec-table-wrapper, .wec-member-note, .wec-quote-inner"
+  );
+
+  revealElements.forEach((element, index) => {
+    if (element.classList.contains("wec-about-image")) {
+      element.classList.add("wec-reveal-left");
+    } else if (element.classList.contains("wec-about-content")) {
+      element.classList.add("wec-reveal-right");
+    } else if (element.classList.contains("wec-objective-card")) {
+      element.classList.add(
+        index % 2 === 0 ? "wec-reveal-left" : "wec-reveal-right"
+      );
+
+      element.style.setProperty(
+        "--wec-reveal-delay",
+        `${(index % 4) * 100}ms`
+      );
+    } else if (element.classList.contains("wec-hero-symbol")) {
+      element.classList.add("wec-reveal-right");
+    } else {
+      element.classList.add("wec-reveal-up");
+    }
+  });
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        const element = entry.target as HTMLElement;
+
+        if (entry.isIntersecting) {
+          element.classList.add("wec-reveal-visible");
+        } else {
+          element.classList.remove("wec-reveal-visible");
+        }
+      });
+    },
+    {
+      threshold: 0.15,
+      rootMargin: "0px 0px -35px 0px",
+    }
+  );
+
+  revealElements.forEach((element) => observer.observe(element));
+
+  return () => observer.disconnect();
+}, []);
   return (
-    <main className="wec-page">
+<main className="wec-page" ref={pageRef}>
 
       {/* HERO SECTION */}
       <section className="wec-hero">
@@ -1082,6 +1135,152 @@ export default function WomenEmpowermentCell() {
             transition-duration: .01ms !important;
           }
         }
+          /* =========================================
+   SCROLL REVEAL ANIMATIONS
+========================================= */
+
+.wec-page .wec-reveal-left,
+.wec-page .wec-reveal-right,
+.wec-page .wec-reveal-up {
+  opacity: 0;
+  will-change: opacity, transform;
+  transition:
+    opacity .8s ease,
+    transform .8s cubic-bezier(.2,.7,.2,1);
+  transition-delay: var(--wec-reveal-delay, 0ms);
+}
+
+.wec-page .wec-reveal-left {
+  transform: translateX(-65px);
+}
+
+.wec-page .wec-reveal-right {
+  transform: translateX(65px);
+}
+
+.wec-page .wec-reveal-up {
+  transform: translateY(38px);
+}
+
+.wec-page .wec-reveal-visible {
+  opacity: 1;
+  transform: translate3d(0,0,0);
+}
+
+/* =========================================
+   ABOUT IMAGE HOVER
+========================================= */
+
+.wec-page .wec-about-image img {
+  transition: transform .55s ease, box-shadow .4s ease;
+}
+
+.wec-page .wec-about-image:hover img {
+  transform: scale(1.035);
+  box-shadow: 0 20px 38px rgba(65, 20, 30, .2);
+}
+
+/* =========================================
+   ABOUT HIGHLIGHT HOVER
+========================================= */
+
+.wec-page .wec-about-highlight {
+  transition: transform .3s ease;
+}
+
+.wec-page .wec-about-highlight:hover {
+  transform: translateX(7px);
+}
+
+/* =========================================
+   OBJECTIVE CARDS HOVER
+========================================= */
+
+.wec-page .wec-objective-card {
+  cursor: default;
+  transition:
+    transform .35s cubic-bezier(.2,.7,.2,1),
+    box-shadow .35s ease,
+    border-color .35s ease;
+}
+
+.wec-page .wec-objective-card:hover {
+  transform: translateY(-9px) scale(1.015);
+  border-color: rgba(214,173,83,.75);
+  box-shadow: 0 18px 34px rgba(83, 19, 37, .15);
+}
+
+.wec-page .wec-objective-icon {
+  transition: transform .35s ease, box-shadow .35s ease;
+}
+
+.wec-page .wec-objective-card:hover .wec-objective-icon {
+  transform: rotate(-8deg) scale(1.08);
+  box-shadow: 0 9px 20px rgba(90, 13, 34, .22);
+}
+
+/* =========================================
+   COMMITTEE TABLE HOVER
+========================================= */
+
+.wec-page .wec-table tbody tr {
+  transition: background .25s ease, transform .25s ease;
+}
+
+.wec-page .wec-table tbody tr:hover {
+  transform: translateX(4px);
+}
+
+.wec-page .wec-position {
+  transition: transform .25s ease, box-shadow .25s ease;
+}
+
+.wec-page .wec-table tbody tr:hover .wec-position {
+  transform: scale(1.06);
+  box-shadow: 0 4px 12px rgba(83, 19, 37, .12);
+}
+
+/* =========================================
+   CLOSING BANNER HOVER
+========================================= */
+
+.wec-page .wec-quote-icon {
+  transition: transform .45s ease;
+}
+
+.wec-page .wec-quote-inner:hover .wec-quote-icon {
+  transform: translateY(-5px) rotate(-5deg);
+}
+
+/* =========================================
+   MOBILE ANIMATION
+========================================= */
+
+@media (max-width: 600px) {
+  .wec-page .wec-reveal-left {
+    transform: translateX(-28px);
+  }
+
+  .wec-page .wec-reveal-right {
+    transform: translateX(28px);
+  }
+
+  .wec-page .wec-reveal-up {
+    transform: translateY(24px);
+  }
+}
+
+/* ACCESSIBILITY */
+
+@media (prefers-reduced-motion: reduce) {
+  .wec-page .wec-reveal-left,
+  .wec-page .wec-reveal-right,
+  .wec-page .wec-reveal-up {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
       `}</style>
     </main>
   );

@@ -1,4 +1,5 @@
 
+import { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import {
   ArrowRight,
@@ -68,23 +69,83 @@ const supportPoints = [
 ];
 
 export default function SexualHarassmentCommittee() {
-  return (
-    <div className="shrc-page">
-      <style>{`
-.shrc-page {
-  --shrc-maroon: #570d24;
-  --shrc-deep: #350817;
-  --shrc-gold: #e7b83f;
-  --shrc-cream: #fffaf2;
-  --shrc-text: #4a3040;
+  const pageRef = useRef<HTMLDivElement | null>(null);
 
-  width: 100%;
-  padding-top: 72px;
-  overflow: hidden;
-  background: var(--shrc-cream);
-  color: var(--shrc-text);
-  font-family: Inter, Arial, sans-serif;
-}
+  /* =========================================
+     REPEATING SCROLL ANIMATION
+  ========================================= */
+
+  useEffect(() => {
+    const page = pageRef.current;
+    if (!page) return;
+
+    const revealElements = page.querySelectorAll<HTMLElement>(
+      '.shrc-hero-inner, .shrc-section-heading, .shrc-member, .shrc-support, .shrc-footer-inner > div, .shrc-footer-bottom'
+    );
+
+    revealElements.forEach((element, index) => {
+      if (element.classList.contains('shrc-member')) {
+        element.classList.add(
+          index % 2 === 0
+            ? 'shrc-reveal-left'
+            : 'shrc-reveal-right'
+        );
+
+        element.style.setProperty(
+          '--shrc-reveal-delay',
+          `${(index % 4) * 90}ms`
+        );
+      } else if (element.classList.contains('shrc-support')) {
+        element.classList.add('shrc-reveal-right');
+      } else {
+        element.classList.add('shrc-reveal-up');
+      }
+    });
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const element = entry.target as HTMLElement;
+
+          if (entry.isIntersecting) {
+            element.classList.add('shrc-reveal-visible');
+          } else {
+            element.classList.remove('shrc-reveal-visible');
+          }
+        });
+      },
+      {
+        threshold: 0.12,
+        rootMargin: '0px 0px -35px 0px',
+      }
+    );
+
+    revealElements.forEach((element) => observer.observe(element));
+
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <div
+      className="shrc-page"
+      data-header-theme="light"
+      ref={pageRef}
+    >
+      <style>{`
+        .shrc-page {
+          --shrc-maroon: #570d24;
+          --shrc-deep: #350817;
+          --shrc-gold: #e7b83f;
+          --shrc-cream: #fffaf2;
+          --shrc-text: #4a3040;
+
+          width: 100%;
+          padding-top: 72px;
+          overflow: hidden;
+          background: var(--shrc-cream);
+          color: var(--shrc-text);
+          font-family: Inter, Arial, sans-serif;
+        }
 
         .shrc-page * {
           box-sizing: border-box;
@@ -277,12 +338,6 @@ export default function SexualHarassmentCommittee() {
             transform .22s ease,
             border-color .22s ease,
             box-shadow .22s ease;
-        }
-
-        .shrc-member:hover {
-          transform: translateY(-2px);
-          border-color: var(--shrc-gold);
-          box-shadow: 0 7px 18px rgba(71,26,34,.10);
         }
 
         .shrc-member-chair {
@@ -480,11 +535,6 @@ export default function SexualHarassmentCommittee() {
           transition: transform .2s ease, box-shadow .2s ease;
         }
 
-        .shrc-contact-button:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 5px 16px rgba(231,184,63,.22);
-        }
-
         .shrc-footer {
           border-top: 3px solid var(--shrc-gold);
           background: linear-gradient(
@@ -599,9 +649,11 @@ export default function SexualHarassmentCommittee() {
           .shrc-hero {
             min-height: 285px;
           }
-.shrc-page {
-  padding-top: 64px;
-}
+
+          .shrc-page {
+            padding-top: 64px;
+          }
+
           .shrc-hero-inner {
             width: calc(100% - 40px);
             padding: 48px 0 36px;
@@ -756,13 +808,168 @@ export default function SexualHarassmentCommittee() {
           }
         }
 
+        /* =========================================
+           SCROLL REVEAL ANIMATIONS
+        ========================================= */
+
+        .shrc-page .shrc-reveal-left,
+        .shrc-page .shrc-reveal-right,
+        .shrc-page .shrc-reveal-up {
+          opacity: 0;
+          will-change: opacity, transform;
+          transition:
+            opacity .75s ease,
+            transform .75s cubic-bezier(.2,.7,.2,1);
+          transition-delay: var(--shrc-reveal-delay, 0ms);
+        }
+
+        .shrc-page .shrc-reveal-left {
+          transform: translateX(-55px);
+        }
+
+        .shrc-page .shrc-reveal-right {
+          transform: translateX(55px);
+        }
+
+        .shrc-page .shrc-reveal-up {
+          transform: translateY(35px);
+        }
+
+        .shrc-page .shrc-reveal-visible {
+          opacity: 1;
+          transform: translate3d(0,0,0);
+        }
+
+        /* =========================================
+           MEMBER CARD HOVER ANIMATION
+        ========================================= */
+
+        .shrc-page .shrc-member {
+          position: relative;
+          overflow: hidden;
+          transition:
+            transform .3s ease,
+            border-color .3s ease,
+            box-shadow .3s ease,
+            background .3s ease;
+        }
+
+        .shrc-page .shrc-member::before {
+          content: "";
+          position: absolute;
+          inset: 0 auto 0 0;
+          width: 3px;
+          background: var(--shrc-gold);
+          transform: scaleY(0);
+          transform-origin: bottom;
+          transition: transform .3s ease;
+        }
+
+        .shrc-page .shrc-member:hover::before {
+          transform: scaleY(1);
+        }
+
+        .shrc-page .shrc-member:hover {
+          transform: translateY(-5px);
+          border-color: var(--shrc-gold);
+          box-shadow: 0 12px 24px rgba(71,26,34,.13);
+        }
+
+        .shrc-page .shrc-avatar {
+          transition: transform .3s ease, box-shadow .3s ease;
+        }
+
+        .shrc-page .shrc-member:hover .shrc-avatar {
+          transform: scale(1.08) rotate(-5deg);
+          box-shadow: 0 5px 13px rgba(231,184,63,.2);
+        }
+
+        .shrc-page .shrc-role {
+          transition: transform .25s ease, box-shadow .25s ease;
+        }
+
+        .shrc-page .shrc-member:hover .shrc-role {
+          transform: scale(1.05);
+          box-shadow: 0 4px 10px rgba(71,26,34,.1);
+        }
+
+        .shrc-page .shrc-member-chair:hover {
+          background: linear-gradient(110deg,#fff 0%,#fff1d5 100%);
+        }
+
+        /* =========================================
+           SUPPORT PANEL HOVER ANIMATION
+        ========================================= */
+
+        .shrc-page .shrc-support {
+          transition: transform .35s ease, box-shadow .35s ease;
+        }
+
+        .shrc-page .shrc-support:hover {
+          transform: translateY(-5px);
+          box-shadow: 0 17px 32px rgba(53,8,23,.18);
+        }
+
+        .shrc-page .shrc-support-icon {
+          transition: transform .35s ease, background .35s ease;
+        }
+
+        .shrc-page .shrc-support:hover .shrc-support-icon {
+          transform: translateY(-4px) rotate(-5deg);
+          background: rgba(255,255,255,.1);
+        }
+
+        .shrc-page .shrc-contact-button:hover {
+          transform: translateY(-3px) scale(1.02);
+          box-shadow: 0 5px 16px rgba(231,184,63,.22);
+        }
+
+        /* =========================================
+           FOOTER LINK HOVER
+        ========================================= */
+
+        .shrc-page .shrc-footer-links a {
+          display: inline-block;
+          transition: color .25s ease, transform .25s ease;
+        }
+
+        .shrc-page .shrc-footer-links a:hover {
+          transform: translateX(5px);
+        }
+
+        /* =========================================
+           MOBILE + ACCESSIBILITY
+        ========================================= */
+
+        @media (max-width: 600px) {
+          .shrc-page .shrc-reveal-left {
+            transform: translateX(-25px);
+          }
+
+          .shrc-page .shrc-reveal-right {
+            transform: translateX(25px);
+          }
+
+          .shrc-page .shrc-reveal-up {
+            transform: translateY(22px);
+          }
+        }
+
         @media (prefers-reduced-motion: reduce) {
-          .shrc-page *,
-          .shrc-page *::before,
-          .shrc-page *::after {
-            scroll-behavior: auto !important;
-            transition-duration: .01ms !important;
-            animation-duration: .01ms !important;
+          .shrc-page .shrc-reveal-left,
+          .shrc-page .shrc-reveal-right,
+          .shrc-page .shrc-reveal-up {
+            opacity: 1;
+            transform: none;
+            transition: none;
+          }
+
+          .shrc-page .shrc-member,
+          .shrc-page .shrc-support,
+          .shrc-page .shrc-contact-button,
+          .shrc-page .shrc-avatar,
+          .shrc-page .shrc-role {
+            transition: none;
           }
         }
       `}</style>
@@ -822,7 +1029,7 @@ export default function SexualHarassmentCommittee() {
         <div className="shrc-content-grid">
           {/* Member cards */}
           <div className="shrc-members">
-            {committeeMembers.map((member, index) => {
+            {committeeMembers.map((member) => {
               const isChair = member.position === 'Chair Person';
 
               return (
@@ -892,85 +1099,7 @@ export default function SexualHarassmentCommittee() {
         </div>
       </main>
 
-      {/* Footer */}
-      <footer className="shrc-footer">
-        <div className="shrc-footer-inner">
-          <div>
-            <div className="shrc-footer-brand">
-              <div className="shrc-footer-logo">
-                <GraduationCap size={25} />
-              </div>
-
-              <div>
-                <strong>ST. Lourdes</strong>
-                <span>ENGINEERING COLLEGE</span>
-              </div>
-            </div>
-
-            <p>
-              A pioneering engineering institution committed
-              to quality education and academic excellence.
-            </p>
-          </div>
-
-          <div>
-            <h3>Quick Links</h3>
-
-            <div className="shrc-footer-links">
-              <Link to="/">› Home</Link>
-              <Link to="/about">› About Us</Link>
-              <Link to="/admission">› Admission</Link>
-              <Link to="/academics">› Academics</Link>
-            </div>
-          </div>
-
-          <div>
-            <h3>Departments</h3>
-
-            <div className="shrc-footer-links">
-              <Link to="/departments">› B.E. CSE</Link>
-              <Link to="/departments">› B.E. ECE</Link>
-              <Link to="/departments">› B.E. EEE</Link>
-              <Link to="/departments">› B.E. Civil</Link>
-            </div>
-          </div>
-
-          <div>
-            <h3>Contact Information</h3>
-
-            <p>
-              ST. Lourdes Engineering College
-              <br />
-              Erandam Kattalai, Tharapakkam,
-              <br />
-              Chennai – 600128.
-            </p>
-
-            <div className="shrc-footer-links" style={{ marginTop: 12 }}>
-              <Link to="/contact">
-                <MessageCircle
-                  size={13}
-                  style={{
-                    display: 'inline',
-                    verticalAlign: 'middle',
-                    marginRight: 6,
-                  }}
-                />
-                Contact Us
-              </Link>
-            </div>
-          </div>
-        </div>
-
-        <div className="shrc-footer-bottom">
-          <span>
-            © {new Date().getFullYear()} ST. Lourdes Engineering
-            College. All Rights Reserved.
-          </span>
-
-          <Link to="/contact">Contact the College</Link>
-        </div>
-      </footer>
+      
     </div>
   );
 }
