@@ -139,10 +139,11 @@ export default function SexualHarassmentCommittee() {
           --shrc-cream: #fffaf2;
           --shrc-text: #4a3040;
 
-          width: 100%;
-          padding-top: 72px;
-          overflow: hidden;
-          background: var(--shrc-cream);
+         .shrc-page {
+  width: 100%;
+  padding-top: 0;
+  overflow: hidden;
+  background: var(--shrc-cream);
           color: var(--shrc-text);
           font-family: Inter, Arial, sans-serif;
         }
@@ -187,13 +188,11 @@ export default function SexualHarassmentCommittee() {
             );
           background-size: 36px 36px;
         }
-
-        .shrc-hero-inner {
-          width: min(1160px, calc(100% - 48px));
-          margin: 0 auto;
-          padding: 56px 0 48px;
-        }
-
+.shrc-hero-inner {
+  width: min(1160px, calc(100% - 48px));
+  margin: 0 auto;
+  padding: 130px 0 48px;
+}
         .shrc-eyebrow {
           display: flex;
           align-items: center;
@@ -654,10 +653,10 @@ export default function SexualHarassmentCommittee() {
             padding-top: 64px;
           }
 
-          .shrc-hero-inner {
-            width: calc(100% - 40px);
-            padding: 48px 0 36px;
-          }
+        .sh​​rc-hero-inner {
+  width: calc(100% - 32px);
+  padding: 92px 0 30px;
+}
 
           .shrc-hero h1 {
             font-size: clamp(30px, 7vw, 42px);
@@ -975,8 +974,8 @@ export default function SexualHarassmentCommittee() {
       `}</style>
 
       {/* Hero section */}
-      <section className="shrc-hero">
-        <div className="shrc-hero-inner">
+<section className="shrc-hero" data-header-theme="dark">
+          <div className="shrc-hero-inner">
           <p className="shrc-eyebrow">
             Student Support &amp; Governance
           </p>

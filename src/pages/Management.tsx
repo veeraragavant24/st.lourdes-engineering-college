@@ -117,7 +117,7 @@ export default function Management() {
           --cream: #fbf7f2;
 
           min-height: 100vh;
-          padding: 65px 5% 85px;
+          padding: 100px 5% 85px;
           color: var(--maroon);
           background:
             radial-gradient(

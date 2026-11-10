@@ -85,8 +85,9 @@ export default function GrievanceCommittee() {
   --navy: #0c1c35;
   --muted: #696064;
 
+ 
   width: 100%;
-  padding-top: 76px;
+  padding-top: 0;
   background: var(--cream);
   color: #35111c;
   font-family: Inter, Arial, sans-serif;
@@ -102,13 +103,13 @@ export default function GrievanceCommittee() {
         }
 
         /* HERO */
-        .grc-hero {
-          position: relative;
-          isolation: isolate;
-          display: flex;
-          align-items: center;
-          min-height: 250px;
-          padding: 45px 0 42px;
+       .grc-hero {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  align-items: center;
+  min-height: 250px;
+ padding: 130px 0 42px;
           color: white;
           background:
             linear-gradient(

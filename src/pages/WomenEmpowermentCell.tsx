@@ -154,8 +154,8 @@ useEffect(() => {
 <main className="wec-page" ref={pageRef}>
 
       {/* HERO SECTION */}
-      <section className="wec-hero">
-        <div className="wec-hero-overlay" />
+<section className="wec-hero" data-header-theme="dark">
+          <div className="wec-hero-overlay" />
 
         <div className="wec-hero-content">
           <div className="wec-college-label">
@@ -369,7 +369,7 @@ useEffect(() => {
       {/* PAGE STYLES */}
       <style>{`
       .wec-page {
-  padding-top: 75px;
+  padding-top: 0;
 
   --wec-maroon: #690d22;
           --wec-dark: #350b19;
@@ -396,12 +396,12 @@ useEffect(() => {
 
         /* HERO */
 
-        .wec-hero {
-          position: relative;
-          min-height: 350px;
-          display: flex;
-          align-items: center;
-          padding: 65px 7% 75px;
+       .wec-hero {
+  position: relative;
+  min-height: 350px;
+  display: flex;
+  align-items: center;
+  padding: 130px 7% 75px;
           isolation: isolate;
           color: #fff;
           background:

@@ -403,18 +403,12 @@ export default function Header({
         className="fixed inset-x-0 top-0 z-50 bg-transparent transition-all duration-300"
       >
         <div
-          className={`mx-auto flex w-full max-w-7xl items-center justify-between gap-2
-            px-3 py-3
-            sm:gap-3 sm:px-5 sm:py-3.5
-            lg:px-8 xl:px-10
-            max-xl:backdrop-blur-xl
-            max-xl:border-b
-            ${
-              isDarkBackground
-                ? 'max-xl:border-white/10 max-xl:bg-[#3B0712]/65'
-                : 'max-xl:border-[#650d18]/10 max-xl:bg-white/80'
-            }`}
-        >
+  className="mx-auto flex w-full max-w-7xl items-center justify-between gap-2
+    bg-transparent border-none shadow-none
+    px-3 py-3
+    sm:gap-3 sm:px-5 sm:py-3.5
+    lg:px-8 xl:px-10"
+>
           {/* College logo and name */}
           <Link
             to="/"

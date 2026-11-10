@@ -256,7 +256,7 @@ export default function Eligibility() {
 
   width: 100%;
   min-height: 100vh;
-  padding-top: 100px;
+  padding-top: 0;
   background: var(--eligibility-cream);
   color: var(--eligibility-text);
   font-family: inherit;
@@ -270,10 +270,11 @@ export default function Eligibility() {
         /* HERO */
 
         .eligibility-hero {
-          position: relative;
-          width: 100%;
-          min-height: 285px;
-          padding: 35px 6% 40px;
+  position: relative;
+  width: 100%;
+  min-height: 285px;
+  padding: 130px 6% 40px;
+
           background:
             radial-gradient(
               circle at 85% 15%,

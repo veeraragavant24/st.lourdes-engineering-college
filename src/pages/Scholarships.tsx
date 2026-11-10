@@ -271,7 +271,7 @@ const Scholarships: React.FC = () => {
            MAROON + GOLD PREMIUM THEME
         ========================================= */
 
-        .scholarships-page {
+    .scholarships-page {
   --sch-maroon: #74152f;
   --sch-dark-maroon: #4a1026;
   --sch-gold: #d9b052;
@@ -281,10 +281,7 @@ const Scholarships: React.FC = () => {
 
   width: 100%;
   min-height: 100vh;
-
-  /* Space for the existing fixed college navbar */
-  padding-top: 100px;
-
+  padding-top: 0;
   background: var(--sch-cream);
   color: var(--sch-text);
   font-family: inherit;
@@ -296,14 +293,13 @@ const Scholarships: React.FC = () => {
         }
 
         /* HERO */
+.scholarship-hero {
+  position: relative;
+  width: 100%;
+  min-height: 180px;
+  padding: 130px 7% 26px;
 
-        .scholarship-hero {
-          position: relative;
-          width: 100%;
-          min-height: 180px;
-          padding: 24px 7% 26px;
-          color: #fff;
-
+  
           background:
             radial-gradient(
               ellipse at 75% 50%,

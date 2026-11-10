@@ -218,6 +218,7 @@ export default function MandatoryDisclosure() {
           display: flex;
           align-items: center;
           overflow: hidden;
+            padding: 110px 7% 26px;
 
           background:
             linear-gradient(
