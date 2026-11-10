@@ -2,10 +2,10 @@
 import React, { useEffect } from "react";
 
 const principal = {
-  name: "Dr. B. R. RAMESH BAPU",
+  name: "Dr. B. R. RAMESH BAPU ",
   role: "Principal",
   college: "ST. Lourdes Engineering College",
-  image: "public/management/principal.png",
+  image: "/management/principal.png",
 };
 
 const academicDetails = [
@@ -127,7 +127,8 @@ export default function Principal() {
           align-items: center;
           gap: 45px;
           min-height: 440px;
-          padding: 45px 7%;
+          padding: 120px 7% 20px;
+          
           color: #fff;
           background:
             radial-gradient(
@@ -160,7 +161,7 @@ export default function Principal() {
 
         .principal-photo-frame {
           width: 100%;
-          max-width: 290px;
+          max-width: 280px;
           justify-self: center;
           overflow: hidden;
           border: 2px solid var(--gold);
@@ -202,7 +203,7 @@ export default function Principal() {
         .principal-photo-caption h2 {
           margin: 0 0 4px;
           font-family: Georgia, "Times New Roman", serif;
-          font-size: 23px;
+          font-size: 12px;
           line-height: 1.3;
           font-weight: 700;
         }
@@ -233,7 +234,7 @@ export default function Principal() {
           margin: 0;
           color: #fff;
           font-family: Georgia, "Times New Roman", serif;
-          font-size: clamp(36px, 4vw, 54px);
+          font-size: clamp(28px, 4vw, 40px);
           line-height: 1.12;
           font-weight: 700;
         }
@@ -278,6 +279,12 @@ export default function Principal() {
           font-style: italic;
           line-height: 1.65;
         }
+        .principal-heading-underline p {
+        
+        
+        }
+
+
 
         /* MAIN CONTENT */
 
