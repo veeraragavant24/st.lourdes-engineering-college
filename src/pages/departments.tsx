@@ -1378,32 +1378,32 @@ function DepartmentCard({
         transitionDelay: visible ? `${(index % 2) * 120}ms` : '0ms',
       }}
     >
-      <a
-        href={department.url}
-        target="_blank"
-        rel="noopener noreferrer"
-        className={`dept-card-link ${selected ? 'selected' : ''}`}
-        aria-label={`View ${department.shortName} department page`}
-        onClick={onSelect}
-      >
-        <span className="dept-card-icon">
-          <Icon aria-hidden="true" />
-        </span>
+     <button
+  type="button"
+  className={`dept-card-link ${selected ? 'selected' : ''}`}
+  aria-label={`Show ${department.shortName} details`}
+  aria-pressed={selected}
+  onClick={onSelect}
+>
+  <span className="dept-card-icon">
+    <Icon aria-hidden="true" />
+  </span>
 
-        <span>
-          <span className="dept-card-title">
-            {department.name}
-          </span>
+  <span>
+    <span className="dept-card-title">
+      {department.name}
+    </span>
 
-          <span className="dept-card-subtitle">
-            {department.shortName}
-          </span>
-        </span>
+    <span className="dept-card-subtitle">
+      {department.shortName}
+    </span>
+  </span>
 
-        <span className="dept-card-arrow">
-          <ArrowRight aria-hidden="true" />
-        </span>
-      </a>
+  <span className="dept-card-arrow">
+    <ArrowRight aria-hidden="true" />
+  </span>
+</button>
+        
     </div>
   );
 }

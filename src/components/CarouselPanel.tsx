@@ -1,10 +1,13 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { ChevronLeft, ChevronRight, Calendar, ArrowRight } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import type { CSSProperties } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { Calendar, ArrowRight } from 'lucide-react';
+
 import type { NewsItem } from '@/data/news';
 import type { EventItem } from '@/data/events';
 
 type ItemType = NewsItem | EventItem;
+type ScrollDirection = 'vertical' | 'horizontal';
 
 interface CarouselPanelProps {
   title: string;
@@ -12,7 +15,9 @@ interface CarouselPanelProps {
   items: ItemType[];
   accent: 'maroon' | 'gold';
   viewAllLink: string;
+  itemLink?: string;
   emptyText?: string;
+  direction?: ScrollDirection;
 }
 
 function isNews(item: ItemType): item is NewsItem {
@@ -23,45 +28,110 @@ function isEvent(item: ItemType): item is EventItem {
   return 'venue' in item;
 }
 
-function Card({ item }: { item: ItemType }) {
+// Scroll speed in pixels per second
+const SPEED = 28;
+
+// --------------------------------------------------
+// CARD COMPONENT
+// --------------------------------------------------
+
+function Card({
+  item,
+  direction,
+  to,
+}: {
+  item: ItemType;
+  direction: ScrollDirection;
+  to: string;
+}) {
+  const news = isNews(item);
+  const navigate = useNavigate();
+
   return (
-    <article className="group flex h-full flex-col overflow-hidden rounded-xl border border-gold/10 bg-white shadow-sm transition-all duration-300 hover:shadow-xl hover:shadow-maroon-900/10">
-      <div className="relative h-44 overflow-hidden">
+    <article
+      onClick={() => navigate(to)}
+      className="
+        news-event-card group
+        flex h-full flex-col overflow-hidden
+        rounded-xl border border-[#E9DCC9]
+        bg-white shadow-sm
+        transition-all duration-300
+        hover:-translate-y-1
+        hover:shadow-xl hover:shadow-black/15
+      "
+    >
+      {/* IMAGE */}
+      <div
+        className={`
+          relative overflow-hidden
+          ${direction === 'horizontal' ? 'h-36' : 'h-32'}
+        `}
+      >
         <img
           src={item.image}
-          alt=""
-          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+          alt={item.title}
           loading="lazy"
+          className="
+            h-full w-full object-cover
+            transition-transform duration-500
+            group-hover:scale-105
+          "
         />
-        <div className="absolute left-3 top-3 flex flex-col items-center rounded-lg bg-maroon-700/95 px-3 py-1.5 shadow-lg backdrop-blur-sm">
-          <span className="font-sans text-[10px] font-semibold uppercase tracking-wider text-gold-100">
+
+        {/* DATE BADGE */}
+        <div
+          className="
+            absolute left-3 top-3
+            flex flex-col items-center
+            rounded-lg bg-[#64182C]/95
+            px-3 py-1.5 shadow-lg
+            backdrop-blur-sm
+          "
+        >
+          <span className="text-[10px] font-semibold uppercase tracking-wider text-[#F8E6BC]">
             {item.dateLabel.split(' ')[1]}
           </span>
-          <span className="font-serif text-lg font-bold leading-none text-ivory">
+
+          <span className="font-serif text-lg font-bold leading-none text-white">
             {item.dateLabel.split(' ')[0]}
           </span>
         </div>
+
+        {/* PLACEHOLDER BADGE */}
         {isEvent(item) && item.isPlaceholder && (
-          <div className="absolute right-3 top-3 rounded-full bg-gold/90 px-2.5 py-1 text-[9px] font-semibold uppercase tracking-wider text-maroon-700">
+          <div className="absolute right-3 top-3 rounded-full bg-[#D6AD55] px-2.5 py-1 text-[9px] font-bold uppercase tracking-wider text-[#421321]">
             Placeholder
           </div>
         )}
       </div>
-      <div className="flex flex-1 flex-col p-5">
-        <p className="text-xs font-medium uppercase tracking-wider text-gold-500">
-          {isNews(item) ? item.department : isEvent(item) ? item.venue : ''}
+
+      {/* CARD CONTENT */}
+      <div className="flex flex-1 flex-col p-4">
+        <p className="text-[11px] font-bold uppercase tracking-wider text-[#A77E36]">
+          {news ? item.department : isEvent(item) ? item.venue : ''}
         </p>
-        <h3 className="mt-2 font-serif text-base font-bold leading-snug text-maroon-700 line-clamp-2">
+
+        <h3 className="mt-2 line-clamp-2 font-serif text-base font-bold leading-snug text-[#64182C]">
           {item.title}
         </h3>
-        <p className="mt-2 flex-1 text-sm leading-relaxed text-charcoal/60 line-clamp-3">
+
+        <p className="mt-2 line-clamp-3 flex-1 text-sm leading-relaxed text-gray-500">
           {item.description}
         </p>
+
         <Link
-          to={isNews(item) ? '/about#news' : '/about#events'}
-          className="mt-4 inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-maroon-600 transition-colors hover:text-gold"
+          to={to}
+          onClick={(e) => e.stopPropagation()}
+          className="
+            mt-3 inline-flex items-center
+            gap-1.5 text-xs font-bold
+            uppercase tracking-wider
+            text-[#801E37]
+            transition-colors hover:text-[#B58A3A]
+          "
         >
-          {isNews(item) ? 'Read More' : 'View Details'}
+          {news ? 'Read More' : 'View Details'}
+
           <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-1" />
         </Link>
       </div>
@@ -69,114 +139,198 @@ function Card({ item }: { item: ItemType }) {
   );
 }
 
+// --------------------------------------------------
+// MAIN CAROUSEL PANEL
+// --------------------------------------------------
+
 export default function CarouselPanel({
   title,
   icon: Icon,
   items,
-  accent,
   viewAllLink,
+  itemLink = '/news-events',
+  emptyText = 'No updates available at the moment.',
+  direction,
 }: CarouselPanelProps) {
-  const [index, setIndex] = useState(0);
-  const [visibleCount, setVisibleCount] = useState(3);
-  const containerRef = useRef<HTMLDivElement>(null);
+  const viewportRef = useRef<HTMLDivElement>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
 
-  const updateVisible = useCallback(() => {
-    if (!containerRef.current) return;
-    const width = containerRef.current.offsetWidth;
-    if (width < 500) setVisibleCount(1);
-    else if (width < 800) setVisibleCount(2);
-    else setVisibleCount(3);
-  }, []);
+  // How far (px) the track has to travel to show every card
+  const [distance, setDistance] = useState(0);
 
+  const scrollDirection: ScrollDirection =
+    direction ??
+    (items.length > 0
+      ? isNews(items[0])
+        ? 'vertical'
+        : 'horizontal'
+      : title.toLowerCase().includes('news')
+        ? 'vertical'
+        : 'horizontal');
+
+  const isVertical = scrollDirection === 'vertical';
+
+  // Measure how much the content overflows the box
   useEffect(() => {
-    updateVisible();
-    window.addEventListener('resize', updateVisible);
-    return () => window.removeEventListener('resize', updateVisible);
-  }, [updateVisible]);
+    const viewport = viewportRef.current;
+    const track = trackRef.current;
 
-  const maxIndex = Math.max(0, items.length - visibleCount);
+    if (!viewport || !track) {
+      setDistance(0);
+      return;
+    }
 
-  useEffect(() => {
-    if (index > maxIndex) setIndex(maxIndex);
-  }, [maxIndex, index]);
+    const measure = () => {
+      const overflow = isVertical
+        ? track.offsetHeight - viewport.clientHeight
+        : track.offsetWidth - viewport.clientWidth;
 
-  const next = () => setIndex((i) => Math.min(i + 1, maxIndex));
-  const prev = () => setIndex((i) => Math.max(i - 1, 0));
+      setDistance(Math.max(0, Math.round(overflow)));
+    };
 
-  const cardWidth = 100 / visibleCount;
+    measure();
 
-  const headingColor = accent === 'maroon' ? 'text-maroon-700' : 'text-gold-600';
-  const iconColor = accent === 'maroon' ? 'text-maroon-600' : 'text-gold';
+    const observer = new ResizeObserver(measure);
+    observer.observe(viewport);
+    observer.observe(track);
+
+    return () => observer.disconnect();
+  }, [items, isVertical]);
+
+  // Animate only when the cards do not fit in the box
+  const shouldAnimate = distance > 8;
+  const duration = Math.max(10, Math.round(distance / SPEED));
+
+  const trackStyle: CSSProperties | undefined = shouldAnimate
+    ? ({
+        '--scroll-distance': `${distance}px`,
+        animationDuration: `${duration}s`,
+      } as CSSProperties)
+    : undefined;
 
   return (
-    <div className="flex flex-col">
-      {/* Header */}
-      <div className="mb-5 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-full border border-gold/30 bg-gold/10">
-            <Icon className={`h-5 w-5 ${iconColor}`} strokeWidth={1.5} />
+    <div className="news-event-panel flex h-full min-w-0 flex-col rounded-2xl border border-[#80503E] bg-[#421321] p-4 shadow-md sm:p-5">
+      {/* HEADER */}
+      <div className="mb-4 flex items-center justify-between gap-2">
+        <div className="flex min-w-0 items-center gap-3">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[#B58A3A]/50 bg-[#B58A3A]/10">
+            <Icon className="h-5 w-5 text-[#D6AD55]" strokeWidth={1.8} />
           </div>
-          <h2 className={`font-serif text-xl font-bold ${headingColor} sm:text-2xl`}>{title}</h2>
-        </div>
-        <div className="flex items-center gap-3">
-          <Link
-            to={viewAllLink}
-            className="hidden text-xs font-semibold uppercase tracking-wider text-gold-500 transition-colors hover:text-gold sm:inline"
-          >
-            View All
-          </Link>
-          <div className="flex gap-1.5">
-            <button
-              onClick={prev}
-              disabled={index === 0}
-              className="flex h-8 w-8 items-center justify-center rounded-full border border-maroon-200 text-maroon-600 transition-all duration-200 hover:border-maroon-400 hover:bg-maroon-50 disabled:opacity-30 disabled:hover:bg-transparent focus:outline-none focus-visible:ring-2 focus-visible:ring-gold"
-              aria-label="Previous"
-            >
-              <ChevronLeft className="h-4 w-4" />
-            </button>
-            <button
-              onClick={next}
-              disabled={index >= maxIndex}
-              className="flex h-8 w-8 items-center justify-center rounded-full border border-maroon-200 text-maroon-600 transition-all duration-200 hover:border-maroon-400 hover:bg-maroon-50 disabled:opacity-30 disabled:hover:bg-transparent focus:outline-none focus-visible:ring-2 focus-visible:ring-gold"
-              aria-label="Next"
-            >
-              <ChevronRight className="h-4 w-4" />
-            </button>
-          </div>
-        </div>
-      </div>
 
-      {/* Carousel */}
-      <div ref={containerRef} className="overflow-hidden">
-        <div
-          className="flex transition-transform duration-500 ease-out"
-          style={{ transform: `translateX(-${index * cardWidth}%)` }}
+          <h2 className="font-serif text-xl font-extrabold tracking-wide text-[#D6AD55] sm:text-2xl">
+            {title}
+          </h2>
+        </div>
+
+        <Link
+          to={viewAllLink}
+          className="shrink-0 text-xs font-bold uppercase tracking-wider text-[#D6AD55] transition-colors hover:text-white"
         >
-          {items.map((item) => (
-            <div
-              key={item.id}
-              className="shrink-0 px-2"
-              style={{ width: `${cardWidth}%` }}
-            >
-              <Card item={item} />
-            </div>
-          ))}
-        </div>
+          View All
+        </Link>
       </div>
 
-      {/* Pagination */}
-      <div className="mt-5 flex items-center justify-center gap-1.5">
-        {Array.from({ length: maxIndex + 1 }).map((_, i) => (
-          <button
-            key={i}
-            onClick={() => setIndex(i)}
-            aria-label={`Page ${i + 1}`}
-            className={`h-1.5 rounded-full transition-all duration-300 ${
-              i === index ? 'w-6 bg-gold' : 'w-1.5 bg-maroon-200 hover:bg-maroon-300'
-            }`}
-          />
-        ))}
-      </div>
+      {/* EMPTY STATE */}
+      {items.length === 0 ? (
+        <div className="flex min-h-[240px] items-center justify-center text-center text-sm text-[#E6D6BB]/70">
+          {emptyText}
+        </div>
+      ) : (
+        <div
+          ref={viewportRef}
+          className={`news-event-viewport ${
+            isVertical
+              ? 'news-event-vertical-viewport'
+              : 'news-event-horizontal-viewport'
+          }`}
+        >
+          <div
+            ref={trackRef}
+            style={trackStyle}
+            className={`news-event-track ${
+              isVertical
+                ? 'news-event-vertical-track'
+                : 'news-event-horizontal-track'
+            } ${shouldAnimate ? 'is-animated' : ''}`}
+          >
+            {items.map((item) => (
+              <div
+                key={item.id}
+                className="news-event-item"
+                style={!isVertical ? { width: '210px' } : undefined}
+              >
+                <Card item={item} direction={scrollDirection} to={itemLink} />
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      <style>{`
+        .news-event-viewport {
+          position: relative;
+          width: 100%;
+          height: 300px;
+          overflow: hidden;
+        }
+
+        .news-event-track {
+          display: flex;
+          gap: 14px;
+          padding: 4px 2px;
+          will-change: transform;
+        }
+
+        /* Events: cards in a row */
+        .news-event-horizontal-track {
+          width: max-content;
+          flex-direction: row;
+          align-items: stretch;
+        }
+
+        .news-event-horizontal-track .news-event-item {
+          flex: 0 0 210px;
+        }
+
+        /* News: cards in a column */
+        .news-event-vertical-track {
+          width: 100%;
+          flex-direction: column;
+        }
+
+        .news-event-vertical-track .news-event-item {
+          width: 100%;
+          flex: 0 0 auto;
+        }
+
+        /* Scroll to the end, pause, then scroll back. No cloned cards. */
+        .news-event-horizontal-track.is-animated {
+          animation: newsEventHorizontal 30s linear infinite alternate;
+        }
+
+        .news-event-vertical-track.is-animated {
+          animation: newsEventVertical 30s linear infinite alternate;
+        }
+
+        @keyframes newsEventHorizontal {
+          0%, 6%    { transform: translateX(0); }
+          94%, 100% { transform: translateX(calc(var(--scroll-distance) * -1)); }
+        }
+
+        @keyframes newsEventVertical {
+          0%, 6%    { transform: translateY(0); }
+          94%, 100% { transform: translateY(calc(var(--scroll-distance) * -1)); }
+        }
+
+        /* Pause while the mouse is over the list */
+        .news-event-viewport:hover .news-event-track {
+          animation-play-state: paused;
+        }
+
+        .news-event-card {
+          cursor: pointer;
+        }
+      `}</style>
     </div>
   );
 }

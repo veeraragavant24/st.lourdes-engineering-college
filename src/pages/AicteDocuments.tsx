@@ -353,6 +353,7 @@ export default function AicteDocuments() {
           grid-template-columns: repeat(3, minmax(0, 1fr));
           gap: 14px;
           margin-bottom: 23px;
+          margin-top:20px;
         }
 
         .aicte-category-card {
@@ -1074,7 +1075,7 @@ export default function AicteDocuments() {
   display: flex;
   align-items: center;
   gap: 35px;
-  padding: 125px 0 65px;
+  padding: 140px 0 10px;
 }
 
 .aicte-hero-icon {
@@ -1096,7 +1097,7 @@ export default function AicteDocuments() {
 .aicte-hero-eyebrow {
   display: block;
   color: #f5d16f;
-  font-size: 13px;
+  font-size: 11px;
   font-weight: 800;
   letter-spacing: 4px;
   margin-bottom: 16px;
@@ -1105,7 +1106,7 @@ export default function AicteDocuments() {
 .aicte-hero-content h1 {
   color: #fff;
   font-family: Georgia, "Times New Roman", serif;
-  font-size: clamp(48px, 6vw, 76px);
+  font-size: clamp(30px, 4vw, 48px);
   font-weight: 700;
   line-height: 1.02;
   letter-spacing: -1.5px;
@@ -1115,6 +1116,7 @@ export default function AicteDocuments() {
 .aicte-hero-content h1 span {
   display: block;
   color: #f2d17c;
+
 }
 
 .aicte-hero-underline {

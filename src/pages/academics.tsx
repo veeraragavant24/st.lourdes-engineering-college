@@ -687,17 +687,12 @@ function AcademicsStyles() {
       }
 
       /* Programme detail page */
-      .programme-detail {
-        min-height: 100vh;
-        background: var(--academic-cream);
-        /* Keep the programme page below the fixed college header. */
-        padding-top: 88px;
-      }
+      
 
       .programme-detail-hero {
         position: relative;
         overflow: hidden;
-        padding: 54px 24px 50px;
+        padding: 120px 24px 50px;
         color: #fff;
         background:
           radial-gradient(

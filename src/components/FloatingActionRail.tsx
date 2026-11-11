@@ -78,7 +78,7 @@ export default function FloatingActionRail() {
             </span>
           );
 
-          if (item.href) {
+          if (item.href) { 
             return item.external ? (
               <a
                 key={item.label}

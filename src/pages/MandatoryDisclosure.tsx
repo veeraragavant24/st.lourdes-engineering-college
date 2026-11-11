@@ -218,7 +218,7 @@ export default function MandatoryDisclosure() {
           display: flex;
           align-items: center;
           overflow: hidden;
-            padding: 110px 7% 26px;
+            padding: 75px 7% 26px;
 
           background:
             linear-gradient(
@@ -298,7 +298,7 @@ export default function MandatoryDisclosure() {
           color: #fffaf5;
 
           font-family: Georgia, "Times New Roman", serif;
-          font-size: clamp(34px, 4.3vw, 56px);
+          font-size: clamp(28px, 4.0vw, 40px);
           line-height: 1.08;
           font-weight: 700;
           letter-spacing: -.8px;

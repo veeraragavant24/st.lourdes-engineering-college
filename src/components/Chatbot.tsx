@@ -286,7 +286,7 @@ export default function Chatbot() {
           setIsOpen((o) => !o);
           setHasUnread(false);
         }}
-        className={`fixed bottom-6 left-6 z-[55] flex h-14 w-14 items-center justify-center rounded-full border-2 border-gold bg-maroon-600 text-gold-100 shadow-2xl shadow-maroon-900/50 transition-all duration-300 hover:scale-110 hover:bg-maroon-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 ${
+        className={`fixed bottom-6 right-6 z-[55] flex h-14 w-14 items-center justify-center rounded-full border-2 border-gold bg-maroon-600 text-gold-100 shadow-2xl shadow-maroon-900/50 transition-all duration-300 hover:scale-110 hover:bg-maroon-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 ${
           hasUnread && !isOpen ? 'animate-pulse' : ''
         }`}
         aria-label={isOpen ? 'Close chat assistant' : 'Open chat assistant'}
@@ -301,7 +301,7 @@ export default function Chatbot() {
 
       {/* Chat panel */}
       {isOpen && (
-        <div className="fixed bottom-24 left-6 z-[55] flex h-[min(32rem,75vh)] w-[min(23rem,calc(100vw-3rem))] flex-col overflow-hidden rounded-2xl border-2 border-gold/30 bg-white shadow-2xl shadow-maroon-900/40 animate-scale-in">
+        <div className="fixed bottom-24 right-12 z-[55] flex h-[min(32rem,75vh)] w-[min(23rem,calc(100vw-3rem))] flex-col overflow-hidden rounded-2xl border-2 border-gold/30 bg-white shadow-2xl shadow-maroon-900/40 animate-scale-in">
           {/* Header */}
           <div className="relative overflow-hidden bg-gradient-to-br from-maroon-600 via-maroon-700 to-maroon-800 px-5 py-4">
             <div className="pointer-events-none absolute -right-4 -top-4 h-20 w-20 rounded-full bg-gold/10" />

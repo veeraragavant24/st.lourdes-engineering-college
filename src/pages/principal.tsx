@@ -260,6 +260,18 @@ export default function Principal() {
           font-weight: 600;
         }
 
+
+.principal-message p {
+  margin: 0 0 17px;
+  color: #382b2f;
+  font-size: 16px;
+  line-height: 1.9;
+}
+
+
+
+
+
         .principal-college {
           margin: 0;
           color: #f0e5e5;
@@ -752,7 +764,7 @@ export default function Principal() {
           <div className="principal-heading-underline" />
 
           <p>
-           Welcome to St. Lourdes Engineering College, a centre of excellence committed to academic quality, innovation, and holistic student development
+           Welcome to St. Lourdes Engineering College, a centre of excellence committed to academic quality, innovation, and holistic student development.
           </p>
 
           <p>
