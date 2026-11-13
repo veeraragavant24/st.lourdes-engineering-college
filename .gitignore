@@ -21,3 +21,22 @@ dist-ssr
 *.sln
 *.sw?
 .env
+# Build output directories
+bin/
+obj/
+
+# Visual Studio files
+.vs/
+*.user
+*.suo
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+
+# Environment and secret files
+.env
+.env.*
+!.env.example
