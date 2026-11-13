@@ -1,3 +1,4 @@
+
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -8,10 +9,6 @@ using STLourdes.Api.Models;
 using STLourdes.Api.Services;
 
 var builder = WebApplication.CreateBuilder(args);
-
-// --------------------------------------------------
-// 1. SQL SERVER DATABASE
-// --------------------------------------------------
 
 var connectionString = builder.Configuration
     .GetConnectionString("DefaultConnection");
@@ -25,17 +22,9 @@ if (string.IsNullOrWhiteSpace(connectionString))
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 
-// --------------------------------------------------
-// 2. PASSWORD HASHING
-// --------------------------------------------------
-
 builder.Services.AddScoped<
     IPasswordHasher<AdminUser>,
     PasswordHasher<AdminUser>>();
-
-// --------------------------------------------------
-// 3. JWT AUTHENTICATION
-// --------------------------------------------------
 
 var jwtKey = builder.Configuration["Jwt:Key"];
 var jwtIssuer = builder.Configuration["Jwt:Issuer"];
@@ -64,25 +53,17 @@ builder.Services
             {
                 ValidateIssuer = true,
                 ValidIssuer = jwtIssuer,
-
                 ValidateAudience = true,
                 ValidAudience = jwtAudience,
-
                 ValidateLifetime = true,
                 ValidateIssuerSigningKey = true,
-
                 IssuerSigningKey = new SymmetricSecurityKey(
                     Encoding.UTF8.GetBytes(jwtKey)),
-
                 ClockSkew = TimeSpan.FromMinutes(1)
             };
     });
 
 builder.Services.AddAuthorization();
-
-// --------------------------------------------------
-// 4. CORS - REACT FRONTEND
-// --------------------------------------------------
 
 builder.Services.AddCors(options =>
 {
@@ -100,37 +81,17 @@ builder.Services.AddCors(options =>
     });
 });
 
-// --------------------------------------------------
-// 5. EMAIL SERVICE
-// --------------------------------------------------
-
 builder.Services.AddScoped<EmailService>();
-
-// --------------------------------------------------
-// 6. CONTROLLERS AND SWAGGER
-// --------------------------------------------------
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// --------------------------------------------------
-// 7. BUILD APPLICATION
-// --------------------------------------------------
-
 var app = builder.Build();
-
-// --------------------------------------------------
-// 8. SEED INITIAL ADMIN ACCOUNT
-// --------------------------------------------------
 
 await AdminSeeder.SeedAsync(
     app.Services,
     app.Configuration);
-
-// --------------------------------------------------
-// 9. HTTP REQUEST PIPELINE
-// --------------------------------------------------
 
 if (app.Environment.IsDevelopment())
 {
@@ -139,7 +100,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 app.UseStaticFiles();
 
 app.UseCors("FrontendPolicy");

@@ -1,3 +1,4 @@
+using System.Net;
 using MailKit.Net.Smtp;
 using MailKit.Security;
 using MimeKit;
@@ -13,67 +14,96 @@ namespace STLourdes.Api.Services
             _configuration = configuration;
         }
 
-        public async Task SendEmailAsync(
-            string recipientEmail,
-            string subject,
-            string htmlBody)
+        public async Task SendAdmissionEnquiryAsync(
+            string studentName,
+            string studentEmail,
+            string phone,
+            string course,
+            string description)
         {
-            var senderName =
-                _configuration["EmailSettings:SenderName"];
+            var host = _configuration["Smtp:Host"];
+            var portValue = _configuration["Smtp:Port"];
+            var username = _configuration["Smtp:Username"];
+            var password = _configuration["Smtp:Password"];
+            var fromName = _configuration["Smtp:FromName"];
+            var collegeEmail = _configuration["Smtp:CollegeEmail"];
 
-            var senderEmail =
-                _configuration["EmailSettings:SenderEmail"];
-
-            var smtpServer =
-    _configuration["EmailSettings:SmtpServer"];
-
-if (string.IsNullOrWhiteSpace(smtpServer))
-{
-    throw new InvalidOperationException(
-        "SMTP server configuration is missing.");
-}
-
-            var smtpPort =
-                _configuration.GetValue<int>("EmailSettings:Port");
-
-            var appPassword =
-                _configuration["EmailSettings:AppPassword"];
-
-            if (string.IsNullOrWhiteSpace(senderEmail) ||
-                string.IsNullOrWhiteSpace(appPassword))
+            if (string.IsNullOrWhiteSpace(host) ||
+                !int.TryParse(portValue, out var port) ||
+                string.IsNullOrWhiteSpace(username) ||
+                string.IsNullOrWhiteSpace(password) ||
+                string.IsNullOrWhiteSpace(collegeEmail))
             {
                 throw new InvalidOperationException(
-                    "Gmail SMTP credentials are missing.");
+                    "SMTP settings are missing or invalid.");
             }
+
+            var safeName = WebUtility.HtmlEncode(studentName);
+            var safeEmail = WebUtility.HtmlEncode(studentEmail);
+            var safePhone = WebUtility.HtmlEncode(phone);
+            var safeCourse = WebUtility.HtmlEncode(course);
+            var safeDescription = WebUtility.HtmlEncode(description)
+                .Replace("\r\n", "<br>")
+                .Replace("\n", "<br>");
 
             var message = new MimeMessage();
 
             message.From.Add(new MailboxAddress(
-                senderName ?? "ST Lourdes Engineering College",
-                senderEmail));
+                fromName ?? "ST Lourdes Engineering College",
+                username));
 
-            message.To.Add(MailboxAddress.Parse(recipientEmail));
-            message.Subject = subject;
+            message.To.Add(MailboxAddress.Parse(collegeEmail));
+
+            // Replies from the college can go directly to the student.
+            message.ReplyTo.Add(MailboxAddress.Parse(studentEmail));
+
+            message.Subject = $"New Admission Enquiry - {studentName}";
 
             message.Body = new BodyBuilder
             {
-                HtmlBody = htmlBody
+                HtmlBody = $@"
+                    <div style='font-family:Arial,sans-serif;line-height:1.6;'>
+                        <h2>New Admission Enquiry</h2>
+                        <p>You have received a new admission enquiry.</p>
+
+                        <table cellpadding='8' cellspacing='0'
+                               style='border-collapse:collapse;'>
+                            <tr>
+                                <td><b>Student Name</b></td>
+                                <td>{safeName}</td>
+                            </tr>
+                            <tr>
+                                <td><b>Email</b></td>
+                                <td>{safeEmail}</td>
+                            </tr>
+                            <tr>
+                                <td><b>Phone</b></td>
+                                <td>{safePhone}</td>
+                            </tr>
+                            <tr>
+                                <td><b>Course</b></td>
+                                <td>{safeCourse}</td>
+                            </tr>
+                            <tr>
+                                <td><b>Message</b></td>
+                                <td>{safeDescription}</td>
+                            </tr>
+                        </table>
+
+                        <p>ST Lourdes Engineering College</p>
+                    </div>"
             }.ToMessageBody();
 
-            using var client = new SmtpClient();
+            using var smtp = new SmtpClient();
 
-            await client.ConnectAsync(
-                smtpServer,
-                smtpPort,
+            await smtp.ConnectAsync(
+                host,
+                port,
                 SecureSocketOptions.StartTls);
 
-            await client.AuthenticateAsync(
-                senderEmail,
-                appPassword.Replace(" ", ""));
-
-            await client.SendAsync(message);
-
-            await client.DisconnectAsync(true);
+            await smtp.AuthenticateAsync(username, password);
+            await smtp.SendAsync(message);
+            await smtp.DisconnectAsync(true);
         }
     }
 }
