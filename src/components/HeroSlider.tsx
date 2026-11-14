@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
 import { heroSlides, siteConfig } from '@/data/siteConfig';
@@ -13,7 +13,8 @@ function HeroStyles() {
   return (
     <style>{`
       .hero-slider {
-        --hero-maroon-900: 74, 16, 34;      /* rgb of #4A1022 */
+        --hero-maroon-900: 74, 16, 34;
+        --hero-maroon-900-hex: #4A1022;
         --hero-maroon-700: #6E1832;
         --hero-gold: #D8B54C;
         --hero-gold-rgb: 216, 181, 76;
@@ -97,8 +98,6 @@ function HeroStyles() {
         display: flex;
         align-items: center;
         height: 130%;
-        
-    
       }
 
       .hero-content-inner {
@@ -106,7 +105,6 @@ function HeroStyles() {
         max-width: 80rem;
         margin-inline: auto;
         padding-inline: 20px;
-        
       }
 
       .hero-text {
@@ -202,21 +200,148 @@ function HeroStyles() {
 
       /* ================= TNEA BADGE ================= */
 
+      /* The wrapper handles the hover lift, because the badge's own
+         transform is held by the entrance animation (fill-mode: both). */
       .hero-badge-wrap {
         display: none;
         position: absolute;
         right: 400px;
         bottom: 620px;
         z-index: 10;
+        cursor: pointer;
+        transition: transform 350ms ease;
+      }
+
+      .hero-badge-wrap:hover {
+        transform: translateY(-4px) scale(1.03);
+      }
+
+      /* Gold shine angle */
+      @property --hero-badge-angle {
+        syntax: '<angle>';
+        initial-value: 0deg;
+        inherits: false;
+      }
+
+      /* Cinematic entrance */
+      @keyframes heroBadgeEntrance {
+        from {
+          opacity: 0;
+          transform: translateY(12px) scale(.98);
+          filter: blur(5px);
+        }
+
+        to {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+          filter: blur(0);
+        }
+      }
+
+      /* Continuous golden glow */
+      @keyframes heroBadgeGlow {
+        0%, 100% {
+          box-shadow:
+            0 4px 18px rgba(0, 0, 0, .15),
+            0 0 5px rgba(216, 181, 76, .12);
+        }
+
+        50% {
+          box-shadow:
+            0 5px 20px rgba(0, 0, 0, .18),
+            0 0 13px rgba(216, 181, 76, .28);
+        }
+      }
+
+      /* Shine travels around the border */
+      @keyframes heroBadgeShine {
+        to {
+          --hero-badge-angle: 360deg;
+        }
       }
 
       .hero-badge {
+        position: relative;
+        isolation: isolate;
+        overflow: hidden;
+
         padding: 16px 24px;
         border: 1px solid rgba(var(--hero-gold-rgb), .4);
         border-radius: 16px;
-        background: rgba(var(--hero-maroon-900), .8);
+        background-color: rgba(var(--hero-maroon-900), .8);
+
         backdrop-filter: blur(12px);
         -webkit-backdrop-filter: blur(12px);
+
+        transition:
+          background-color 400ms ease,
+          border-color 400ms ease;
+
+        animation:
+          heroBadgeEntrance 900ms ease-out both,
+          heroBadgeGlow 4s ease-in-out 900ms infinite;
+      }
+
+      /* HOVER: box turns gold */
+      .hero-badge-wrap:hover .hero-badge {
+        background-color: var(--hero-gold);
+        border-color: var(--hero-gold);
+      }
+
+      /* Animated gold border */
+      .hero-badge::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        padding: 2px;
+        border-radius: inherit;
+
+        background: conic-gradient(
+          from var(--hero-badge-angle),
+          transparent 0deg,
+          transparent 285deg,
+          #A77B32 310deg,
+          #D8B54C 325deg,
+          #FFF1B5 340deg,
+          #D8B54C 350deg,
+          transparent 360deg
+        );
+
+        -webkit-mask:
+          linear-gradient(#fff 0 0) content-box,
+          linear-gradient(#fff 0 0);
+
+        -webkit-mask-composite: xor;
+        mask-composite: exclude;
+
+        pointer-events: none;
+        z-index: 3;
+
+        animation: heroBadgeShine 5s linear infinite;
+
+        filter: drop-shadow(
+          0 0 3px rgba(216, 181, 76, .5)
+        );
+      }
+
+      .hero-badge > * {
+        position: relative;
+        z-index: 1;
+      }
+
+      /* Heading reveal */
+      @keyframes heroBadgeHeadingReveal {
+        from {
+          opacity: 0;
+          transform: translateY(8px);
+          filter: blur(3px);
+        }
+
+        to {
+          opacity: 1;
+          transform: translateY(0);
+          filter: blur(0);
+        }
       }
 
       .hero-badge-label {
@@ -226,15 +351,106 @@ function HeroStyles() {
         font-size: 10px;
         letter-spacing: .2em;
         text-transform: uppercase;
+
+        opacity: 0;
+        transition: color 400ms ease;
+        animation: heroBadgeHeadingReveal 700ms ease-out 900ms forwards;
+      }
+
+      /* HOVER: label turns maroon */
+      .hero-badge-wrap:hover .hero-badge-label {
+        color: var(--hero-maroon-900-hex);
+      }
+
+      /* Number reveal - Bottom to Top */
+      @keyframes heroDigitRevealUp {
+        from {
+          opacity: 0;
+          transform: translateY(7px);
+          filter: blur(2px);
+        }
+
+        70% {
+          opacity: 1;
+          transform: translateY(-1px);
+          filter: blur(0);
+        }
+
+        to {
+          opacity: 1;
+          transform: translateY(0);
+          filter: blur(0);
+        }
+      }
+
+      /* Number reveal - Top to Bottom */
+      @keyframes heroDigitRevealDown {
+        from {
+          opacity: 0;
+          transform: translateY(-7px);
+          filter: blur(2px);
+        }
+
+        70% {
+          opacity: 1;
+          transform: translateY(1px);
+          filter: blur(0);
+        }
+
+        to {
+          opacity: 1;
+          transform: translateY(0);
+          filter: blur(0);
+        }
+      }
+
+      /* Subtle number glow */
+      @keyframes heroNumberGlow {
+        0%, 100% {
+          text-shadow: 0 0 2px rgba(255, 210, 100, .15);
+        }
+
+        50% {
+          text-shadow: 0 0 7px rgba(255, 210, 100, .4);
+        }
       }
 
       .hero-badge-code {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        gap: 3px;
+
         margin: 4px 0 0;
         color: var(--hero-gold);
         font-family: Georgia, 'Times New Roman', serif;
         font-size: 30px;
         font-weight: 700;
         line-height: 1.2;
+
+        transition: color 400ms ease;
+        animation: heroNumberGlow 3s ease-in-out 3.5s infinite;
+      }
+
+      /* HOVER: number turns maroon */
+      .hero-badge-wrap:hover .hero-badge-code {
+        color: var(--hero-maroon-900-hex);
+      }
+
+      .hero-badge-code span {
+        display: inline-block;
+        opacity: 0;
+      }
+
+      /* Odd digits: Bottom to Top */
+      .hero-badge-code span:nth-child(odd) {
+        animation: heroDigitRevealUp 650ms ease-out both;
+      }
+
+      /* Even digits: Top to Bottom */
+      .hero-badge-code span:nth-child(even) {
+        animation: heroDigitRevealDown 650ms ease-out both;
       }
 
       /* ================= ARROWS ================= */
@@ -327,6 +543,7 @@ function HeroStyles() {
           opacity: 0;
           transform: translate3d(0, 24px, 0);
         }
+
         to {
           opacity: 1;
           transform: translate3d(0, 0, 0);
@@ -358,8 +575,25 @@ function HeroStyles() {
       /* ================= ACCESSIBILITY ================= */
 
       @media (prefers-reduced-motion: reduce) {
-        .hero-slide { transition: none; }
-        .hero-animate { animation: none; }
+        .hero-slide {
+          transition: none;
+        }
+
+        .hero-badge-wrap {
+          transition: none;
+        }
+
+        .hero-animate,
+        .hero-badge,
+        .hero-badge::before,
+        .hero-badge-label,
+        .hero-badge-code,
+        .hero-badge-code span {
+          animation: none !important;
+          opacity: 1;
+          transform: none;
+          filter: none;
+        }
       }
     `}</style>
   );
@@ -372,6 +606,7 @@ function HeroStyles() {
 export default function HeroSlider() {
   const [current, setCurrent] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
+
   const slideCount = heroSlides.length;
 
   const next = useCallback(() => {
@@ -382,7 +617,7 @@ export default function HeroSlider() {
     setCurrent((c) => (c - 1 + slideCount) % slideCount);
   }, [slideCount]);
 
-  // Auto-play: restarts every time the slide changes (including manual clicks)
+  // Auto-play: restarts every time the slide changes
   useEffect(() => {
     if (isPaused || slideCount < 2) return;
 
@@ -390,14 +625,21 @@ export default function HeroSlider() {
     return () => window.clearTimeout(timer);
   }, [current, isPaused, next, slideCount]);
 
-  // Pause while the browser tab is hidden, resume when it comes back
+  // Pause when browser tab is hidden
   useEffect(() => {
     const onVisibility = () => setIsPaused(document.hidden);
+
     document.addEventListener('visibilitychange', onVisibility);
-    return () => document.removeEventListener('visibilitychange', onVisibility);
+
+    return () => {
+      document.removeEventListener('visibilitychange', onVisibility);
+    };
   }, []);
 
   if (slideCount === 0) return null;
+
+  // Dynamic TNEA code: works with any configured code length
+  const tneaDigits = String(siteConfig.tneaCode ?? '').split('');
 
   return (
     <section
@@ -420,8 +662,6 @@ export default function HeroSlider() {
           <div className="hero-overlay-bottom" />
         </div>
       ))}
-
-  
 
       {/* Content */}
       <div className="hero-content">
@@ -465,7 +705,10 @@ export default function HeroSlider() {
                       <ArrowRight aria-hidden="true" />
                     </Link>
 
-                    <Link to={slide.secondaryCta.to} className="hero-btn-outline">
+                    <Link
+                      to={slide.secondaryCta.to}
+                      className="hero-btn-outline"
+                    >
                       {slide.secondaryCta.label}
                     </Link>
                   </div>
@@ -479,8 +722,26 @@ export default function HeroSlider() {
       {/* TNEA Badge */}
       <div className="hero-badge-wrap">
         <div className="hero-badge">
-          <p className="hero-badge-label">TNEA Counselling Code</p>
-          <p className="hero-badge-code">{siteConfig.tneaCode}</p>
+          <p className="hero-badge-label">
+            TNEA Counselling Code
+          </p>
+
+          <p
+            className="hero-badge-code"
+            aria-label={`TNEA Counselling Code ${siteConfig.tneaCode}`}
+          >
+            {tneaDigits.map((digit, idx) => (
+              <span
+                key={`${idx}-${digit}`}
+                aria-hidden="true"
+                style={{
+                  animationDelay: `${1.6 + idx * 0.4}s`,
+                }}
+              >
+                {digit}
+              </span>
+            ))}
+          </p>
         </div>
       </div>
 

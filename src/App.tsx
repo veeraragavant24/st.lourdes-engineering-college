@@ -1,4 +1,3 @@
-
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 
 import { AdmissionModalProvider } from '@/components/AdmissionModalContext';
@@ -32,6 +31,43 @@ import NewsEvents from './pages/NewsEvents';
 
 import AdminLogin from './pages/AdminLogin';
 import AdminNewsEvents from './pages/AdminNewsEvents';
+
+/**
+ * Always start from the Home page when the browser is refreshed.
+ *
+ * This runs once when the app loads, BEFORE the router renders, so the
+ * visitor never sees the old page flash. Normal navigation (clicking links,
+ * typing a URL, back/forward) is not affected. Admin pages are skipped so
+ * refreshing the admin portal does not kick you out of your work.
+ */
+(function redirectToHomeOnRefresh() {
+  if (typeof window === 'undefined') return;
+
+  const navEntry = performance.getEntriesByType('navigation')[0] as
+    | PerformanceNavigationTiming
+    | undefined;
+
+  const isReload = navEntry?.type === 'reload';
+  const isAdmin = window.location.pathname.startsWith('/admin');
+
+  if (!isReload || isAdmin) return;
+
+  // Stop the browser from restoring the old scroll position
+  if ('scrollRestoration' in window.history) {
+    window.history.scrollRestoration = 'manual';
+  }
+
+  const isAlreadyHome =
+    window.location.pathname === '/' &&
+    !window.location.search &&
+    !window.location.hash;
+
+  if (!isAlreadyHome) {
+    window.history.replaceState(null, '', '/');
+  }
+
+  window.scrollTo(0, 0);
+})();
 
 function AppLayout() {
   const location = useLocation();

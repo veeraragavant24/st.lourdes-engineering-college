@@ -367,7 +367,7 @@ export default function Eligibility() {
           margin: 0;
           color: #fff;
           font-family: Georgia, "Times New Roman", serif;
-          font-size: clamp(38px, 5vw, 55px);
+          font-size: clamp(29px, 4vw, 40px);
           line-height: 1.1;
           font-weight: 700;
         }
@@ -383,7 +383,7 @@ export default function Eligibility() {
           max-width: 650px;
           margin: 17px 0 0;
           color: rgba(255,255,255,0.86);
-          font-size: 15px;
+          font-size: 14px;
           line-height: 1.8;
         }
 
@@ -499,7 +499,7 @@ export default function Eligibility() {
           margin: 0 0 7px;
           color: var(--eligibility-maroon);
           font-family: Georgia, "Times New Roman", serif;
-          font-size: 25px;
+          font-size: 24px;
           line-height: 1.3;
           font-weight: 700;
         }

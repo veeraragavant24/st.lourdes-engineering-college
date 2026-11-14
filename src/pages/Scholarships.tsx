@@ -410,7 +410,7 @@ const Scholarships: React.FC = () => {
           margin: 0;
           color: #fff;
           font-family: Georgia, "Times New Roman", serif;
-          font-size: clamp(38px, 4.5vw, 56px);
+          font-size: clamp(28px, 4.0vw, 42px);
           font-weight: 700;
           line-height: 1.1;
         }
@@ -427,7 +427,7 @@ const Scholarships: React.FC = () => {
           margin: 10px 0 0;
           color: rgba(255,255,255,0.95);
           font-family: Georgia, "Times New Roman", serif;
-          font-size: 19px;
+          font-size: 15px;
           font-style: italic;
           line-height: 1.5;
         }
@@ -553,7 +553,7 @@ const Scholarships: React.FC = () => {
           margin: 0;
           color: #76152f;
           font-family: Georgia, "Times New Roman", serif;
-          font-size: 29px;
+          font-size: 24px;
           font-weight: 700;
           line-height: 1.25;
         }
@@ -616,7 +616,7 @@ const Scholarships: React.FC = () => {
           margin: 0;
           color: #821b39;
           font-family: Georgia, "Times New Roman", serif;
-          font-size: 19px;
+          font-size: 17px;
           font-weight: 700;
           line-height: 1.35;
         }
@@ -624,7 +624,7 @@ const Scholarships: React.FC = () => {
         .scholarship-item-content p {
           margin: 2px 0 0;
           color: #44363a;
-          font-size: 14px;
+          font-size: 12px;
           line-height: 1.55;
         }
 
@@ -654,7 +654,7 @@ const Scholarships: React.FC = () => {
         .scholarship-information p {
           margin: 0;
           color: #54443b;
-          font-size: 14px;
+          font-size: 13px;
           font-style: italic;
           line-height: 1.6;
         }
@@ -677,7 +677,7 @@ const Scholarships: React.FC = () => {
         }
 
         .small-scholarship-card .scholarship-card-heading h2 {
-          font-size: 26px;
+          font-size: 24px;
         }
 
         .small-scholarship-card .scholarship-list-item {
@@ -695,7 +695,7 @@ const Scholarships: React.FC = () => {
         }
 
         .management-item .scholarship-item-content h3 {
-          font-size: 17px;
+          font-size: 16px;
         }
 
         /* CONTACT BANNER */
@@ -766,7 +766,7 @@ const Scholarships: React.FC = () => {
           margin: 0 0 5px;
           color: #fff;
           font-family: Georgia, "Times New Roman", serif;
-          font-size: 24px;
+          font-size: 20px;
           font-style: italic;
           line-height: 1.3;
         }
@@ -774,7 +774,7 @@ const Scholarships: React.FC = () => {
         .scholarship-contact-content p {
           margin: 0;
           color: rgba(255,255,255,0.88);
-          font-size: 14px;
+          font-size: 13px;
           line-height: 1.6;
         }
 

@@ -403,7 +403,7 @@ export default function Header({
         className="fixed inset-x-0 top-0 z-50 bg-transparent transition-all duration-300"
       >
         <div
-  className="mx-auto flex w-full max-w-7xl items-center justify-between gap-2
+  className="mx-auto flex w-full max-w-7xl items-center justify-between gap-3
     bg-transparent border-none shadow-none
     px-3 py-3
     sm:gap-3 sm:px-5 sm:py-3.5
@@ -435,17 +435,21 @@ className={`whitespace-nowrap font-sans text-[10px] font-semibold uppercase trac
           </Link>
 
           {/* Desktop and laptop navigation */}
-          <nav
-            className="hidden xl:flex flex-1 items-center justify-center gap-1 xl:gap-1.5 2xl:gap-2 ml-4 2xl:ml-6"
-            aria-label="Main navigation"
-          >
+          
+<nav
+  className="hidden 2xl:flex flex-1 min-w-0 items-center justify-between gap-1.5 ml-4"
+  aria-label="Main navigation"
+>
+
             {navItems.map((item) => (
-              <div
-                key={item.label}
-                className="relative"
-                onMouseEnter={() => handleDropdownEnter(item.label)}
-                onMouseLeave={handleDropdownLeave}
-              >
+              
+<div
+  key={item.label}
+  className="relative shrink-0"
+  onMouseEnter={() => handleDropdownEnter(item.label)}
+  onMouseLeave={handleDropdownLeave}
+>
+
                 {item.children ? (
                   <button
                     type="button"
@@ -456,7 +460,9 @@ className={`whitespace-nowrap font-sans text-[10px] font-semibold uppercase trac
                       setOpenDesktopSubmenu(null);
                     }}
                     aria-expanded={openDropdown === item.label}
-                    className={`group relative flex items-center whitespace-nowrap rounded px-1 py-2 text-[10px] font-medium transition-colors duration-300 xl:px-1.5 xl:text-[11px] 2xl:gap-1.5 2xl:px-2 2xl:text-[12px] ${
+                    className={`group relative flex items-center whitespace-nowrap rounded px-1 py-2 text-[10px] font-medium
+whitespace-nowrap transition-colors duration-300
+xl:px-1 xl:text-[11px] 2xl:px-1.5 2xl:text-[12px] ${
                       isItemActive(item)
                         ? 'text-gold'
                         : navTextColor
@@ -599,7 +605,7 @@ className={`whitespace-nowrap font-sans text-[10px] font-semibold uppercase trac
           </nav>
 
           {/* Search and mobile menu buttons */}
-          <div className="ml-auto flex shrink-0 items-center gap-1.5 sm:gap-2 xl:ml-3 2xl:ml-4">
+          <div className="ml-3 flex shrink-0 items-center gap-2">
             <button
               type="button"
               onClick={() => setSearchOpen((open) => !open)}

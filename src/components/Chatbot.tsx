@@ -1,464 +1,973 @@
-import { useEffect, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { MessageCircle, X, Send, GraduationCap, User, ChevronDown } from 'lucide-react';
-import { siteConfig } from '@/data/siteConfig';
-import { useAdmissionModal } from '@/components/AdmissionModalContext';
+
+import React, { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 interface Message {
   id: number;
-  sender: 'bot' | 'user';
+  sender: "bot" | "user";
   text: string;
-  links?: { label: string; to: string }[];
-  action?: { label: string; type: 'admission' };
+  options?: MenuOption[];
 }
 
-interface KeywordRule {
-  keywords: string[];
-  response: string;
-  links?: { label: string; to: string }[];
-  action?: { label: string; type: 'admission' };
+interface MenuOption {
+  label: string;
+  response?: string;
+  route?: string;
+  action?: "admission" | "external";
+  url?: string;
+  children?: MenuOption[];
 }
 
-const rules: KeywordRule[] = [
+interface ChatbotProps {
+  onOpenAdmission?: () => void;
+}
+
+const mainMenu: MenuOption[] = [
   {
-    keywords: ['admission', 'apply', 'admissions', 'enroll', 'enquiry', 'join', 'how to apply'],
-    response:
-      "Admissions for 2026-27 are open! Here's the process: 1) Submit an enquiry, 2) Participate in TNEA counselling (code " +
-      siteConfig.tneaCode +
-      '), 3) Verify documents, 4) Confirm your seat. You can start your enquiry right now.',
-    links: [{ label: 'View Admission Details', to: '/admission' }],
-    action: { label: 'Open Enquiry Form', type: 'admission' },
-  },
-  {
-    keywords: ['tnea', 'counselling code', 'counselling', 'anna university counselling'],
-    response:
-      'Our TNEA Counselling Code is ' +
-      siteConfig.tneaCode +
-      '. Use this code during TNEA counselling for B.E. / B.Tech. admissions.',
-    links: [{ label: 'Admission Process', to: '/admission' }],
-  },
-  {
-    keywords: ['program', 'programs', 'course', 'courses', 'degree', 'branch', 'department', 'study', 'offer'],
-    response:
-      'We offer 7 programs: B.E. CSE, B.E. CSE (Cyber Security), B.Tech. AI & DS, B.Tech. IT, B.E. ECE, M.B.A., and M.E. CSE. Explore each one for details on duration, curriculum, and career paths.',
-    links: [{ label: 'View All Programs', to: '/programs' }],
-  },
-  {
-    keywords: ['cse', 'computer science'],
-    response:
-      'We offer B.E. Computer Science & Engineering and B.E. CSE (Cyber Security) at the undergraduate level, plus M.E. CSE at the postgraduate level. All are 4-year (UG) or 2-year (PG) programs.',
-    links: [
-      { label: 'B.E. CSE Details', to: '/programs#be-cse' },
-      { label: 'B.E. CSE Cyber Security', to: '/programs#be-cse-cyber-security' },
-      { label: 'M.E. CSE Details', to: '/programs#me-cse' },
+    label: "About Our College",
+    children: [
+      {
+        label: "About Us",
+        response: "St. Lourdes Engineering College is committed to providing quality technical education and developing skilled professionals.",
+        route: "/about",
+      },
+      {
+        label: "Vision & Mission",
+        response: "Our vision is to develop competent professionals through quality education, innovation, research, and ethical values.",
+        route: "/about",
+      },
+      {
+        label: "Management",
+        response: "Our management works towards academic excellence, student development, and creating a supportive learning environment.",
+        route: "/about",
+      },
     ],
   },
   {
-    keywords: ['ai', 'artificial intelligence', 'data science', 'ds', 'machine learning'],
-    response:
-      'Our B.Tech. Artificial Intelligence & Data Science program covers machine learning, deep learning, data analytics, and intelligent systems design. It\'s a 4-year undergraduate program.',
-    links: [{ label: 'B.Tech AI & DS Details', to: '/programs#btech-ai-ds' }],
+    label: "Admissions",
+    children: [
+      {
+        label: "Admission Enquiry",
+        response: "Interested in joining St. Lourdes Engineering College? Contact our admission team for assistance.",
+        action: "admission",
+      },
+      {
+        label: "Eligibility",
+        response: "Eligibility requirements depend on the programme and applicable admission regulations. Contact our admission office for the latest details.",
+      },
+      {
+        label: "Apply Now",
+        response: "Visit our admission page to explore the admission process.",
+        route: "/admission",
+      },
+    ],
   },
   {
-    keywords: ['it', 'information technology', 'btech it'],
-    response:
-      'B.Tech. Information Technology bridges computing fundamentals with enterprise IT, cloud infrastructure, networking, and modern web technologies. It\'s a 4-year program.',
-    links: [{ label: 'B.Tech IT Details', to: '/programs#btech-it' }],
+    label: "Courses & Programmes",
+    children: [
+      {
+        label: "Engineering Programmes",
+        response: "Explore the engineering programmes offered by our institution.",
+        route: "/programs",
+      },
+      {
+        label: "Departments",
+        response: "Our academic departments focus on technical knowledge, practical learning, and career development.",
+        route: "/departments",
+      },
+    ],
   },
   {
-    keywords: ['ece', 'electronics', 'communication'],
-    response:
-      'B.E. Electronics and Communication Engineering spans analog and digital electronics, communication systems, VLSI design, and signal processing. It\'s a 4-year program.',
-    links: [{ label: 'B.E. ECE Details', to: '/programs#be-ece' }],
+    label: "Campus & Facilities",
+    children: [
+      {
+        label: "Campus Facilities",
+        response: "Our campus provides facilities that support academic learning and student development.",
+        route: "/facilities",
+      },
+      {
+        label: "Library",
+        response: "Our college library supports students and faculty with learning and academic resources.",
+      },
+      {
+        label: "Laboratories",
+        response: "Practical laboratory sessions help students develop technical and professional skills.",
+      },
+      {
+        label: "Gallery",
+        response: "Explore photographs and highlights from our campus and college activities.",
+        route: "/gallery",
+      },
+    ],
   },
   {
-    keywords: ['mba', 'management', 'business', 'master of business'],
-    response:
-      'Our Master of Business Administration (M.B.A.) is a 2-year postgraduate program developing strategic thinking, leadership, and business acumen.',
-    links: [{ label: 'M.B.A. Details', to: '/programs#mba' }],
+    label: "Placements",
+    children: [
+      {
+        label: "Placement Cell",
+        response: "Our placement activities help students prepare for recruitment through career guidance, training, and placement opportunities.",
+        route: "/placement",
+      },
+      {
+        label: "Training & Development",
+        response: "Students can develop communication, aptitude, technical, and interview skills through training activities.",
+        route: "/placement",
+      },
+    ],
   },
   {
-    keywords: ['placement', 'recruiter', 'recruiters', 'job', 'jobs', 'career', 'careers', 'placement cell', 'campus placement'],
-    response:
-      'Our Placement Cell provides career guidance, mock interviews, resume workshops, and coordinates campus recruitment drives with national and multinational companies. Visit the placement page for the full recruiter list.',
-    links: [{ label: 'Placement Overview', to: '/placement' }],
-  },
-  {
-    keywords: ['eligibility', 'eligible', 'criteria', 'qualification', 'qualifications', 'marks', 'hsc', '12th'],
-    response:
-      'For B.E./B.Tech.: Pass 10+2 (HSC) with Mathematics, Physics, and Chemistry as per Anna University norms, plus valid TNEA registration. For M.B.A./M.E.: A relevant Bachelor\'s degree as per Anna University PG admission norms.',
-    links: [{ label: 'Eligibility Details', to: '/admission#eligibility' }],
-  },
-  {
-    keywords: ['fee', 'fees', 'tuition', 'cost', 'fee structure', 'scholarship'],
-    response:
-      'For the most accurate and up-to-date fee structure, please contact our admissions office directly. They can provide detailed fee information for each program and any available scholarships.',
-    links: [{ label: 'Contact Admissions', to: '/contact' }],
-    action: { label: 'Open Enquiry Form', type: 'admission' },
-  },
-  {
-    keywords: ['library', 'books', 'study material', 'reading'],
-    response:
-      'Our Central Library is a state-of-the-art facility with an extensive collection of books, e-resources, digital journals, spacious reading halls, and group study rooms. It serves as the intellectual hub of our campus.',
-    links: [{ label: 'Campus Facilities', to: '/gallery#facilities' }],
-  },
-  {
-    keywords: ['hostel', 'accommodation', 'stay', 'lodging', 'residence'],
-    response:
-      'We provide separate, safe, and comfortable hostel facilities for boys and girls with nutritious food, hygiene facilities, and recreational and study areas.',
-    links: [{ label: 'Campus Facilities', to: '/gallery#hostel' }],
-  },
-  {
-    keywords: ['campus', 'facilities', 'infrastructure', 'labs', 'wifi', 'sports'],
-    response:
-      'Our campus features a central library, modern computer and science labs, high-speed Wi-Fi, separate hostels, sports grounds, and recreation facilities. Explore our photo gallery for a visual tour.',
-    links: [{ label: 'View Gallery', to: '/gallery' }],
-  },
-  {
-    keywords: ['about', 'history', 'founder', 'trust', 'established', 'when was', 'who started'],
-    response:
-      'ST. Lourdes Engineering College was founded by Ln. Dr. S. Peter in ' +
-      siteConfig.established +
-      ' under the Loordhu Ammal Educational Trust. It is a Christian Minority Institution located on NH45 at Erandam Kattalai, Tharapakkam, near Anagaputhur, Chennai - 600128.',
-    links: [{ label: 'About the College', to: '/about' }],
-  },
-  {
-    keywords: ['location', 'address', 'where', 'map', 'directions', 'reach', 'how to reach'],
-    response:
-      'We are located at ' +
-      siteConfig.address.line2 +
-      ' ' +
-      siteConfig.address.line3 +
-      ' ' +
-      siteConfig.address.line4,
-    links: [{ label: 'View on Map', to: '/contact' }],
-  },
-  {
-    keywords: ['contact', 'phone', 'email', 'call', 'reach out'],
-    response:
-      'You can reach us at ' +
-      siteConfig.phones[0] +
-      ' or email ' +
-      siteConfig.emails[0] +
-      '. Visit our contact page for all phone numbers and office hours.',
-    links: [{ label: 'Contact Page', to: '/contact' }],
-  },
-  {
-    keywords: ['news', 'events', 'happening', 'latest', 'update', 'updates', 'upcoming'],
-    response:
-      'Recent news includes our National-Level Hackathon "Hack It Out", the "Techtopia \'25" symposium, and guest lectures on digital marketing and global education. Check our news section for full details.',
-    links: [{ label: 'News & Events', to: '/about#news' }],
-  },
-  {
-    keywords: ['gallery', 'photos', 'images', 'pictures', 'see campus'],
-    response:
-      'Our photo gallery showcases the library, labs, hostel, campus events, and student life. Take a visual tour of our campus!',
-    links: [{ label: 'View Gallery', to: '/gallery' }],
-  },
-  {
-    keywords: ['hello', 'hi', 'hey', 'greetings', 'good morning', 'good afternoon', 'good evening'],
-    response:
-      'Hello! Welcome to ST. Lourdes Engineering College. I can help you with admissions, programs, placements, campus facilities, and more. What would you like to know?',
-  },
-  {
-    keywords: ['thank', 'thanks', 'thank you', 'great', 'awesome', 'perfect', 'helpful'],
-    response:
-      'You\'re welcome! Feel free to ask if you have any more questions. We\'re here to help you on your journey to ST. Lourdes.',
-  },
-  {
-    keywords: ['bye', 'goodbye', 'see you', 'later'],
-    response: 'Goodbye! We hope to see you at ST. Lourdes Engineering College soon. Have a great day!',
+    label: "Contact Us",
+    response: "Contact St. Lourdes Engineering College through our official contact page for enquiries and assistance.",
+    route: "/contact",
   },
 ];
 
-const defaultResponse: KeywordRule = {
-  keywords: [],
-  response:
-    'I can help with admissions, programs offered, placement support, campus facilities, eligibility, fees, location, and more. Try asking "What programs do you offer?" or "How do I apply?"',
-  links: [
-    { label: 'Programs', to: '/programs' },
-    { label: 'Admission', to: '/admission' },
-    { label: 'Contact', to: '/contact' },
-  ],
-};
-
-const quickPrompts = [
-  'What programs do you offer?',
-  'How do I apply for admission?',
-  'What is the TNEA counselling code?',
-  'Tell me about placement support',
-  'Where is the college located?',
+const quickQuestions = [
+  "Admission Enquiry",
+  "Available Courses",
+  "Placement Details",
+  "Contact Information",
 ];
 
-function findResponse(input: string): KeywordRule {
-  const lower = input.toLowerCase();
-  for (const rule of rules) {
-    if (rule.keywords.some((kw) => lower.includes(kw))) {
-      return rule;
-    }
-  }
-  return defaultResponse;
-}
+const Chatbot: React.FC<ChatbotProps> = ({ onOpenAdmission }) => {
+  const navigate = useNavigate();
 
-let messageIdCounter = 0;
-function createMessage(sender: 'bot' | 'user', text: string, links?: { label: string; to: string }[], action?: { label: string; type: 'admission' }): Message {
-  messageIdCounter += 1;
-  return { id: messageIdCounter, sender, text, links, action };
-}
-
-export default function Chatbot() {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
-  const [input, setInput] = useState('');
+  const [menuStack, setMenuStack] = useState<MenuOption[][]>([mainMenu]);
+  const [input, setInput] = useState("");
   const [isTyping, setIsTyping] = useState(false);
-  const [hasUnread, setHasUnread] = useState(false);
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
-  const { openModal } = useAdmissionModal();
-  const initialized = useRef(false);
 
-  // Seed welcome message on first open
-  useEffect(() => {
-    if (isOpen && !initialized.current) {
-      initialized.current = true;
-      setMessages([
-        createMessage(
-          'bot',
-          'Welcome to ST. Lourdes Engineering College! I\'m Lourdes Assistant. How can I help you today? You can ask me about admissions, programs, placements, campus facilities, and more.'
-        ),
-      ]);
-      setHasUnread(false);
-    }
-  }, [isOpen]);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const typingTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Auto-scroll to bottom
-  useEffect(() => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollTo({ top: scrollRef.current.scrollHeight, behavior: 'smooth' });
-    }
-  }, [messages, isTyping]);
+  const createMessage = (
+    sender: "bot" | "user",
+    text: string,
+    options?: MenuOption[]
+  ): Message => ({
+    id: Date.now() + Math.random(),
+    sender,
+    text,
+    options,
+  });
 
-  // Focus input when opened
-  useEffect(() => {
-    if (isOpen && inputRef.current) {
-      setTimeout(() => inputRef.current?.focus(), 300);
-    }
-  }, [isOpen]);
-
-  // Show notification pulse after delay if never opened
-  useEffect(() => {
-    if (!isOpen && !initialized.current) {
-      const timer = setTimeout(() => setHasUnread(true), 4000);
-      return () => clearTimeout(timer);
-    }
-  }, [isOpen]);
-
-  const handleSend = (text?: string) => {
-    const messageText = (text ?? input).trim();
-    if (!messageText) return;
-
-    const userMsg = createMessage('user', messageText);
-    setMessages((prev) => [...prev, userMsg]);
-    setInput('');
-    setIsTyping(true);
-
-    // Simulate typing delay
-    setTimeout(() => {
-      const rule = findResponse(messageText);
-      const botMsg = createMessage('bot', rule.response, rule.links, rule.action);
-      setMessages((prev) => [...prev, botMsg]);
-      setIsTyping(false);
-    }, 600 + Math.random() * 400);
+  const addMessage = (
+    sender: "bot" | "user",
+    text: string,
+    options?: MenuOption[]
+  ) => {
+    setMessages((previous) => [
+      ...previous,
+      createMessage(sender, text, options),
+    ]);
   };
 
-  const handleAction = (action: { label: string; type: 'admission' }) => {
-    if (action.type === 'admission') {
-      setIsOpen(false);
-      openModal();
+  const showBotMessage = (text: string, options?: MenuOption[]) => {
+    if (typingTimerRef.current) {
+      clearTimeout(typingTimerRef.current);
+    }
+
+    setIsTyping(true);
+
+    typingTimerRef.current = setTimeout(() => {
+      addMessage("bot", text, options);
+      setIsTyping(false);
+      typingTimerRef.current = null;
+    }, 450);
+  };
+
+  useEffect(() => {
+    if (isOpen && messages.length === 0 && !isTyping) {
+      showBotMessage(
+        "Welcome to St. Lourdes Engineering College! 👋\n\nI'm your virtual assistant. How can I help you today?",
+        mainMenu
+      );
+    }
+  }, [isOpen, messages.length, isTyping]);
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages, isTyping]);
+
+  useEffect(() => {
+    return () => {
+      if (typingTimerRef.current) {
+        clearTimeout(typingTimerRef.current);
+      }
+    };
+  }, []);
+
+  const handleOptionClick = (option: MenuOption) => {
+    addMessage("user", option.label);
+
+    if (option.children) {
+      setMenuStack((previous) => [...previous, option.children!]);
+      showBotMessage(
+        `Here are the available options for ${option.label}. Please select one:`,
+        option.children
+      );
+      return;
+    }
+
+    if (option.action === "admission") {
+      showBotMessage(option.response || "Let's connect you with our admission team.");
+
+      if (onOpenAdmission) {
+        onOpenAdmission();
+      } else {
+        navigate("/admission");
+      }
+      return;
+    }
+
+    if (option.action === "external" && option.url) {
+      window.open(option.url, "_blank", "noopener,noreferrer");
+    }
+
+    showBotMessage(option.response || "Here is the information you requested.");
+
+    if (option.route) {
+      setTimeout(() => navigate(option.route!), 500);
+    }
+  };
+
+  const goBack = () => {
+    if (menuStack.length > 1) {
+      const previousMenu = menuStack[menuStack.length - 2];
+      setMenuStack((previous) => previous.slice(0, -1));
+      showBotMessage("Here are the previous options:", previousMenu);
+    } else {
+      showBotMessage("You are already in the main menu.", mainMenu);
+    }
+  };
+
+  const goToMainMenu = () => {
+    setMenuStack([mainMenu]);
+    showBotMessage("Welcome to the main menu. What would you like to know?", mainMenu);
+  };
+
+  const startNewConversation = () => {
+    if (typingTimerRef.current) {
+      clearTimeout(typingTimerRef.current);
+      typingTimerRef.current = null;
+    }
+
+    setMessages([]);
+    setMenuStack([mainMenu]);
+    setInput("");
+    setIsTyping(false);
+
+    setTimeout(() => {
+      addMessage(
+        "bot",
+        "Welcome back! 👋\n\nHow can I help you today?",
+        mainMenu
+      );
+    }, 100);
+  };
+
+  const findMatchingOption = (text: string): MenuOption | undefined => {
+    const query = text.toLowerCase();
+
+    const allOptions: MenuOption[] = [];
+
+    const collectOptions = (options: MenuOption[]) => {
+      options.forEach((option) => {
+        allOptions.push(option);
+        if (option.children) collectOptions(option.children);
+      });
+    };
+
+    collectOptions(mainMenu);
+
+    const aliases: Record<string, string[]> = {
+      "Admission Enquiry": ["admission", "join", "apply", "application"],
+      "Engineering Programmes": ["courses", "course", "programmes", "programs"],
+      "Placement Cell": ["placement", "jobs", "recruitment"],
+      "Contact Us": ["contact", "phone", "email", "address"],
+    };
+
+    return allOptions.find((option) => {
+      const label = option.label.toLowerCase();
+      const words = aliases[option.label] || [];
+
+      return (
+        query.includes(label) ||
+        words.some((word) => query.includes(word))
+      );
+    });
+  };
+
+  const handleSend = () => {
+    const trimmedInput = input.trim();
+
+    if (!trimmedInput || isTyping) return;
+
+    addMessage("user", trimmedInput);
+    setInput("");
+
+    const matchedOption = findMatchingOption(trimmedInput);
+
+    if (!matchedOption) {
+      showBotMessage(
+        "I'm sorry, I couldn't find an exact answer. Please select an option from the menu below or contact our college office.",
+        mainMenu
+      );
+      setMenuStack([mainMenu]);
+      return;
+    }
+
+    if (matchedOption.children) {
+      setMenuStack((previous) => [...previous, matchedOption.children!]);
+      showBotMessage(
+        `Here are the options for ${matchedOption.label}.`,
+        matchedOption.children
+      );
+      return;
+    }
+
+    if (matchedOption.action === "admission") {
+      showBotMessage(matchedOption.response || "Please contact our admission team.");
+
+      if (onOpenAdmission) {
+        onOpenAdmission();
+      } else {
+        navigate("/admission");
+      }
+      return;
+    }
+
+    showBotMessage(
+      matchedOption.response || "Here is the information you requested."
+    );
+
+    if (matchedOption.route) {
+      setTimeout(() => navigate(matchedOption.route!), 500);
+    }
+  };
+
+  const handleQuickQuestion = (question: string) => {
+    setInput("");
+    addMessage("user", question);
+
+    const matchedOption = findMatchingOption(question);
+
+    if (!matchedOption) {
+      showBotMessage("Please select an option from the main menu.", mainMenu);
+      return;
+    }
+
+    if (matchedOption.action === "admission") {
+      showBotMessage(matchedOption.response || "Please contact our admission team.");
+
+      if (onOpenAdmission) {
+        onOpenAdmission();
+      } else {
+        navigate("/admission");
+      }
+      return;
+    }
+
+    showBotMessage(
+      matchedOption.response || "Here is the information you requested.",
+      matchedOption.children
+    );
+
+    if (matchedOption.children) {
+      setMenuStack((previous) => [...previous, matchedOption.children!]);
+    }
+
+    if (matchedOption.route) {
+      setTimeout(() => navigate(matchedOption.route!), 500);
     }
   };
 
   return (
     <>
-      {/* Toggle button */}
-      <button
-        onClick={() => {
-          setIsOpen((o) => !o);
-          setHasUnread(false);
-        }}
-        className={`fixed bottom-6 right-6 z-[55] flex h-14 w-14 items-center justify-center rounded-full border-2 border-gold bg-maroon-600 text-gold-100 shadow-2xl shadow-maroon-900/50 transition-all duration-300 hover:scale-110 hover:bg-maroon-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 ${
-          hasUnread && !isOpen ? 'animate-pulse' : ''
-        }`}
-        aria-label={isOpen ? 'Close chat assistant' : 'Open chat assistant'}
-      >
-        {isOpen ? <X className="h-6 w-6" /> : <MessageCircle className="h-6 w-6" strokeWidth={1.5} />}
-        {hasUnread && !isOpen && (
-          <span className="absolute -right-0.5 -top-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-gold text-[9px] font-bold text-maroon-800">
-            1
-          </span>
-        )}
-      </button>
+      <style>{`
+        :root {
+          --lourdes-maroon: #681b2c;
+          --lourdes-dark-maroon: #45101e;
+          --lourdes-gold: #d6ad55;
+          --lourdes-light-gold: #f1d995;
+        }
 
-      {/* Chat panel */}
+        .lourdes-chat-launcher {
+          position: fixed;
+          right: 28px;
+          bottom: 28px;
+          z-index: 9998;
+          display: flex;
+          align-items: center;
+          gap: 11px;
+          padding: 13px 21px;
+          border: 1px solid var(--lourdes-gold);
+          border-radius: 50px;
+          background: linear-gradient(135deg, var(--lourdes-maroon), var(--lourdes-dark-maroon));
+          color: #fff;
+          font-size: 14px;
+          font-weight: 600;
+          cursor: pointer;
+          box-shadow: 0 8px 28px rgba(0,0,0,.25);
+          transition: all .3s ease;
+        }
+
+        .lourdes-chat-launcher:hover {
+          transform: translateY(-4px);
+          box-shadow: 0 12px 32px rgba(104,27,44,.35);
+        }
+
+        .lourdes-launcher-icon {
+          color: var(--lourdes-light-gold);
+          font-size: 22px;
+        }
+
+        .lourdes-chat-window {
+          position: fixed;
+          right: 28px;
+          bottom: 28px;
+          z-index: 9999;
+          width: 390px;
+          height: 590px;
+          max-height: calc(100vh - 55px);
+          display: flex;
+          flex-direction: column;
+          overflow: hidden;
+          border: 2px solid var(--lourdes-gold);
+          border-radius: 20px;
+          background: transparent;
+          box-shadow: 0 15px 50px rgba(0,0,0,.25);
+          animation: lourdes-appear .3s ease;
+        }
+
+        @keyframes lourdes-appear {
+          from { opacity: 0; transform: translateY(20px) scale(.97); }
+          to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .lourdes-chat-header {
+          flex-shrink: 0;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 17px 18px;
+          background: linear-gradient(120deg, var(--lourdes-dark-maroon), var(--lourdes-maroon));
+          border-bottom: 2px solid var(--lourdes-gold);
+          color: #fff;
+        }
+
+        .lourdes-header-info {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+        }
+
+        .lourdes-bot-avatar {
+          width: 43px;
+          height: 43px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border: 1px solid var(--lourdes-gold);
+          border-radius: 50%;
+          background: rgba(255,255,255,.1);
+          color: var(--lourdes-light-gold);
+          font-size: 25px;
+        }
+
+        .lourdes-header-info h3 {
+          margin: 0 0 5px;
+          font-size: 15px;
+          font-weight: 700;
+          color: #fff;
+        }
+
+        .lourdes-online-status {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          font-size: 11px;
+          color: #f5e8e8;
+        }
+
+        .lourdes-online-dot {
+          width: 7px;
+          height: 7px;
+          border-radius: 50%;
+          background: #55d98a;
+          box-shadow: 0 0 7px rgba(85,217,138,.8);
+        }
+
+        .lourdes-header-actions {
+          display: flex;
+          align-items: center;
+          gap: 7px;
+        }
+
+        .lourdes-header-actions button {
+          width: 32px;
+          height: 32px;
+          border: 1px solid rgba(255,255,255,.3);
+          border-radius: 50%;
+          background: rgba(255,255,255,.1);
+          color: white;
+          font-size: 21px;
+          cursor: pointer;
+          transition: .2s ease;
+        }
+
+        .lourdes-header-actions button:hover {
+          background: var(--lourdes-gold);
+          color: var(--lourdes-dark-maroon);
+        }
+
+        .lourdes-chat-body {
+          flex: 1;
+          min-height: 0;
+          overflow: hidden;
+          background: transparent;
+        }
+
+        .lourdes-messages {
+          height: 100%;
+          overflow-y: auto;
+          display: flex;
+          flex-direction: column;
+          gap: 15px;
+          padding: 17px 13px;
+          background: transparent;
+          scrollbar-width: thin;
+          scrollbar-color: var(--lourdes-gold) transparent;
+        }
+
+        .lourdes-messages::-webkit-scrollbar { width: 5px; }
+        .lourdes-messages::-webkit-scrollbar-thumb {
+          background: var(--lourdes-gold);
+          border-radius: 10px;
+        }
+
+        .lourdes-message-row {
+          display: flex;
+          align-items: flex-start;
+          gap: 8px;
+          width: 100%;
+        }
+
+        .bot-row { justify-content: flex-start; }
+        .user-row { justify-content: flex-end; }
+
+        .lourdes-message-avatar,
+        .lourdes-user-avatar {
+          width: 29px;
+          height: 29px;
+          flex-shrink: 0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 50%;
+          font-size: 12px;
+          font-weight: 700;
+        }
+
+        .lourdes-message-avatar {
+          background: var(--lourdes-maroon);
+          border: 1px solid var(--lourdes-gold);
+          color: var(--lourdes-light-gold);
+        }
+
+        .lourdes-user-avatar {
+          background: var(--lourdes-gold);
+          color: var(--lourdes-dark-maroon);
+        }
+
+        .lourdes-message {
+          max-width: 84%;
+          padding: 12px 14px;
+          border-radius: 13px;
+          font-size: 13px;
+          line-height: 1.6;
+          overflow-wrap: anywhere;
+        }
+
+        .lourdes-message p {
+          margin: 0;
+          white-space: pre-line;
+        }
+
+        .bot-message {
+          background: rgba(104,27,44,.87);
+          color: #fff;
+          border: 1px solid rgba(214,173,85,.65);
+          border-top-left-radius: 3px;
+        }
+
+        .user-message {
+          background: rgba(214,173,85,.94);
+          color: #32101a;
+          border-top-right-radius: 3px;
+          font-weight: 500;
+        }
+
+        .lourdes-menu-options {
+          display: flex;
+          flex-direction: column;
+          gap: 7px;
+          margin-top: 13px;
+        }
+
+        .lourdes-menu-option {
+          width: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 10px 12px;
+          border: 1px solid rgba(241,217,149,.7);
+          border-radius: 8px;
+          background: rgba(255,255,255,.1);
+          color: #fff;
+          text-align: left;
+          font-size: 12px;
+          font-weight: 500;
+          cursor: pointer;
+          transition: all .2s ease;
+        }
+
+        .lourdes-menu-option:hover {
+          background: var(--lourdes-gold);
+          color: var(--lourdes-dark-maroon);
+          transform: translateX(3px);
+        }
+
+        .lourdes-option-arrow {
+          font-size: 20px;
+          line-height: 1;
+        }
+
+        .lourdes-typing {
+          display: flex;
+          align-items: center;
+          gap: 5px;
+          padding: 13px 15px;
+          background: rgba(104,27,44,.87);
+          border: 1px solid rgba(214,173,85,.65);
+          border-radius: 12px;
+        }
+
+        .lourdes-typing span {
+          width: 7px;
+          height: 7px;
+          border-radius: 50%;
+          background: var(--lourdes-light-gold);
+          animation: lourdes-typing 1.2s infinite ease-in-out;
+        }
+
+        .lourdes-typing span:nth-child(2) { animation-delay: .2s; }
+        .lourdes-typing span:nth-child(3) { animation-delay: .4s; }
+
+        @keyframes lourdes-typing {
+          0%, 60%, 100% { transform: translateY(0); opacity: .5; }
+          30% { transform: translateY(-5px); opacity: 1; }
+        }
+
+        .lourdes-chat-controls {
+          flex-shrink: 0;
+          padding: 10px 12px 8px;
+          background: transparent;
+          border-top: 1px solid rgba(214,173,85,.65);
+        }
+
+        .lourdes-navigation {
+          display: flex;
+          gap: 6px;
+          margin-bottom: 10px;
+        }
+
+        .lourdes-navigation button {
+          flex: 1;
+          padding: 8px 4px;
+          border: 1px solid var(--lourdes-gold);
+          border-radius: 7px;
+          background: rgba(104,27,44,.9);
+          color: #fff;
+          font-size: 10px;
+          font-weight: 600;
+          cursor: pointer;
+          transition: .2s ease;
+        }
+
+        .lourdes-navigation button:hover {
+          background: var(--lourdes-gold);
+          color: var(--lourdes-dark-maroon);
+        }
+
+        .lourdes-quick-questions {
+          display: flex;
+          gap: 6px;
+          margin-bottom: 10px;
+          padding-bottom: 3px;
+          overflow-x: auto;
+          scrollbar-width: none;
+        }
+
+        .lourdes-quick-questions::-webkit-scrollbar { display: none; }
+
+        .lourdes-quick-questions button {
+          flex-shrink: 0;
+          padding: 7px 10px;
+          border: 1px solid var(--lourdes-gold);
+          border-radius: 20px;
+          background: rgba(104,27,44,.88);
+          color: #fff;
+          font-size: 10px;
+          font-weight: 500;
+          cursor: pointer;
+          transition: .2s ease;
+        }
+
+        .lourdes-quick-questions button:hover {
+          background: var(--lourdes-gold);
+          color: var(--lourdes-dark-maroon);
+        }
+
+        .lourdes-input-area {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          padding: 6px 7px 6px 13px;
+          border: 1px solid var(--lourdes-gold);
+          border-radius: 30px;
+          background: rgba(255,255,255,.92);
+        }
+
+        .lourdes-input-area input {
+          flex: 1;
+          min-width: 0;
+          border: none;
+          outline: none;
+          background: transparent;
+          color: #32101a;
+          font-size: 12px;
+        }
+
+        .lourdes-input-area input::placeholder { color: #777; }
+
+        .lourdes-input-area button {
+          width: 33px;
+          height: 33px;
+          flex-shrink: 0;
+          border: none;
+          border-radius: 50%;
+          background: var(--lourdes-maroon);
+          color: var(--lourdes-light-gold);
+          font-size: 17px;
+          cursor: pointer;
+          transition: .2s ease;
+        }
+
+        .lourdes-input-area button:hover:not(:disabled) {
+          background: var(--lourdes-gold);
+          color: var(--lourdes-dark-maroon);
+        }
+
+        .lourdes-input-area button:disabled {
+          opacity: .5;
+          cursor: not-allowed;
+        }
+
+        .lourdes-chat-footer {
+          margin-top: 8px;
+          color: #fff;
+          text-align: center;
+          font-size: 9px;
+          text-shadow: 0 1px 3px rgba(0,0,0,.6);
+        }
+
+        .lourdes-chat-footer strong {
+          color: var(--lourdes-light-gold);
+        }
+
+        @media (max-width: 480px) {
+          .lourdes-chat-window {
+            right: 10px;
+            bottom: 10px;
+            width: calc(100vw - 20px);
+            height: min(620px, calc(100dvh - 20px));
+            max-height: calc(100dvh - 20px);
+            border-radius: 17px;
+          }
+
+          .lourdes-chat-launcher {
+            right: 16px;
+            bottom: 16px;
+            padding: 12px 17px;
+          }
+
+          .lourdes-chat-header { padding: 14px; }
+          .lourdes-message { max-width: 88%; }
+          .lourdes-navigation button { font-size: 9px; }
+        }
+
+        @media (max-width: 350px) {
+          .lourdes-quick-questions button {
+            font-size: 9px;
+            padding: 6px 8px;
+          }
+
+          .lourdes-chat-controls { padding: 8px; }
+        }
+      `}</style>
+
+      {!isOpen && (
+        <button
+          className="lourdes-chat-launcher"
+          onClick={() => setIsOpen(true)}
+          aria-label="Open chatbot"
+        >
+          <span className="lourdes-launcher-icon">✦</span>
+          <span>Chat with us</span>
+        </button>
+      )}
+
       {isOpen && (
-        <div className="fixed bottom-24 right-12 z-[55] flex h-[min(32rem,75vh)] w-[min(23rem,calc(100vw-3rem))] flex-col overflow-hidden rounded-2xl border-2 border-gold/30 bg-white shadow-2xl shadow-maroon-900/40 animate-scale-in">
-          {/* Header */}
-          <div className="relative overflow-hidden bg-gradient-to-br from-maroon-600 via-maroon-700 to-maroon-800 px-5 py-4">
-            <div className="pointer-events-none absolute -right-4 -top-4 h-20 w-20 rounded-full bg-gold/10" />
-            <div className="pointer-events-none absolute -left-6 -bottom-6 h-16 w-16 rounded-full border border-gold/10" />
-            <div className="relative flex items-center gap-3">
-              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border-2 border-gold bg-maroon-700 shadow-md">
-                <GraduationCap className="h-6 w-6 text-gold" strokeWidth={1.5} />
+        <div className="lourdes-chat-window">
+          <div className="lourdes-chat-header">
+            <div className="lourdes-header-info">
+              <div className="lourdes-bot-avatar">✦</div>
+              <div>
+                <h3>St. Lourdes Assistant</h3>
+                <span className="lourdes-online-status">
+                  <span className="lourdes-online-dot" />
+                  Online | Here to help
+                </span>
               </div>
-              <div className="flex-1">
-                <p className="font-serif text-lg font-bold text-ivory">Lourdes Assistant</p>
-                <p className="flex items-center gap-1.5 text-xs font-medium text-gold-100/80">
-                  <span className="h-2 w-2 rounded-full bg-green-400" />
-                  Online now
-                </p>
-              </div>
+            </div>
+
+            <div className="lourdes-header-actions">
+              <button
+                onClick={startNewConversation}
+                title="New conversation"
+                aria-label="New conversation"
+              >
+                ↻
+              </button>
               <button
                 onClick={() => setIsOpen(false)}
-                className="rounded-full p-1.5 text-ivory/60 transition-colors hover:bg-white/10 hover:text-ivory"
-                aria-label="Close chat"
+                title="Close chatbot"
+                aria-label="Close chatbot"
               >
-                <X className="h-5 w-5" />
+                ×
               </button>
             </div>
           </div>
 
-          {/* Messages */}
-          <div
-            ref={scrollRef}
-            className="flex-1 overflow-y-auto bg-ivory/30 px-4 py-4"
-          >
-            <div className="space-y-3">
-              {messages.map((msg) => (
+          <div className="lourdes-chat-body">
+            <div className="lourdes-messages">
+              {messages.map((message) => (
                 <div
-                  key={msg.id}
-                  className={`flex items-end gap-2 ${msg.sender === 'user' ? 'flex-row-reverse' : ''}`}
+                  key={message.id}
+                  className={`lourdes-message-row ${
+                    message.sender === "user" ? "user-row" : "bot-row"
+                  }`}
                 >
+                  {message.sender === "bot" && (
+                    <div className="lourdes-message-avatar">✦</div>
+                  )}
+
                   <div
-                    className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full ${
-                      msg.sender === 'bot'
-                        ? 'border border-gold/30 bg-maroon-50 text-maroon-600'
-                        : 'bg-gold/20 text-gold-600'
+                    className={`lourdes-message ${
+                      message.sender === "user" ? "user-message" : "bot-message"
                     }`}
                   >
-                    {msg.sender === 'bot' ? (
-                      <GraduationCap className="h-4 w-4" strokeWidth={1.5} />
-                    ) : (
-                      <User className="h-4 w-4" strokeWidth={1.5} />
-                    )}
-                  </div>
-                  <div className={`max-w-[80%] ${msg.sender === 'user' ? 'items-end' : 'items-start'}`}>
-                    <div
-                      className={`rounded-2xl px-4 py-3 text-[13px] leading-relaxed ${
-                        msg.sender === 'bot'
-                          ? 'rounded-bl-md border border-gold/15 bg-white text-charcoal shadow-sm'
-                          : 'rounded-br-md bg-maroon-700 text-ivory'
-                      }`}
-                    >
-                      {msg.text}
-                    </div>
+                    <p>{message.text}</p>
 
-                    {/* Link buttons */}
-                    {msg.links && msg.links.length > 0 && (
-                      <div className="mt-2 flex flex-wrap gap-1.5">
-                        {msg.links.map((link) => (
-                          <Link
-                            key={link.label}
-                            to={link.to}
-                            onClick={() => setIsOpen(false)}
-                            className="inline-flex items-center gap-1 rounded-full border border-gold/30 bg-gold/10 px-3 py-1.5 text-[11px] font-medium text-maroon-600 transition-all duration-200 hover:border-gold hover:bg-gold hover:text-maroon-800"
+                    {message.options && message.options.length > 0 && (
+                      <div className="lourdes-menu-options">
+                        {message.options.map((option, index) => (
+                          <button
+                            key={`${option.label}-${index}`}
+                            onClick={() => handleOptionClick(option)}
+                            className="lourdes-menu-option"
                           >
-                            {link.label}
-                            <ChevronDown className="h-3 w-3 -rotate-90" />
-                          </Link>
+                            <span>{option.label}</span>
+                            <span className="lourdes-option-arrow">›</span>
+                          </button>
                         ))}
                       </div>
                     )}
-
-                    {/* Action button */}
-                    {msg.action && (
-                      <button
-                        onClick={() => handleAction(msg.action!)}
-                        className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-maroon-700 px-3.5 py-1.5 text-[11px] font-semibold text-gold-100 transition-all duration-200 hover:bg-maroon-600"
-                      >
-                        {msg.action.label}
-                      </button>
-                    )}
                   </div>
+
+                  {message.sender === "user" && (
+                    <div className="lourdes-user-avatar">You</div>
+                  )}
                 </div>
               ))}
 
-              {/* Typing indicator */}
               {isTyping && (
-                <div className="flex items-end gap-2">
-                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-gold/30 bg-maroon-50 text-maroon-600">
-                    <GraduationCap className="h-4 w-4" strokeWidth={1.5} />
-                  </div>
-                  <div className="flex items-center gap-1 rounded-2xl rounded-bl-md border border-gold/15 bg-white px-4 py-3 shadow-sm">
-                    <span className="h-2 w-2 animate-bounce rounded-full bg-gold/60 [animation-delay:0ms]" />
-                    <span className="h-2 w-2 animate-bounce rounded-full bg-gold/60 [animation-delay:150ms]" />
-                    <span className="h-2 w-2 animate-bounce rounded-full bg-gold/60 [animation-delay:300ms]" />
+                <div className="lourdes-message-row bot-row">
+                  <div className="lourdes-message-avatar">✦</div>
+                  <div className="lourdes-typing">
+                    <span />
+                    <span />
+                    <span />
                   </div>
                 </div>
               )}
+
+              <div ref={messagesEndRef} />
             </div>
           </div>
 
-          {/* Quick prompts */}
-          {messages.length <= 1 && (
-            <div className="border-t border-gold/15 bg-white px-4 py-3">
-              <p className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-gold-500">Quick questions</p>
-              <div className="flex flex-wrap gap-1.5">
-                {quickPrompts.map((prompt) => (
-                  <button
-                    key={prompt}
-                    onClick={() => handleSend(prompt)}
-                    className="rounded-full border border-gold/25 bg-ivory px-3.5 py-1.5 text-[11px] font-medium text-charcoal/70 transition-all duration-200 hover:border-gold/50 hover:bg-gold/10 hover:text-maroon-600"
-                  >
-                    {prompt}
-                  </button>
-                ))}
-              </div>
+          <div className="lourdes-chat-controls">
+            <div className="lourdes-navigation">
+              <button onClick={goBack}>‹ Previous</button>
+              <button onClick={goToMainMenu}>⌂ Main Menu</button>
+              <button onClick={startNewConversation}>↻ New Chat</button>
             </div>
-          )}
 
-          {/* Input */}
-          <div className="border-t border-gold/15 bg-white px-4 py-3">
+            <div className="lourdes-quick-questions">
+              {quickQuestions.map((question) => (
+                <button
+                  key={question}
+                  onClick={() => handleQuickQuestion(question)}
+                >
+                  {question}
+                </button>
+              ))}
+            </div>
+
             <form
-              onSubmit={(e) => {
-                e.preventDefault();
+              className="lourdes-input-area"
+              onSubmit={(event) => {
+                event.preventDefault();
                 handleSend();
               }}
-              className="flex items-center gap-2"
             >
               <input
-                ref={inputRef}
                 type="text"
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
                 placeholder="Type your question..."
-                className="flex-1 rounded-full border border-maroon-200 bg-ivory px-4 py-2.5 text-[13px] text-charcoal placeholder:text-charcoal/30 focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/20"
-                aria-label="Type your message"
+                value={input}
+                onChange={(event) => setInput(event.target.value)}
+                disabled={isTyping}
               />
+
               <button
                 type="submit"
-                disabled={!input.trim()}
-                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-gold/30 bg-maroon-700 text-gold-100 transition-all duration-200 hover:border-gold hover:bg-maroon-600 disabled:opacity-40 focus:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2"
+                disabled={!input.trim() || isTyping}
                 aria-label="Send message"
               >
-                <Send className="h-4 w-4" strokeWidth={1.5} />
+                ➤
               </button>
             </form>
-            <p className="mt-2 text-center text-[10px] font-medium text-charcoal/30">
-              ST. Lourdes Assistant &middot; Demo mode
-            </p>
+
+            <div className="lourdes-chat-footer">
+              Powered by <strong>St. Lourdes Engineering College</strong>
+            </div>
           </div>
         </div>
       )}
     </>
   );
-}
+};
+
+export default Chatbot;

@@ -1,12 +1,86 @@
-
 import { useEffect, useRef } from 'react';
 import HeroSlider from '@/components/HeroSlider';
+import AboutSection from '@/components/AboutSection';
 import NewsEventsSection from '@/components/NewsEventsSection';
 import CampusHighlights from '@/components/CampusHighlights';
-import PlacementSection from '@/components/PlacementSection';
-import RecruitersSection from '@/components/RecruitersSection';
-import AboutSection from '@/components/AboutSection';
+
+
 import { Link } from 'react-router-dom';
+
+/* --------------------------------------------------
+   ACADEMIC FLIP CARDS
+   Front = content, Back = image.
+   Save the images in:  public/images/
+   -------------------------------------------------- */
+
+const programmes = [
+  {
+    number: '01',
+    title: 'Undergraduate Programmes',
+    text: 'B.E. Computer Science and Engineering,B.E. Computer Science and Engineering(Cyber),B.Tech. Information Technology, B.Tech. Artificial Intelligence and Data Science, and B.E. Electronics and Communication Engineering.',
+    image: '/images/ug-programmes.jpg',
+    linkLabel: 'View UG Courses',
+  },
+  {
+    number: '02',
+    title: 'Postgraduate Programmes',
+    text: 'Master of Business Administration (MBA) and M.E. Computer Science and Engineering.',
+    image: '/images/pg-programmes.jpg',
+    linkLabel: 'View PG Courses',
+  },
+];
+
+function FlipCard({
+  number,
+  title,
+  text,
+  image,
+  linkLabel,
+}: (typeof programmes)[number]) {
+  return (
+    <div
+      className="home-academics-card"
+      // Tap to flip on touch devices (hover does not exist there).
+      onClick={(e) => e.currentTarget.classList.toggle('is-flipped')}
+    >
+      <div className="home-academics-card-inner">
+        {/* FRONT SIDE: CONTENT */}
+        <div className="home-academics-card-face home-academics-front">
+          <span className="home-card-number">{number}</span>
+
+          <h3>{title}</h3>
+
+          <p>{text}</p>
+
+          <span className="home-flip-hint">
+            Hover to explore <span>↻</span>
+          </span>
+        </div>
+
+        {/* BACK SIDE: IMAGE */}
+        <div className="home-academics-card-face home-academics-back">
+          <img
+            src="/recuiters/undergraduate.png"
+            alt=""
+            className="home-academics-back-img"
+            loading="lazy"
+            draggable={false}
+          />
+
+          <div className="home-academics-back-shade" aria-hidden="true" />
+
+          <div className="home-academics-back-caption">
+            <span className="home-academics-back-title">{title}</span>
+
+            <Link to="/academics" className="home-academics-card-link">
+              {linkLabel} <span>→</span>
+            </Link>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function Home() {
   const homeRef = useRef<HTMLDivElement | null>(null);
@@ -16,10 +90,18 @@ export default function Home() {
     const home = homeRef.current;
     if (!home) return;
 
+    // Anything inside a flip card (except the card itself) must NOT get
+    // reveal classes, otherwise they override the 3D flip transforms.
+    const insideFlipCard = (element: Element) =>
+      !!element.closest('.home-academics-card') &&
+      !element.classList.contains('home-academics-card');
+
     // Select cards and boxes from the Home page sections.
-    const cards = home.querySelectorAll<HTMLElement>(
-      'article, [class*="card"], [class*="Card"]'
-    );
+    const cards = Array.from(
+      home.querySelectorAll<HTMLElement>(
+        'article, [class*="card"], [class*="Card"]'
+      )
+    ).filter((element) => !insideFlipCard(element));
 
     // Select the main sections.
     const mainSections = home.querySelectorAll<HTMLElement>(
@@ -41,9 +123,9 @@ export default function Home() {
     academicElements.forEach((element) => allElements.add(element));
 
     // Add fade-in animation to text inside cards and sections.
-    const contentElements = home.querySelectorAll<HTMLElement>(
-      'h1, h2, h3, p'
-    );
+    const contentElements = Array.from(
+      home.querySelectorAll<HTMLElement>('h1, h2, h3, p')
+    ).filter((element) => !insideFlipCard(element));
 
     contentElements.forEach((element) => {
       element.classList.add('home-content-fade');
@@ -74,9 +156,7 @@ export default function Home() {
     );
 
     // Alternate cards from left and right.
-    const cardElements = Array.from(cards);
-
-    cardElements.forEach((element, index) => {
+    cards.forEach((element, index) => {
       if (element.classList.contains('home-academics-card')) {
         element.classList.add('home-reveal-up');
       } else {
@@ -112,15 +192,15 @@ export default function Home() {
 
       <HeroSlider />
 
+ <AboutSection />
+
       <NewsEventsSection />
 
       <CampusHighlights />
 
-      <PlacementSection />
+    
 
-      <RecruitersSection />
-
-      <AboutSection />
+     
 
       {/* ACADEMIC PROGRAMMES SECTION */}
       <section className="home-academics-section">
@@ -143,106 +223,9 @@ export default function Home() {
         </div>
 
         <div className="home-academics-preview">
-
-          {/* UNDERGRADUATE CARD */}
-          <div className="home-academics-card">
-
-            <div className="home-academics-card-inner">
-
-              {/* FRONT SIDE */}
-              <div className="home-academics-card-face home-academics-front">
-
-                <span className="home-card-number">01</span>
-
-                <h3>Undergraduate Programmes</h3>
-
-                <p>
-                  B.E. Computer Science and Engineering, B.Tech. Information
-                  Technology, B.Tech. Artificial Intelligence and Data Science,
-                  and B.E. Electronics and Communication Engineering.
-                </p>
-
-                <span className="home-flip-hint">
-                  Hover to explore <span>↻</span>
-                </span>
-
-              </div>
-
-              {/* BACK SIDE */}
-              <div className="home-academics-card-face home-academics-back">
-
-                <span className="home-card-number">01</span>
-
-                <h3>Shape Your Future</h3>
-
-                <p>
-                  Explore our undergraduate programmes and discover
-                  opportunities to build your technical knowledge,
-                  practical skills and professional career.
-                </p>
-
-                <Link
-                  to="/academics"
-                  className="home-academics-card-link"
-                >
-                  View UG Courses <span>→</span>
-                </Link>
-
-              </div>
-
-            </div>
-
-          </div>
-
-          {/* POSTGRADUATE CARD */}
-          <div className="home-academics-card">
-
-            <div className="home-academics-card-inner">
-
-              {/* FRONT SIDE */}
-              <div className="home-academics-card-face home-academics-front">
-
-                <span className="home-card-number">02</span>
-
-                <h3>Postgraduate Programmes</h3>
-
-                <p>
-                  Master of Business Administration (MBA) and M.E.
-                  Computer Science and Engineering.
-                </p>
-
-                <span className="home-flip-hint">
-                  Hover to explore <span>↻</span>
-                </span>
-
-              </div>
-
-              {/* BACK SIDE */}
-              <div className="home-academics-card-face home-academics-back">
-
-                <span className="home-card-number">02</span>
-
-                <h3>Advance Your Knowledge</h3>
-
-                <p>
-                  Discover postgraduate programmes designed to strengthen
-                  advanced knowledge, leadership abilities and
-                  professional expertise.
-                </p>
-
-                <Link
-                  to="/academics"
-                  className="home-academics-card-link"
-                >
-                  View PG Courses <span>→</span>
-                </Link>
-
-              </div>
-
-            </div>
-
-          </div>
-
+          {programmes.map((programme) => (
+            <FlipCard key={programme.number} {...programme} />
+          ))}
         </div>
 
         <Link
@@ -318,20 +301,16 @@ export default function Home() {
 
         /* =========================================
            GENERAL CARD HOVER EFFECT
+           (flip card parts are excluded so this rule
+            cannot cancel the flip transition)
         ========================================= */
 
         .home-page-animations article,
-        .home-page-animations [class*="card"],
+        .home-page-animations [class*="card"]:not([class*="home-academics"]):not([class*="home-card"]),
         .home-page-animations [class*="Card"] {
           transition:
             box-shadow .35s ease,
             border-color .35s ease;
-        }
-
-        /* Academic flip card is controlled separately. */
-
-        .home-academics-card {
-          perspective: 1200px;
         }
 
         /* =========================================
@@ -385,11 +364,11 @@ export default function Home() {
           max-width: 1050px;
           margin: 0 auto 30px;
           text-align: left;
-          perspective: 1200px;
         }
 
         /* =========================================
            3D FLIP CARD
+           front = content, back = image
         ========================================= */
 
         .home-academics-card {
@@ -400,6 +379,7 @@ export default function Home() {
           border: none;
           border-radius: 10px;
           perspective: 1200px;
+          cursor: pointer;
         }
 
         .home-academics-card-inner {
@@ -412,11 +392,21 @@ export default function Home() {
           transition: transform .85s cubic-bezier(.2, .75, .25, 1);
         }
 
-        .home-academics-card:hover .home-academics-card-inner {
+        /* Flip: mouse hover (desktop), keyboard focus, or tap (touch) */
+
+        @media (hover: hover) and (pointer: fine) {
+          .home-academics-card:hover .home-academics-card-inner {
+            transform: rotateY(180deg);
+          }
+        }
+
+        .home-academics-card:focus-within .home-academics-card-inner,
+        .home-academics-card.is-flipped .home-academics-card-inner {
           transform: rotateY(180deg);
         }
 
         .home-academics-card-face {
+          position: relative;
           grid-area: 1 / 1;
           display: flex;
           flex-direction: column;
@@ -426,25 +416,20 @@ export default function Home() {
           border: 1px solid #ead9b7;
           border-bottom: 4px solid #d8ad45;
           border-radius: 10px;
-          background: #fff;
+          background: #580202;  
           backface-visibility: hidden;
           -webkit-backface-visibility: hidden;
           box-shadow: 0 5px 18px rgba(94, 20, 38, .05);
         }
 
-        .home-academics-front {
-          transform: rotateY(0deg);
-        }
-
-        .home-academics-back {
-          transform: rotateY(180deg);
-          background: linear-gradient(145deg, #74182b, #4e1020);
-          border-color: #d8ad45;
-          color: #fff;
-        }
-
         .home-academics-card:hover .home-academics-card-face {
           box-shadow: 0 15px 35px rgba(94, 20, 38, .15);
+        }
+
+        /* FRONT: content */
+
+        .home-academics-front {
+          transform: rotateY(0deg);
         }
 
         .home-card-number {
@@ -461,32 +446,19 @@ export default function Home() {
           font-weight: 800;
         }
 
-        .home-academics-back .home-card-number {
-          background: rgba(255,255,255,.13);
-          color: #e7c46e;
-        }
-
         .home-academics-card h3 {
           margin: 0 0 12px;
-          color: #74182b;
+          color: #ecbe68;
           font-family: Georgia, "Times New Roman", serif;
           font-size: 21px;
           line-height: 1.4;
         }
 
-        .home-academics-back h3 {
-          color: #e6c36c;
-        }
-
         .home-academics-card p {
           margin: 0 0 20px;
-          color: #6b6263;
+          color: #f7edee;
           font-size: 14px;
           line-height: 1.9;
-        }
-
-        .home-academics-back p {
-          color: rgba(255,255,255,.86);
         }
 
         .home-flip-hint {
@@ -503,6 +475,61 @@ export default function Home() {
           font-size: 17px;
         }
 
+        /* BACK: image */
+
+        .home-academics-back {
+          transform: rotateY(180deg);
+          align-items: stretch;
+          justify-content: flex-end;
+          padding: 0;
+          overflow: hidden;
+          border-color: #d8ad45;
+          /* shown only if the image file is missing */
+          background: linear-gradient(145deg, #74182b, #4e1020);
+        }
+
+        .home-academics-back-img {
+          position: absolute;
+          inset: 0;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          transition: transform .8s ease;
+        }
+
+        .home-academics-card:hover .home-academics-back-img {
+          transform: scale(1.06);
+        }
+
+        .home-academics-back-shade {
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(
+            to top,
+            rgba(76, 16, 38, .9) 0%,
+            rgba(76, 16, 38, .35) 38%,
+            rgba(76, 16, 38, 0) 65%
+          );
+        }
+
+        .home-academics-back-caption {
+          position: relative;
+          z-index: 2;
+          display: flex;
+          flex-wrap: wrap;
+          align-items: center;
+          justify-content: space-between;
+          gap: 8px 16px;
+          padding: 20px 24px;
+        }
+
+        .home-academics-back-title {
+          color: #fff;
+          font-family: Georgia, "Times New Roman", serif;
+          font-size: 17px;
+          font-weight: 700;
+        }
+
         /* =========================================
            ACADEMIC CARD LINKS
         ========================================= */
@@ -511,7 +538,6 @@ export default function Home() {
           display: inline-flex;
           align-items: center;
           gap: 8px;
-          margin-top: 5px;
           color: #f1d17d;
           font-size: 13px;
           font-weight: 700;
@@ -589,16 +615,17 @@ export default function Home() {
             gap: 18px;
           }
 
-          .home-academics-card {
-            min-height: 260px;
-          }
-
+          .home-academics-card,
           .home-academics-card-inner {
             min-height: 260px;
           }
 
           .home-academics-card-face {
             padding: 23px;
+          }
+
+          .home-academics-back {
+            padding: 0;
           }
 
           .home-academics-card h3 {
@@ -609,12 +636,16 @@ export default function Home() {
             font-size: 13px;
           }
 
-          /* Disable hover flip on touch devices. */
-          .home-academics-card:hover .home-academics-card-inner {
-            transform: none;
+          .home-flip-hint {
+            font-size: 0;
           }
 
-          .home-academics-back {
+          .home-flip-hint::before {
+            content: "Tap to explore ↻";
+            font-size: 11px;
+          }
+
+          .home-flip-hint span {
             display: none;
           }
         }
@@ -635,7 +666,8 @@ export default function Home() {
             transition: none !important;
           }
 
-          .home-academics-card-inner {
+          .home-academics-card-inner,
+          .home-academics-back-img {
             transition: none !important;
           }
 

@@ -13,7 +13,7 @@ interface CarouselPanelProps {
   title: string;
   icon: typeof Calendar;
   items: ItemType[];
-  accent: 'maroon' | 'gold';
+  accent?: 'maroon' | 'gold';
   viewAllLink: string;
   itemLink?: string;
   emptyText?: string;
@@ -30,6 +30,8 @@ function isEvent(item: ItemType): item is EventItem {
 
 // Scroll speed in pixels per second
 const SPEED = 28;
+// Space between cards in px (must match the CSS below)
+const GAP = 14;
 
 // --------------------------------------------------
 // CARD COMPONENT
@@ -39,13 +41,16 @@ function Card({
   item,
   direction,
   to,
+  isClone = false,
 }: {
   item: ItemType;
   direction: ScrollDirection;
   to: string;
+  isClone?: boolean;
 }) {
   const news = isNews(item);
   const navigate = useNavigate();
+  const [day = '', month = ''] = (item.dateLabel ?? '').split(' ');
 
   return (
     <article
@@ -62,38 +67,24 @@ function Card({
     >
       {/* IMAGE */}
       <div
-        className={`
-          relative overflow-hidden
-          ${direction === 'horizontal' ? 'h-36' : 'h-32'}
-        `}
+        className={`relative overflow-hidden ${
+          direction === 'horizontal' ? 'h-36' : 'h-32'
+        }`}
       >
         <img
           src={item.image}
-          alt={item.title}
+          alt={isClone ? '' : item.title}
           loading="lazy"
-          className="
-            h-full w-full object-cover
-            transition-transform duration-500
-            group-hover:scale-105
-          "
+          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
         />
 
         {/* DATE BADGE */}
-        <div
-          className="
-            absolute left-3 top-3
-            flex flex-col items-center
-            rounded-lg bg-[#64182C]/95
-            px-3 py-1.5 shadow-lg
-            backdrop-blur-sm
-          "
-        >
+        <div className="absolute left-3 top-3 flex flex-col items-center rounded-lg bg-[#64182C]/95 px-3 py-1.5 shadow-lg backdrop-blur-sm">
           <span className="text-[10px] font-semibold uppercase tracking-wider text-[#F8E6BC]">
-            {item.dateLabel.split(' ')[1]}
+            {month}
           </span>
-
           <span className="font-serif text-lg font-bold leading-none text-white">
-            {item.dateLabel.split(' ')[0]}
+            {day}
           </span>
         </div>
 
@@ -121,17 +112,11 @@ function Card({
 
         <Link
           to={to}
+          tabIndex={isClone ? -1 : undefined}
           onClick={(e) => e.stopPropagation()}
-          className="
-            mt-3 inline-flex items-center
-            gap-1.5 text-xs font-bold
-            uppercase tracking-wider
-            text-[#801E37]
-            transition-colors hover:text-[#B58A3A]
-          "
+          className="mt-3 inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-[#801E37] transition-colors hover:text-[#B58A3A]"
         >
           {news ? 'Read More' : 'View Details'}
-
           <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-1" />
         </Link>
       </div>
@@ -153,10 +138,12 @@ export default function CarouselPanel({
   direction,
 }: CarouselPanelProps) {
   const viewportRef = useRef<HTMLDivElement>(null);
-  const trackRef = useRef<HTMLDivElement>(null);
+  const firstSetRef = useRef<HTMLDivElement>(null);
 
-  // How far (px) the track has to travel to show every card
-  const [distance, setDistance] = useState(0);
+  // Size (px) of ONE full set of cards, including the trailing gap.
+  // The track slides by exactly this much, then restarts = seamless loop.
+  const [loopDistance, setLoopDistance] = useState(0);
+  const [shouldLoop, setShouldLoop] = useState(false);
 
   const scrollDirection: ScrollDirection =
     direction ??
@@ -170,43 +157,57 @@ export default function CarouselPanel({
 
   const isVertical = scrollDirection === 'vertical';
 
-  // Measure how much the content overflows the box
   useEffect(() => {
     const viewport = viewportRef.current;
-    const track = trackRef.current;
+    const firstSet = firstSetRef.current;
 
-    if (!viewport || !track) {
-      setDistance(0);
+    if (!viewport || !firstSet) {
+      setLoopDistance(0);
+      setShouldLoop(false);
       return;
     }
 
     const measure = () => {
-      const overflow = isVertical
-        ? track.offsetHeight - viewport.clientHeight
-        : track.offsetWidth - viewport.clientWidth;
+      const setSize = isVertical ? firstSet.offsetHeight : firstSet.offsetWidth;
+      const viewSize = isVertical ? viewport.clientHeight : viewport.clientWidth;
 
-      setDistance(Math.max(0, Math.round(overflow)));
+      setLoopDistance(setSize);
+      // Loop only when the cards (without trailing gap) don't fit in the box
+      setShouldLoop(setSize - GAP > viewSize + 4);
     };
 
     measure();
 
     const observer = new ResizeObserver(measure);
     observer.observe(viewport);
-    observer.observe(track);
+    observer.observe(firstSet);
 
     return () => observer.disconnect();
   }, [items, isVertical]);
 
-  // Animate only when the cards do not fit in the box
-  const shouldAnimate = distance > 8;
-  const duration = Math.max(10, Math.round(distance / SPEED));
+  const duration = Math.max(10, Math.round(loopDistance / SPEED));
 
-  const trackStyle: CSSProperties | undefined = shouldAnimate
+  const trackStyle: CSSProperties | undefined = shouldLoop
     ? ({
-        '--scroll-distance': `${distance}px`,
+        '--loop-distance': `${loopDistance}px`,
         animationDuration: `${duration}s`,
       } as CSSProperties)
     : undefined;
+
+  const renderSet = (isClone: boolean) =>
+    items.map((item) => (
+      <div
+        key={`${isClone ? 'clone-' : ''}${item.id}`}
+        className="news-event-item"
+      >
+        <Card
+          item={item}
+          direction={scrollDirection}
+          to={itemLink}
+          isClone={isClone}
+        />
+      </div>
+    ));
 
   return (
     <div className="news-event-panel flex h-full min-w-0 flex-col rounded-2xl border border-[#80503E] bg-[#421321] p-4 shadow-md sm:p-5">
@@ -239,29 +240,26 @@ export default function CarouselPanel({
         <div
           ref={viewportRef}
           className={`news-event-viewport ${
-            isVertical
-              ? 'news-event-vertical-viewport'
-              : 'news-event-horizontal-viewport'
+            isVertical ? 'is-vertical' : 'is-horizontal'
           }`}
         >
           <div
-            ref={trackRef}
             style={trackStyle}
             className={`news-event-track ${
-              isVertical
-                ? 'news-event-vertical-track'
-                : 'news-event-horizontal-track'
-            } ${shouldAnimate ? 'is-animated' : ''}`}
+              isVertical ? 'is-vertical' : 'is-horizontal'
+            } ${shouldLoop ? 'is-animated' : ''}`}
           >
-            {items.map((item) => (
-              <div
-                key={item.id}
-                className="news-event-item"
-                style={!isVertical ? { width: '210px' } : undefined}
-              >
-                <Card item={item} direction={scrollDirection} to={itemLink} />
+            {/* Original set (measured) */}
+            <div ref={firstSetRef} className="news-event-set">
+              {renderSet(false)}
+            </div>
+
+            {/* Duplicate set for the seamless loop */}
+            {shouldLoop && (
+              <div className="news-event-set" aria-hidden="true">
+                {renderSet(true)}
               </div>
-            ))}
+            )}
           </div>
         </div>
       )}
@@ -276,59 +274,80 @@ export default function CarouselPanel({
 
         .news-event-track {
           display: flex;
-          gap: 14px;
-          padding: 4px 2px;
+          padding: 6px;               /* room for hover lift + shadow */
           will-change: transform;
         }
 
-        /* Events: cards in a row */
-        .news-event-horizontal-track {
-          width: max-content;
-          flex-direction: row;
-          align-items: stretch;
+        .news-event-set {
+          display: flex;
+          gap: ${GAP}px;
         }
 
-        .news-event-horizontal-track .news-event-item {
-          flex: 0 0 210px;
-        }
-
-        /* News: cards in a column */
-        .news-event-vertical-track {
-          width: 100%;
+        /* ---------- NEWS: vertical, moves UP ---------- */
+        .news-event-track.is-vertical {
           flex-direction: column;
+          width: 100%;
         }
-
-        .news-event-vertical-track .news-event-item {
+        .news-event-track.is-vertical .news-event-set {
+          flex-direction: column;
+          padding-bottom: ${GAP}px;   /* trailing gap => exact loop size */
+        }
+        .news-event-track.is-vertical .news-event-item {
           width: 100%;
           flex: 0 0 auto;
         }
 
-        /* Scroll to the end, pause, then scroll back. No cloned cards. */
-        .news-event-horizontal-track.is-animated {
-          animation: newsEventHorizontal 30s linear infinite alternate;
+        /* ---------- EVENTS: horizontal, moves LEFT ---------- */
+        .news-event-track.is-horizontal {
+          flex-direction: row;
+          width: max-content;
+        }
+        .news-event-track.is-horizontal .news-event-set {
+          flex-direction: row;
+          align-items: stretch;
+          padding-right: ${GAP}px;    /* trailing gap => exact loop size */
+        }
+        .news-event-track.is-horizontal .news-event-item {
+          flex: 0 0 210px;
+          width: 210px;
         }
 
-        .news-event-vertical-track.is-animated {
-          animation: newsEventVertical 30s linear infinite alternate;
+        /* ---------- Continuous, one-direction animation ---------- */
+        .news-event-track.is-vertical.is-animated {
+          animation: newsScrollUp linear infinite;
+        }
+        .news-event-track.is-horizontal.is-animated {
+          animation: eventsScrollLeft linear infinite;
         }
 
-        @keyframes newsEventHorizontal {
-          0%, 6%    { transform: translateX(0); }
-          94%, 100% { transform: translateX(calc(var(--scroll-distance) * -1)); }
+        @keyframes newsScrollUp {
+          from { transform: translateY(0); }
+          to   { transform: translateY(calc(var(--loop-distance) * -1)); }
         }
 
-        @keyframes newsEventVertical {
-          0%, 6%    { transform: translateY(0); }
-          94%, 100% { transform: translateY(calc(var(--scroll-distance) * -1)); }
+        @keyframes eventsScrollLeft {
+          from { transform: translateX(0); }
+          to   { transform: translateX(calc(var(--loop-distance) * -1)); }
         }
 
-        /* Pause while the mouse is over the list */
-        .news-event-viewport:hover .news-event-track {
+        /* Pause while hovering or when a link inside has keyboard focus */
+        .news-event-viewport:hover .news-event-track,
+        .news-event-viewport:focus-within .news-event-track {
           animation-play-state: paused;
         }
 
         .news-event-card {
           cursor: pointer;
+        }
+
+        /* Respect reduced-motion: no animation, allow manual scrolling */
+        @media (prefers-reduced-motion: reduce) {
+          .news-event-track.is-animated {
+            animation: none;
+          }
+          .news-event-viewport {
+            overflow: auto;
+          }
         }
       `}</style>
     </div>

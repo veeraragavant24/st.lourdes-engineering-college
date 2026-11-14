@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import {
   ArrowRight,
@@ -19,6 +19,7 @@ import {
 type Course = {
   title: string;
   shortTitle: string;
+  image?: string;
   description: string;
   duration: string;
   eligibility: string;
@@ -30,6 +31,7 @@ const ugCourses: Course[] = [
   {
     title: 'B.E. Computer Science and Engineering',
     shortTitle: 'B.E. Computer Science',
+    image: '/cources/cse.png',
     description:
       'Develop strong foundations in programming, software engineering, algorithms, databases and modern computing technologies.',
     duration: '4 Years',
@@ -45,6 +47,7 @@ const ugCourses: Course[] = [
   {
     title: 'B.E. Computer Science and Engineering (Cyber Security)',
     shortTitle: 'B.E. CSE (Cyber Security)',
+     image: '/cources/cb.png',
     description:
       'Develop expertise in securing digital systems, networks and data through ethical hacking, cyber forensics, network security and secure coding.',
     duration: '4 Years',
@@ -60,6 +63,7 @@ const ugCourses: Course[] = [
   {
     title: 'B.Tech. Information Technology',
     shortTitle: 'B.Tech. Information Technology',
+     image: '/cources/it.png',
     description:
       'Build practical skills in information systems, web technologies, networking, cloud computing and enterprise applications.',
     duration: '4 Years',
@@ -75,6 +79,7 @@ const ugCourses: Course[] = [
   {
     title: 'B.Tech. Artificial Intelligence and Data Science',
     shortTitle: 'B.Tech. AI and Data Science',
+     image: '/cources/aids.png',
     description:
       'Explore intelligent systems, machine learning, data analytics and emerging technologies for solving real-world problems.',
     duration: '4 Years',
@@ -90,6 +95,7 @@ const ugCourses: Course[] = [
   {
     title: 'B.E. Electronics and Communication Engineering',
     shortTitle: 'B.E. Electronics and Communication',
+     image: '/cources/ece.png',
     description:
       'Study electronic circuits, communication systems, embedded technologies and the engineering behind connected devices.',
     duration: '4 Years',
@@ -108,6 +114,7 @@ const pgCourses: Course[] = [
   {
     title: 'Master of Business Administration (MBA)',
     shortTitle: 'Master of Business Administration',
+     image: '/cources/mba.png',
     description:
       'Develop management, leadership, business strategy and analytical skills for professional and entrepreneurial careers.',
     duration: '2 Years',
@@ -123,6 +130,7 @@ const pgCourses: Course[] = [
   {
     title: 'M.E. Computer Science and Engineering',
     shortTitle: 'M.E. Computer Science and Engineering',
+     image: '/cources/mecse.png',
     description:
       'Advance your expertise in computing, research, advanced software systems and emerging areas of computer science.',
     duration: '2 Years',
@@ -136,6 +144,7 @@ const pgCourses: Course[] = [
     icon: BookOpen,
   },
 ];
+
 
 function AcademicsStyles() {
   return (
@@ -161,7 +170,7 @@ function AcademicsStyles() {
       .academics-hero {
         position: relative;
         overflow: hidden;
-        padding: 64px 24px 58px;
+        padding: 100px 24px 58px;
         color: #fff;
         background:
           radial-gradient(
@@ -707,9 +716,45 @@ function AcademicsStyles() {
           );
       }
 
+      /* Hero background image (fills the whole hero) */
+      .programme-detail-hero-image {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+        pointer-events: none;
+      }
+
+      /* Dark overlay so the text stays readable */
+   .programme-detail-hero::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(
+    90deg,
+    rgba(74,16,34,.80) 0%,
+    rgba(74,16,34,.55) 45%,
+    rgba(74,16,34,.15) 100%
+  );
+}
+
       .programme-detail-hero-inner {
+        position: relative;
+        z-index: 2;
         max-width: 1220px;
         margin: 0 auto;
+      }
+
+      .programme-detail-hero h1,
+      .programme-detail-hero p,
+      .programme-back,
+      .programme-detail-kicker {
+        text-shadow: 0 2px 10px rgba(0,0,0,.45);
       }
 
       .programme-back {
@@ -848,7 +893,7 @@ function AcademicsStyles() {
       .programme-section p {
         margin: 0 0 12px;
         color: #5F5558;
-        font-size: 13px;
+        font-size: 14px;
         line-height: 1.9;
       }
 
@@ -874,7 +919,7 @@ function AcademicsStyles() {
 
       .programme-objective p {
         margin: 0;
-        font-size: 12px;
+        font-size: 14px;
       }
 
       .programme-po-list {
@@ -897,7 +942,7 @@ function AcademicsStyles() {
         cursor: pointer;
         list-style: none;
         color: #4D2734;
-        font-size: 12px;
+        font-size: 13px;
         font-weight: 700;
       }
 
@@ -925,7 +970,7 @@ function AcademicsStyles() {
         border-radius: 4px;
         background: #F7EBC6;
         color: #76551A;
-        font-size: 11px;
+        font-size: 12px;
       }
 
       .programme-po p {
@@ -964,12 +1009,12 @@ function AcademicsStyles() {
       .programme-career h3 {
         margin: 0 0 6px;
         color: var(--academic-maroon);
-        font-size: 13px;
+        font-size: 14px;
       }
 
       .programme-career p {
         margin: 0;
-        font-size: 12px;
+        font-size: 13px;
       }
 
       .programme-course-grid {
@@ -987,7 +1032,7 @@ function AcademicsStyles() {
         border: 1px solid #E9D9AF;
         border-radius: 5px;
         color: #59404A;
-        font-size: 12px;
+        font-size: 13px;
         line-height: 1.55;
       }
 
@@ -1088,6 +1133,10 @@ function AcademicsStyles() {
 
         .programme-detail-hero {
           padding: 38px 19px 34px;
+        }
+
+        .programme-detail-hero::after {
+          background: rgba(74,16,34,.88);
         }
 
         .programme-layout {
@@ -1277,6 +1326,182 @@ function AcademicsStyles() {
         }
 
         .academics-zigzag-card {
+          opacity: 1;
+          transform: none !important;
+        }
+      }
+
+      /* =====================================================
+         PROGRAMME DETAIL ANIMATIONS (new)
+         ===================================================== */
+
+      @keyframes programmeFadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(24px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes programmeSlideFromLeft {
+        from {
+          opacity: 0;
+          transform: translateX(-70px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+
+      /* Hero content fades up one piece at a time on page load */
+      .programme-detail-hero-inner > * {
+        animation: programmeFadeUp 800ms cubic-bezier(.22, 1, .36, 1) both;
+      }
+
+      .programme-detail-hero-inner > *:nth-child(1) { animation-delay: 80ms; }
+      .programme-detail-hero-inner > *:nth-child(2) { animation-delay: 180ms; }
+      .programme-detail-hero-inner > *:nth-child(3) { animation-delay: 280ms; }
+      .programme-detail-hero-inner > *:nth-child(4) { animation-delay: 380ms; }
+      .programme-detail-hero-inner > *:nth-child(5) { animation-delay: 480ms; }
+
+      /* Sidebar slides in from the left on load */
+      .programme-sidebar {
+        animation: programmeSlideFromLeft 850ms cubic-bezier(.22, 1, .36, 1) 150ms both;
+      }
+
+      /* Boxes / cards: move in from the side, then settle */
+      .programme-reveal {
+        opacity: 0;
+        will-change: transform, opacity;
+        transition:
+          transform 850ms cubic-bezier(.22, 1, .36, 1),
+          opacity 650ms ease;
+      }
+
+      /* Left → right, then settle */
+      .programme-reveal.from-left {
+        transform: translateX(-90px);
+      }
+
+      /* Right → left, then settle */
+      .programme-reveal.from-right {
+        transform: translateX(90px);
+      }
+
+      .programme-reveal.is-visible {
+        opacity: 1;
+        transform: translateX(0);
+      }
+
+      /* Content inside each box: hidden until the box is visible, then fades up */
+      .programme-reveal:not(.is-visible) > p,
+      .programme-reveal:not(.is-visible) .programme-section-heading,
+      .programme-reveal:not(.is-visible) .programme-objective,
+      .programme-reveal:not(.is-visible) .programme-po,
+      .programme-reveal:not(.is-visible) .programme-career,
+      .programme-reveal:not(.is-visible) .programme-value-course,
+      .programme-reveal:not(.is-visible) .programme-gallery-card,
+      .programme-reveal:not(.is-visible) > div,
+      .programme-reveal:not(.is-visible) > .academics-apply-button {
+        opacity: 0;
+      }
+
+      .programme-reveal.is-visible > p,
+      .programme-reveal.is-visible .programme-section-heading,
+      .programme-reveal.is-visible .programme-objective,
+      .programme-reveal.is-visible .programme-po,
+      .programme-reveal.is-visible .programme-career,
+      .programme-reveal.is-visible .programme-value-course,
+      .programme-reveal.is-visible .programme-gallery-card,
+      .programme-reveal.is-visible > div,
+      .programme-reveal.is-visible > .academics-apply-button {
+        animation: programmeFadeUp 750ms cubic-bezier(.22, 1, .36, 1) both;
+        animation-delay: 250ms;
+      }
+
+      /* Stagger the items inside a box */
+      .programme-reveal.is-visible .programme-section-heading { animation-delay: 150ms; }
+
+      .programme-reveal.is-visible .programme-objective:nth-child(1),
+      .programme-reveal.is-visible .programme-po:nth-child(1),
+      .programme-reveal.is-visible .programme-career:nth-child(1),
+      .programme-reveal.is-visible .programme-value-course:nth-child(1),
+      .programme-reveal.is-visible .programme-gallery-card:nth-child(1) { animation-delay: 300ms; }
+
+      .programme-reveal.is-visible .programme-objective:nth-child(2),
+      .programme-reveal.is-visible .programme-po:nth-child(2),
+      .programme-reveal.is-visible .programme-career:nth-child(2),
+      .programme-reveal.is-visible .programme-value-course:nth-child(2),
+      .programme-reveal.is-visible .programme-gallery-card:nth-child(2) { animation-delay: 380ms; }
+
+      .programme-reveal.is-visible .programme-objective:nth-child(3),
+      .programme-reveal.is-visible .programme-po:nth-child(3),
+      .programme-reveal.is-visible .programme-career:nth-child(3),
+      .programme-reveal.is-visible .programme-value-course:nth-child(3),
+      .programme-reveal.is-visible .programme-gallery-card:nth-child(3) { animation-delay: 460ms; }
+
+      .programme-reveal.is-visible .programme-objective:nth-child(4),
+      .programme-reveal.is-visible .programme-po:nth-child(4),
+      .programme-reveal.is-visible .programme-career:nth-child(4),
+      .programme-reveal.is-visible .programme-value-course:nth-child(4),
+      .programme-reveal.is-visible .programme-gallery-card:nth-child(4) { animation-delay: 540ms; }
+
+      .programme-reveal.is-visible .programme-objective:nth-child(5),
+      .programme-reveal.is-visible .programme-po:nth-child(5),
+      .programme-reveal.is-visible .programme-career:nth-child(5),
+      .programme-reveal.is-visible .programme-value-course:nth-child(5),
+      .programme-reveal.is-visible .programme-gallery-card:nth-child(5) { animation-delay: 620ms; }
+
+      .programme-reveal.is-visible .programme-objective:nth-child(6),
+      .programme-reveal.is-visible .programme-po:nth-child(6),
+      .programme-reveal.is-visible .programme-career:nth-child(6),
+      .programme-reveal.is-visible .programme-value-course:nth-child(6),
+      .programme-reveal.is-visible .programme-gallery-card:nth-child(6) { animation-delay: 700ms; }
+
+      .programme-reveal.is-visible .programme-objective:nth-child(n+7),
+      .programme-reveal.is-visible .programme-po:nth-child(n+7),
+      .programme-reveal.is-visible .programme-career:nth-child(n+7),
+      .programme-reveal.is-visible .programme-value-course:nth-child(n+7),
+      .programme-reveal.is-visible .programme-gallery-card:nth-child(n+7) { animation-delay: 780ms; }
+
+      @media (max-width: 600px) {
+        .programme-reveal.from-left {
+          transform: translateX(-40px);
+        }
+
+        .programme-reveal.from-right {
+          transform: translateX(40px);
+        }
+
+        .programme-reveal.is-visible {
+          transform: translateX(0);
+        }
+      }
+
+      /* Reduced motion: show everything immediately */
+      @media (prefers-reduced-motion: reduce) {
+        .programme-detail-hero-inner > *,
+        .programme-sidebar,
+        .programme-reveal,
+        .programme-reveal * {
+          animation: none !important;
+          transition: none !important;
+        }
+
+        .programme-reveal,
+        .programme-reveal:not(.is-visible) > p,
+        .programme-reveal:not(.is-visible) .programme-section-heading,
+        .programme-reveal:not(.is-visible) .programme-objective,
+        .programme-reveal:not(.is-visible) .programme-po,
+        .programme-reveal:not(.is-visible) .programme-career,
+        .programme-reveal:not(.is-visible) .programme-value-course,
+        .programme-reveal:not(.is-visible) .programme-gallery-card,
+        .programme-reveal:not(.is-visible) > div,
+        .programme-reveal:not(.is-visible) > .academics-apply-button {
           opacity: 1;
           transform: none !important;
         }
@@ -1823,21 +2048,85 @@ const aidsGallery = [
   { title: 'INTERNAL HACKATHON', src: 'https://www.slec.edu.in/wp-content/uploads/2023/08/INTERNAL-HACKATHON-3.jpg' }
 ];
 
+function RevealSection({
+  className = 'programme-section',
+  id,
+  direction,
+  children,
+}: {
+  className?: string;
+  id?: string;
+  direction: 'left' | 'right';
+  children: ReactNode;
+}) {
+  const ref = useRef<HTMLElement>(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisible(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.12, rootMargin: '0px 0px -25px 0px' }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <section
+      ref={ref}
+      id={id}
+      className={`${className} programme-reveal ${
+        direction === 'left' ? 'from-left' : 'from-right'
+      } ${visible ? 'is-visible' : ''}`}
+    >
+      {children}
+    </section>
+  );
+}
+
+
 function ProgrammeDetails({ course }: { course: Course }) {
   const data: ProgrammeSectionData = programmeData[course.title] || {};
   const isAids = course.title === 'B.Tech. Artificial Intelligence and Data Science';
   const isMba = course.title === 'Master of Business Administration (MBA)';
   const [activeImage, setActiveImage] = useState<string | null>(null);
 
-  const sections = isAids
-    ? sectionLinks.filter(([id]) => ['vision-mission', 'department-highlights', 'programme-outcomes', 'career-opportunities', 'value-added-courses', 'department-labs', 'department-gallery'].includes(id))
-    : isMba
-      ? sectionLinks.filter(([id]) => ['department-overview', 'department-highlights', 'programme-objectives', 'programme-outcomes', 'career-opportunities', 'value-added-courses'].includes(id))
-      : sectionLinks.filter(([id]) => ['department-overview', 'programme-objectives', 'programme-outcomes', 'career-opportunities', 'value-added-courses'].includes(id));
+  const hasSection: Record<string, boolean> = {
+    'department-overview': !!data.overview,
+    'vision-mission': !!(data.vision || data.mission),
+    'department-highlights': !!data.highlights,
+    'programme-objectives': !!data.objectives,
+    'programme-outcomes': !!data.outcomes,
+    'career-opportunities': !!data.careers,
+    'value-added-courses': !!data.valueCourses,
+    'department-labs': !!data.labs,
+    'department-gallery': isAids,
+  };
+
+  const sections = sectionLinks.filter(([id]) => hasSection[id]);
+
+  let sectionNo = 0;
+  const nextNo = () => String(++sectionNo).padStart(2, '0');
 
   return (
     <div className="programme-detail">
       <section className="programme-detail-hero" data-header-theme="dark">
+        {course.image && (
+          <img
+            className="programme-detail-hero-image"
+            src={course.image}
+            alt=""
+            aria-hidden="true"
+            onError={(e) => { e.currentTarget.style.display = 'none'; }}
+          />
+        )}
         <div className="programme-detail-hero-inner">
           <Link to="/academics" className="programme-back">
             <ArrowRight style={{ transform: 'rotate(180deg)' }} aria-hidden="true" />
@@ -1862,81 +2151,81 @@ function ProgrammeDetails({ course }: { course: Course }) {
 
         <div className="programme-content">
           {data?.overview && (
-            <section className="programme-section" id="department-overview">
-              <h2 className="programme-section-heading"><span className="programme-section-number">01</span>Department Overview</h2>
+            <RevealSection id="department-overview" direction="left">
+              <h2 className="programme-section-heading"><span className="programme-section-number">{nextNo()}</span>Department Overview</h2>
               {data.overview.map((paragraph, index) => <p key={index}>{paragraph}</p>)}
-            </section>
+            </RevealSection>
           )}
 
           {(data?.vision || data?.mission) && (
-            <section className="programme-section" id="vision-mission">
-              <h2 className="programme-section-heading"><span className="programme-section-number">01</span>Vision & Mission</h2>
+            <RevealSection id="vision-mission" direction="right">
+              <h2 className="programme-section-heading"><span className="programme-section-number">{nextNo()}</span>Vision & Mission</h2>
               {data.vision && <div className="programme-objective"><h3>Vision</h3><p>{data.vision}</p></div>}
               {data.mission && <div className="programme-objective" style={{ marginTop: 12 }}><h3>Mission</h3><p>{data.mission}</p></div>}
-            </section>
+            </RevealSection>
           )}
 
           {data?.highlights && (
-            <section className="programme-section" id="department-highlights">
-              <h2 className="programme-section-heading"><span className="programme-section-number">02</span>{isMba ? 'Name of the Courses Offering' : 'Department Highlights'}</h2>
+            <RevealSection id="department-highlights" direction="left">
+              <h2 className="programme-section-heading"><span className="programme-section-number">{nextNo()}</span>{isMba ? 'Name of the Courses Offering' : 'Department Highlights'}</h2>
               <div className="programme-career-list">
                 {data.highlights.map((item, index) => <article className="programme-career" key={item}><span className="programme-career-number">{String(index + 1).padStart(2, '0')}</span><div><p>{item}</p></div></article>)}
               </div>
-            </section>
+            </RevealSection>
           )}
 
           {data?.objectives && (
-            <section className="programme-section" id="programme-objectives">
-              <h2 className="programme-section-heading"><span className="programme-section-number">02</span>Objectives of the Programme</h2>
+            <RevealSection id="programme-objectives" direction="right">
+              <h2 className="programme-section-heading"><span className="programme-section-number">{nextNo()}</span>Objectives of the Programme</h2>
               <p>The department is committed to delivering quality education, research and industry-oriented learning. The key objectives are:</p>
               <div className="programme-objective-grid">
                 {data.objectives.map(item => <article className="programme-objective" key={item.title}><h3>{item.title}</h3><p>{item.text}</p></article>)}
               </div>
-            </section>
+            </RevealSection>
           )}
 
           {data?.outcomes && (
-            <section className="programme-section" id="programme-outcomes">
-              <h2 className="programme-section-heading"><span className="programme-section-number">03</span>Programme Outcomes (POs)</h2>
+            <RevealSection id="programme-outcomes" direction="left">
+              <h2 className="programme-section-heading"><span className="programme-section-number">{nextNo()}</span>Programme Outcomes (POs)</h2>
               <p>On successful completion of the programme, graduates will be able to:</p>
               <div className="programme-po-list">
                 {data.outcomes.map(item => <details className="programme-po" key={item.code}><summary><span className="programme-po-code">{item.code}</span>{item.title || 'Programme Outcome'}</summary><p>{item.text}</p></details>)}
               </div>
-            </section>
+            </RevealSection>
           )}
 
           {data?.careers && (
-            <section className="programme-section" id="career-opportunities">
-              <h2 className="programme-section-heading"><span className="programme-section-number">04</span>Career Opportunities</h2>
+            <RevealSection id="career-opportunities" direction="right">
+              <h2 className="programme-section-heading"><span className="programme-section-number">{nextNo()}</span>Career Opportunities</h2>
               <p>{isAids ? 'A career in Artificial Intelligence and Data Science offers diverse, high-growth opportunities across industries.' : isMba ? 'The MBA programme opens diverse career opportunities across corporate organizations, financial institutions, consulting firms, manufacturing companies, IT firms and entrepreneurial ventures.' : course.title === 'M.E. Computer Science and Engineering' ? 'The M.E. Computer Science and Engineering programme prepares graduates for advanced technical, research and leadership roles in IT industries, product-based companies, research organizations, academia, startups and government sectors.' : `The ${course.title} programme opens diverse career opportunities across industry, research, government and entrepreneurial sectors.`}</p>
               <div className="programme-career-list">
                 {data.careers.map((item, index) => <article className="programme-career" key={item.title}><span className="programme-career-number">{String(index + 1).padStart(2, '0')}</span><div><h3>{item.title}</h3><p>{item.text}</p></div></article>)}
               </div>
-            </section>
+            </RevealSection>
           )}
 
           {data?.valueCourses && (
-            <section className="programme-section" id="value-added-courses">
-              <h2 className="programme-section-heading"><span className="programme-section-number">05</span>Value-Added Courses</h2>
+            <RevealSection id="value-added-courses" direction="left">
+              <h2 className="programme-section-heading"><span className="programme-section-number">{nextNo()}</span>Value-Added Courses</h2>
               <p>{course.title === 'M.E. Computer Science and Engineering' ? 'The department offers advanced value-added courses to strengthen postgraduate students’ technical skills, research capabilities and industry readiness beyond the regular curriculum.' : isMba ? 'The Department of Management Studies offers value-added courses to enhance student competencies, employability skills and industry readiness beyond the regular curriculum.' : 'The department offers value-added courses to enhance students’ technical competencies, practical skills, industry readiness and professional development beyond the prescribed curriculum.'}</p>
               <div className="programme-course-grid">
                 {data.valueCourses.map(item => <div className="programme-value-course" key={item}><CheckCircle2 aria-hidden="true" />{item}</div>)}
               </div>
-            </section>
+            </RevealSection>
           )}
 
           {data?.labs && (
-            <section className="programme-section" id="department-labs">
-              <h2 className="programme-section-heading"><span className="programme-section-number">06</span>Department Labs</h2>
+            <RevealSection id="department-labs" direction="right">
+              <h2 className="programme-section-heading"><span className="programme-section-number">{nextNo()}</span>Department Labs</h2>
               <div className="programme-course-grid">
                 {data.labs.map(item => <div className="programme-value-course" key={item}><CheckCircle2 aria-hidden="true" />{item}</div>)}
               </div>
-            </section>
+            </RevealSection>
           )}
 
           {isAids && (
-            <section className="programme-section" id="department-gallery">
-              <h2 className="programme-section-heading"><span className="programme-section-number">07</span>Department Labs & Activities Gallery</h2>
+            <RevealSection id="department-gallery" direction="left">
+              <h2 className="programme-section-heading"><span className="programme-section-number">{nextNo()}</span>Department Labs & Activities Gallery</h2>
               <div className="programme-gallery-grid">
                 {aidsGallery.map((item, index) => (
                   <button className="programme-gallery-card" type="button" key={`${item.src}-${index}`} onClick={() => setActiveImage(item.src)}>
@@ -1945,13 +2234,13 @@ function ProgrammeDetails({ course }: { course: Course }) {
                   </button>
                 ))}
               </div>
-            </section>
+            </RevealSection>
           )}
 
-          <section className="programme-detail-cta">
+          <RevealSection className="programme-detail-cta" direction="right">
             <div><h2>Ready to begin your journey?</h2><p>Take the next step towards your academic and professional goals.</p></div>
             <Link to="/admission" className="academics-apply-button">Apply for Admission <ArrowRight aria-hidden="true" /></Link>
-          </section>
+          </RevealSection>
         </div>
       </main>
 

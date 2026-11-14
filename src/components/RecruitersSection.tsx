@@ -1,7 +1,76 @@
-
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { recruiters } from '@/data/recruiters';
+
+type Recruiter = {
+  id: number;
+  name: string;
+  logo: string;
+};
+
+// Folder name must match the folder inside /public exactly (it is spelled "recuiters" here)
+const recruiters: Recruiter[] = [
+  { id: 1, name: 'Google', logo: '/recuiters/google.png' },
+  { id: 2, name: 'Accenture', logo: '/recuiters/accenture.png' },
+  { id: 3, name: 'Cognizant', logo: '/recuiters/cognizant.png' },
+  { id: 4, name: 'HCL Tech', logo: '/recuiters/hcl.jpg' },
+  { id: 5, name: 'Flipkart', logo: '/recuiters/flipkart.png' },
+  { id: 6, name: 'Amazon', logo: '/recuiters/amazon.png' },
+  { id: 7, name: 'Mahindra', logo: '/recuiters/mahindra.jpg' },
+  { id: 8, name: 'Infosys', logo: '/recuiters/infosys.png' },
+  { id: 9, name: 'IBM', logo: '/recuiters/IBM.png' },
+  { id: 10, name: 'Hexaware', logo: '/recuiters/hexaware.jpg' },
+  { id: 11, name: 'L&T Infotech', logo: '/recuiters/l&tinfotech.png' },
+  { id: 12, name: 'L & T', logo: '/recuiters/l&t.png' },
+  { id: 13, name: 'Polaris', logo: '/recuiters/polaris.jpg' },
+  { id: 14, name: 'QSpiders', logo: '/recuiters/Qspider.png' },
+  { id: 15, name: 'Sutherland', logo: '/recuiters/sutherland.jpg' },
+  { id: 16, name: 'TCS', logo: '/recuiters/tcs.jpg' },
+  { id: 17, name: 'Vertafore', logo: '/recuiters/vertafare.jpg' },
+  { id: 18, name: 'Why Global Service', logo: '/recuiters/why-global.png' },
+  { id: 19, name: 'Wipro', logo: '/recuiters/wipro.png' },
+  { id: 20, name: 'Zoho', logo: '/recuiters/zoho.png' },
+];
+
+/* Shows the logo, or the company name if the image is missing */
+function RecruiterCard({
+  rec,
+  duplicate,
+  onPause,
+  onResume,
+}: {
+  rec: Recruiter;
+  duplicate: boolean;
+  onPause: () => void;
+  onResume: () => void;
+}) {
+  const [failed, setFailed] = useState(false);
+
+  return (
+    <div
+      className="recruiter-card"
+      data-company={rec.name.toLowerCase()}
+      onMouseEnter={!duplicate ? onPause : undefined}
+      onMouseLeave={!duplicate ? onResume : undefined}
+      onFocus={!duplicate ? onPause : undefined}
+      onBlur={!duplicate ? onResume : undefined}
+      tabIndex={duplicate ? -1 : 0}
+    >
+      {rec.logo && !failed ? (
+        <img
+          src={rec.logo}
+          alt={duplicate ? '' : rec.name}
+          className="recruiter-logo"
+          loading="eager"
+          decoding="async"
+          draggable={false}
+          onError={() => setFailed(true)}
+        />
+      ) : (
+        <span className="recruiter-name">{rec.name}</span>
+      )}
+    </div>
+  );
+}
 
 export default function RecruitersSection() {
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -14,6 +83,7 @@ export default function RecruitersSection() {
 
     let animationFrame = 0;
     let previousTime = 0;
+    let position = container.scrollLeft; // keeps decimals, scrollLeft alone can round them away
 
     const speed = 35;
 
@@ -23,16 +93,17 @@ export default function RecruitersSection() {
       const delta = Math.min((time - previousTime) / 1000, 0.05);
       previousTime = time;
 
-      if (!isPaused.current) {
-        const halfWidth = container.scrollWidth / 2;
+      const halfWidth = container.scrollWidth / 2;
 
-        if (halfWidth > 0) {
-          container.scrollLeft += speed * delta;
+      if (isPaused.current) {
+        // follow manual scrolling while paused
+        position = container.scrollLeft;
+      } else if (halfWidth > 0) {
+        position += speed * delta;
 
-          if (container.scrollLeft >= halfWidth) {
-            container.scrollLeft -= halfWidth;
-          }
-        }
+        if (position >= halfWidth) position -= halfWidth;
+
+        container.scrollLeft = position;
       }
 
       animationFrame = requestAnimationFrame(animate);
@@ -49,9 +120,10 @@ export default function RecruitersSection() {
     if (!container) return;
 
     container.scrollBy({
-      left: direction === 'left'
-        ? -container.clientWidth * 0.65
-        : container.clientWidth * 0.65,
+      left:
+        direction === 'left'
+          ? -container.clientWidth * 0.65
+          : container.clientWidth * 0.65,
       behavior: 'smooth',
     });
   };
@@ -64,51 +136,12 @@ export default function RecruitersSection() {
     isPaused.current = false;
   };
 
-  // RENDER RECRUITER CARD
-  const renderRecruiter = (
-    rec: (typeof recruiters)[number],
-    duplicate = false
-  ) => {
-    const company = rec.name.toLowerCase();
-
-    return (
-      <div
-        key={`${duplicate ? 'duplicate' : 'original'}-${rec.id}`}
-        className="recruiter-card"
-        data-company={company}
-        onMouseEnter={!duplicate ? pauseMovement : undefined}
-        onMouseLeave={!duplicate ? resumeMovement : undefined}
-        onFocus={!duplicate ? pauseMovement : undefined}
-        onBlur={!duplicate ? resumeMovement : undefined}
-        tabIndex={duplicate ? -1 : 0}
-      >
-        {rec.logoUrl ? (
-          <img
-            src={rec.logoUrl}
-            alt={duplicate ? '' : rec.name}
-            className="recruiter-logo"
-            loading="lazy"
-          />
-        ) : (
-          <span className="recruiter-name">
-            {rec.name}
-          </span>
-        )}
-      </div>
-    );
-  };
-
   return (
     <section className="recruiters-section section-pad">
-
       <div className="mx-auto max-w-7xl">
-
         {/* HEADER */}
         <div className="mb-12 text-center">
-
-          <p className="recruiters-eyebrow">
-            Our Hiring Partners
-          </p>
+          <p className="recruiters-eyebrow">Our Hiring Partners</p>
 
           <h2 className="recruiters-heading mt-3 font-serif text-3xl font-bold sm:text-4xl lg:text-5xl">
             Top Recruiters
@@ -117,16 +150,12 @@ export default function RecruitersSection() {
           <div className="recruiters-divider mx-auto mt-4 h-px w-20" />
 
           <p className="recruiters-description mx-auto mt-4 max-w-xl text-sm">
-            Supplied recruiter-logo content pending verification.
-            Official logo files to be provided.
+            Leading companies that recruit our students every year.
           </p>
-
         </div>
 
         {/* CAROUSEL */}
         <div className="relative recruiters-carousel">
-
-          {/* LEFT BUTTON */}
           <button
             type="button"
             onClick={() => scroll('left')}
@@ -138,7 +167,6 @@ export default function RecruitersSection() {
             <ChevronLeft className="h-5 w-5" />
           </button>
 
-          {/* RIGHT BUTTON */}
           <button
             type="button"
             onClick={() => scroll('right')}
@@ -150,55 +178,49 @@ export default function RecruitersSection() {
             <ChevronRight className="h-5 w-5" />
           </button>
 
-          {/* MOVING CARDS */}
-          <div
-            ref={scrollRef}
-            className="recruiters-viewport no-scrollbar"
-          >
-
+          <div ref={scrollRef} className="recruiters-viewport no-scrollbar">
             <div className="recruiters-track">
-
               {/* ORIGINAL CARDS */}
               <div className="recruiters-group">
-                {recruiters.map((rec) =>
-                  renderRecruiter(rec)
-                )}
+                {recruiters.map((rec) => (
+                  <RecruiterCard
+                    key={`original-${rec.id}`}
+                    rec={rec}
+                    duplicate={false}
+                    onPause={pauseMovement}
+                    onResume={resumeMovement}
+                  />
+                ))}
               </div>
 
-              {/* DUPLICATE CARDS FOR INFINITE LOOP */}
-              <div
-                className="recruiters-group"
-                aria-hidden="true"
-              >
-                {recruiters.map((rec) =>
-                  renderRecruiter(rec, true)
-                )}
+              {/* DUPLICATE CARDS FOR THE INFINITE LOOP */}
+              <div className="recruiters-group" aria-hidden="true">
+                {recruiters.map((rec) => (
+                  <RecruiterCard
+                    key={`duplicate-${rec.id}`}
+                    rec={rec}
+                    duplicate
+                    onPause={pauseMovement}
+                    onResume={resumeMovement}
+                  />
+                ))}
               </div>
-
             </div>
-
           </div>
-
         </div>
 
         <p className="recruiters-hint">
           Hover over the company cards to pause the carousel
         </p>
-
       </div>
 
       {/* STYLES */}
       <style>{`
-
-        /* =====================================
-           SECTION BACKGROUND
-        ===================================== */
-
         .recruiters-section {
           position: relative;
           width: 100%;
           overflow: hidden;
-          background: #ffffff;
+          background: #fde9d5;
           padding-top: 85px;
           padding-bottom: 85px;
         }
@@ -216,22 +238,13 @@ export default function RecruitersSection() {
         }
 
         .recruiters-divider {
-          background: linear-gradient(
-            to right,
-            transparent,
-            #d8ad45,
-            transparent
-          );
+          background: linear-gradient(to right, transparent, #d8ad45, transparent);
         }
 
         .recruiters-description {
           color: #827779;
           line-height: 1.8;
         }
-
-        /* =====================================
-           CAROUSEL VIEWPORT
-        ===================================== */
 
         .recruiters-carousel {
           width: 100%;
@@ -251,10 +264,6 @@ export default function RecruitersSection() {
           display: none;
         }
 
-        /* =====================================
-           MOVING TRACK
-        ===================================== */
-
         .recruiters-track {
           display: flex;
           width: max-content;
@@ -269,34 +278,24 @@ export default function RecruitersSection() {
           padding-right: 16px;
         }
 
-        /* =====================================
-           ORIGINAL COMPANY CARDS
-        ===================================== */
-
         .recruiter-card {
           display: flex;
           flex-shrink: 0;
           align-items: center;
           justify-content: center;
-
           width: 170px;
           height: 112px;
           padding: 20px;
-
           background: #ffffff;
           border: 1px solid #eeeeee;
           border-radius: 16px;
-
           box-shadow: 0 5px 18px rgba(0, 0, 0, .07);
-
           transition:
             transform .35s ease,
             box-shadow .35s ease,
             border-color .35s ease,
             background .35s ease;
         }
-
-        /* CARD HOVER */
 
         .recruiter-card:hover,
         .recruiter-card:focus-visible {
@@ -305,8 +304,6 @@ export default function RecruitersSection() {
           box-shadow: 0 14px 28px rgba(0, 0, 0, .13);
           outline: none;
         }
-
-        /* ORIGINAL COMPANY LOGOS */
 
         .recruiter-logo {
           display: block;
@@ -320,8 +317,6 @@ export default function RecruitersSection() {
           transform: scale(1.07);
         }
 
-        /* COMPANY NAME FALLBACK */
-
         .recruiter-name {
           color: #1769aa;
           text-align: center;
@@ -331,27 +326,16 @@ export default function RecruitersSection() {
           line-height: 1.4;
         }
 
-        /* BRAND COLOURS FOR TEXT FALLBACKS */
-
-        .recruiter-card[data-company*="infosys"] .recruiter-name {
-          color: #0875bd;
-        }
-
-        .recruiter-card[data-company*="wipro"] .recruiter-name {
-          color: #4338ca;
-        }
-
-        .recruiter-card[data-company*="accenture"] .recruiter-name {
-          color: #7626a8;
-        }
-
-        .recruiter-card[data-company*="cognizant"] .recruiter-name {
-          color: #194da8;
-        }
-
-        .recruiter-card[data-company*="capgemini"] .recruiter-name {
-          color: #087bc1;
-        }
+        .recruiter-card[data-company*="infosys"] .recruiter-name { color: #0875bd; }
+        .recruiter-card[data-company*="wipro"] .recruiter-name { color: #4338ca; }
+        .recruiter-card[data-company*="accenture"] .recruiter-name { color: #7626a8; }
+        .recruiter-card[data-company*="cognizant"] .recruiter-name { color: #194da8; }
+        .recruiter-card[data-company*="amazon"] .recruiter-name { color: #172033; }
+        .recruiter-card[data-company*="hcl"] .recruiter-name { color: #087db8; }
+        .recruiter-card[data-company*="ibm"] .recruiter-name { color: #1769aa; }
+        .recruiter-card[data-company*="hexaware"] .recruiter-name { color: #008b95; }
+        .recruiter-card[data-company*="mahindra"] .recruiter-name { color: #e8493b; }
+        .recruiter-card[data-company*="tcs"] .recruiter-name { color: #2864cf; }
 
         .recruiter-card[data-company*="flipkart"] {
           background: #ffdf00;
@@ -363,39 +347,9 @@ export default function RecruitersSection() {
           font-style: italic;
         }
 
-        .recruiter-card[data-company*="amazon"] .recruiter-name {
-          color: #172033;
-        }
-
-        .recruiter-card[data-company*="hcl"] .recruiter-name {
-          color: #087db8;
-        }
-
-        .recruiter-card[data-company*="ibm"] .recruiter-name {
-          color: #1769aa;
-        }
-
-        .recruiter-card[data-company*="hexaware"] .recruiter-name {
-          color: #008b95;
-        }
-
-        .recruiter-card[data-company*="tech mahindra"] .recruiter-name {
-          color: #e8493b;
-        }
-
-        .recruiter-card[data-company*="tcs"] .recruiter-name {
-          color: #2864cf;
-        }
-
-        /* FLIPKART HOVER */
-
         .recruiter-card[data-company*="flipkart"]:hover {
           background: #ffe94d;
         }
-
-        /* =====================================
-           NAVIGATION BUTTONS
-        ===================================== */
 
         .recruiters-control {
           background: #ffffff;
@@ -411,10 +365,6 @@ export default function RecruitersSection() {
           box-shadow: 0 8px 18px rgba(0, 0, 0, .12);
         }
 
-        /* =====================================
-           HINT TEXT
-        ===================================== */
-
         .recruiters-hint {
           margin-top: 28px;
           color: #8b7d7e;
@@ -422,12 +372,7 @@ export default function RecruitersSection() {
           text-align: center;
         }
 
-        /* =====================================
-           RESPONSIVE
-        ===================================== */
-
         @media (max-width: 640px) {
-
           .recruiters-section {
             padding-top: 55px;
             padding-bottom: 55px;
@@ -458,21 +403,14 @@ export default function RecruitersSection() {
           }
         }
 
-        /* =====================================
-           REDUCED MOTION
-        ===================================== */
-
         @media (prefers-reduced-motion: reduce) {
-
           .recruiter-card,
           .recruiter-logo,
           .recruiters-control {
             transition: none !important;
           }
         }
-
       `}</style>
-
     </section>
   );
 }

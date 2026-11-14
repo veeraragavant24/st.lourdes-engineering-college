@@ -24,6 +24,7 @@ const features = [
   },
 ];
 
+
 export default function PlacementSection() {
   return (
     <section

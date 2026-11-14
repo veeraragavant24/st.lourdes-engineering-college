@@ -1,5 +1,5 @@
 
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 type FacultyMember = {
   id: number;
@@ -161,17 +161,7 @@ const facultyMembers: FacultyMember[] = [
   },
 ];
 
-const departments = [
-  "All Faculty",
-  ...Array.from(
-    new Set(facultyMembers.map((faculty) => faculty.department))
-  ),
-];
-
 export default function Faculty() {
-  const [activeDepartment, setActiveDepartment] =
-    useState("All Faculty");
-  const [search, setSearch] = useState("");
   const [selectedFaculty, setSelectedFaculty] =
     useState<FacultyMember | null>(null);
 
@@ -226,33 +216,6 @@ export default function Faculty() {
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [selectedFaculty]);
-
-  const filteredFaculty = useMemo(() => {
-    const query = search.trim().toLowerCase();
-
-    return facultyMembers.filter((faculty) => {
-      const matchesDepartment =
-        activeDepartment === "All Faculty" ||
-        faculty.department === activeDepartment;
-
-      const searchableText = [
-        faculty.name,
-        faculty.designation,
-        faculty.department,
-        faculty.biography,
-        faculty.research,
-        ...faculty.qualifications,
-        ...faculty.specialization,
-      ]
-        .join(" ")
-        .toLowerCase();
-
-      return (
-        matchesDepartment &&
-        (!query || searchableText.includes(query))
-      );
-    });
-  }, [activeDepartment, search]);
 
   return (
     <main className="faculty-page">
@@ -344,75 +307,6 @@ export default function Faculty() {
             #9b7126
           );
           box-shadow: 0 2px 14px #d6ad5540;
-        }
-
-        /* Search and result count */
-        .faculty-search-row {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          gap: 18px;
-          margin-bottom: 22px;
-        }
-
-        .faculty-result-count {
-          color: var(--muted);
-          font-size: 13px;
-        }
-
-        .faculty-search {
-          width: 320px;
-          max-width: 100%;
-          padding: 13px 16px;
-          border: 1px solid #d9c79c;
-          border-radius: 7px;
-          outline: none;
-          color: var(--maroon);
-          background: #fffdf9;
-          font-size: 14px;
-          transition: border-color .25s, box-shadow .25s;
-        }
-
-        .faculty-search:focus {
-          border-color: var(--gold);
-          box-shadow: 0 0 0 4px #d6ad5528;
-        }
-
-        /* Department filters */
-        .faculty-filters {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 10px;
-          margin-bottom: 30px;
-        }
-
-        .faculty-filter {
-          padding: 10px 16px;
-          border: 1px solid #ddcda8;
-          border-radius: 6px;
-          color: var(--maroon);
-          background: transparent;
-          cursor: pointer;
-          font-size: 12px;
-          font-weight: 700;
-          transition:
-            color .25s ease,
-            background .25s ease,
-            border-color .25s ease,
-            transform .25s ease;
-        }
-
-        .faculty-filter:hover {
-          transform: translateY(-2px);
-          border-color: var(--gold);
-          background: #f4ead5;
-        }
-
-        .faculty-filter.active {
-          border-color: var(--maroon);
-          color: #fff;
-          background: var(--maroon);
-          box-shadow: 0 5px 15px #68182b20;
         }
 
         /* Faculty card grid */
@@ -846,25 +740,6 @@ export default function Faculty() {
             padding: 30px 16px 40px;
           }
 
-          .faculty-search-row {
-            align-items: stretch;
-            flex-direction: column;
-            gap: 10px;
-          }
-
-          .faculty-search {
-            width: 100%;
-          }
-
-          .faculty-filters {
-            gap: 8px;
-          }
-
-          .faculty-filter {
-            padding: 9px 11px;
-            font-size: 11px;
-          }
-
           .faculty-grid {
             gap: 12px;
           }
@@ -962,48 +837,11 @@ export default function Faculty() {
           <div className="faculty-heading-line" />
         </header>
 
-        <div className="faculty-search-row" data-reveal="right">
-          <p className="faculty-result-count" aria-live="polite">
-            Showing {filteredFaculty.length} of {facultyMembers.length} faculty members
-          </p>
-
-          <input
-            className="faculty-search"
-            type="search"
-            placeholder="Search faculty, department..."
-            aria-label="Search faculty"
-            value={search}
-            onChange={(event) => setSearch(event.target.value)}
-          />
-        </div>
-
-        <nav
-          className="faculty-filters"
-          aria-label="Filter faculty by department"
-          data-reveal="right"
-        >
-          {departments.map((department) => (
-            <button
-              key={department}
-              type="button"
-              className={
-                "faculty-filter" +
-                (activeDepartment === department ? " active" : "")
-              }
-              onClick={() => setActiveDepartment(department)}
-              aria-pressed={activeDepartment === department}
-            >
-              {department}
-            </button>
-          ))}
-        </nav>
-
         <section
           className="faculty-grid"
           aria-label="Faculty directory"
         >
-          {filteredFaculty.length > 0 ? (
-            filteredFaculty.map((faculty, index) => (
+          {facultyMembers.map((faculty, index) => (
               <article
                 className="faculty-card"
                 key={faculty.id}
@@ -1048,12 +886,7 @@ export default function Faculty() {
                   </button>
                 </div>
               </article>
-            ))
-          ) : (
-            <div className="faculty-empty">
-              No faculty members found. Try another search or department.
-            </div>
-          )}
+          ))}
         </section>
       </div>
 

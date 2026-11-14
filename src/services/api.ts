@@ -1,7 +1,3 @@
-// Service interface for future .NET Web API integration.
-// All data-fetching and form-submission logic should go through here,
-// so the backend can be wired up without changing component code.
-
 export interface AdmissionEnquiry {
   name: string;
   email: string;
@@ -10,45 +6,56 @@ export interface AdmissionEnquiry {
   message: string;
 }
 
-export interface ApiResponse<T> {
+interface ApiResponse {
   success: boolean;
-  data?: T;
-  error?: string;
+  message: string;
 }
 
-// Base URL for the .NET API. Set via environment variable when the backend is ready.
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '';
-
-async function request<T>(path: string, options?: RequestInit): Promise<ApiResponse<T>> {
-  if (!API_BASE_URL) {
-    // No backend configured — return a demo response.
-    return { success: false, error: 'API_BASE_URL not configured' };
-  }
-  try {
-    const res = await fetch(`${API_BASE_URL}${path}`, {
-      headers: { 'Content-Type': 'application/json' },
-      ...options,
-    });
-    if (!res.ok) {
-      return { success: false, error: `Request failed: ${res.status}` };
-    }
-    const data = await res.json();
-    return { success: true, data };
-  } catch (err) {
-    return { success: false, error: err instanceof Error ? err.message : 'Unknown error' };
-  }
-}
+// Set VITE_API_BASE_URL in your frontend .env file.
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export const api = {
-  submitAdmissionEnquiry: (payload: AdmissionEnquiry): Promise<ApiResponse<{ id: string }>> => {
-    return request('/api/admission-enquiry', {
-      method: 'POST',
-      body: JSON.stringify(payload),
-    });
-  },
+  async submitAdmissionEnquiry(
+    enquiry: AdmissionEnquiry
+  ): Promise<ApiResponse> {
+    try {
+      const response = await fetch(
+        `${API_BASE_URL}/api/AdmissionEnquiry/submit`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name: enquiry.name,
+            email: enquiry.email,
+            phone: enquiry.phone,
+            course: enquiry.program,
+            description: enquiry.message,
+          }),
+        }
+      );
 
-  // When the backend is ready, add methods like:
-  // getNews: () => request<NewsItem[]>('/api/news'),
-  // getEvents: () => request<EventItem[]>('/api/events'),
-  // getPrograms: () => request<Program[]>('/api/programs'),
+      const result = await response.json();
+
+      if (!response.ok) {
+        return {
+          success: false,
+          message: result.message || "Unable to send your enquiry.",
+        };
+      }
+
+      return {
+        success: result.success === true,
+        message: result.message || "Enquiry submitted successfully.",
+      };
+    } catch (error) {
+      console.error("Admission enquiry API error:", error);
+
+      return {
+        success: false,
+        message: "Unable to connect to the server. Please try again.",
+      };
+    }
+  },
 };

@@ -299,7 +299,7 @@ function DepartmentStyles() {
         position: relative;
         overflow: hidden;
         isolation: isolate;
-        padding: 85px 0 58px;
+        padding: 125px 0 58px;
         color: #fff;
         background: linear-gradient(
           112deg,
@@ -617,7 +617,7 @@ function DepartmentStyles() {
         margin: 0;
         color: #211321;
         font-family: Georgia, "Times New Roman", serif;
-        font-size: 14px;
+        font-size: 17px;
         font-weight: 700;
         line-height: 1.45;
       }
@@ -627,7 +627,7 @@ function DepartmentStyles() {
         margin-top: 5px;
         color: #8B7B78;
         font-family: Arial, sans-serif;
-        font-size: 9px;
+        font-size: 10px;
         font-weight: 600;
         letter-spacing: .5px;
         text-transform: uppercase;
@@ -808,7 +808,7 @@ function DepartmentStyles() {
         margin: 0 0 5px;
         color: var(--dept-maroon);
         font-family: Georgia, "Times New Roman", serif;
-        font-size: 14px;
+        font-size: 15px;
       }
 
      .dept-hod p {
