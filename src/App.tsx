@@ -28,9 +28,12 @@ import AicteDocuments from './pages/AicteDocuments';
 import Eligibility from './pages/Eligibility';
 import Scholarships from './pages/Scholarships';
 import NewsEvents from './pages/NewsEvents';
-
+import Facility from '@/pages/Facility';
 import AdminLogin from './pages/AdminLogin';
 import AdminNewsEvents from './pages/AdminNewsEvents';
+import Hostel from '@/pages/Hostel';
+import HostelAdmin from "./pages/HostelAdmin";
+import Library from "./pages/Library";
 
 /**
  * Always start from the Home page when the browser is refreshed.
@@ -132,6 +135,11 @@ function AppLayout() {
           <Route path="/admin" element={<AdminLogin />} />
           <Route path="/admin/login" element={<AdminLogin />} />
           <Route path="/admin/news-events" element={<AdminNewsEvents />} />
+          <Route path="/hostel" element={<Hostel />} />
+<Route path="/hosteladmin" element={<HostelAdmin />} />
+<Route path="/facilities" element={<Facility />} />
+      <Route path="/library" element={<Library />} />
+
         </Routes>
       </main>
 

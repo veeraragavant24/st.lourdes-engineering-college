@@ -931,74 +931,198 @@ export default function MandatoryDisclosure() {
         }
 
         /* =====================================
-           ORGANIZATIONAL CHART
-        ===================================== */
+   ORGANIZATIONAL CHART
+===================================== */
 
-        .md-org-chart {
-          padding: 20px 12px;
+.md-tree-hint {
+  display: none;
+  margin: 0;
+  color: #8a6a3b;
+  font-size: 11px;
+}
 
-          border: 1px solid #ead9c9;
-          border-radius: 12px;
+.md-tree-scroll {
+  --tree-line: #a96d2d;
 
-          background: #fffaf4;
+  width: 100%;
+  overflow-x: auto;
+  padding: 26px 16px 30px;
 
-          display: flex;
-          flex-direction: column;
-          align-items: center;
+  border: 1px solid #ead9c9;
+  border-radius: 12px;
 
-          overflow-x: auto;
-        }
+  background:
+    radial-gradient(
+      circle at 50% 0%,
+      rgba(205, 153, 72, .09),
+      transparent 45%
+    ),
+    #fffaf4;
+}
 
-        .md-org-node {
-          padding: 10px 18px;
-          border-radius: 7px;
-          border: 1px solid #bd8b43;
+.md-tree {
+  display: flex;
+  justify-content: center;
+  width: max-content;
+  min-width: 100%;
+}
 
-          text-align: center;
-          font-size: 12px;
-          font-weight: 700;
-          min-width: 145px;
-        }
+.md-tree ul {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  margin: 0;
+  padding: 22px 0 0;
+  list-style: none;
+}
 
-        .md-org-node.main {
-          background: linear-gradient(90deg, #650f2b, #92213e);
-          color: white;
-          border-color: #650f2b;
-        }
+.md-tree > ul {
+  padding-top: 0;
+}
 
-        .md-org-node.highlight {
-          background: #fff1e8;
-          color: #68132e;
-        }
+.md-tree li {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 22px 7px 0;
+}
 
-        .md-org-connector {
-          height: 19px;
-          width: 2px;
-          background: #a96d2d;
-        }
+.md-tree > ul > li {
+  padding-top: 0;
+}
 
-        .md-org-principal-row {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          gap: 25px;
-          width: 100%;
-        }
+/* Horizontal and vertical connector lines */
 
-        .md-org-departments {
-          display: grid;
-          grid-template-columns: repeat(7, minmax(105px, 1fr));
-          gap: 9px;
-          width: 100%;
-        }
+.md-tree li::before,
+.md-tree li::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 50%;
+  width: 50%;
+  height: 22px;
+  border-top: 2px solid var(--tree-line);
+}
 
-        .md-org-node.department {
-          min-width: 0;
-          padding: 12px 7px;
-          background: #fff0e3;
-          color: #64122a;
-          font-size: 11px;
-        }
+.md-tree li::after {
+  right: auto;
+  left: 50%;
+  border-left: 2px solid var(--tree-line);
+}
+
+.md-tree li:only-child {
+  padding-top: 0;
+}
+
+.md-tree li:only-child::before,
+.md-tree li:only-child::after {
+  display: none;
+}
+
+.md-tree li:first-child::before,
+.md-tree li:last-child::after {
+  border: 0;
+}
+
+.md-tree li:last-child::before {
+  border-right: 2px solid var(--tree-line);
+}
+
+.md-tree ul ul::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  height: 22px;
+  border-left: 2px solid var(--tree-line);
+}
+
+/* Boxes */
+
+.md-tree-row {
+  display: flex;
+  align-items: center;
+}
+
+.md-tree-link {
+  width: 26px;
+  height: 2px;
+  background: var(--tree-line);
+}
+
+.md-tree-box {
+  position: relative;
+  z-index: 1;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 44px;
+  padding: 8px 10px;
+
+  border: 1px solid #bd8b43;
+  border-radius: 8px;
+
+  background: #fff0e3;
+  color: #64122a;
+
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.35;
+  text-align: center;
+
+  transition:
+    transform .25s ease,
+    box-shadow .25s ease;
+}
+
+.md-tree-box:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(91, 23, 45, .15);
+}
+
+.md-tree-box.dept,
+.md-tree-box.side {
+  width: 112px;
+}
+
+.md-tree-box.main {
+  min-width: 150px;
+  border-color: #650f2b;
+
+  background: linear-gradient(90deg, #650f2b, #92213e);
+  color: #fff;
+
+  font-size: 12px;
+}
+
+.md-tree-box.side {
+  border-color: #c99735;
+  background: #fff6dc;
+}
+
+@media (max-width: 700px) {
+  .md-tree-hint {
+    display: block;
+  }
+
+  .md-tree-scroll {
+    padding: 20px 10px 24px;
+  }
+
+  .md-tree-box.dept,
+  .md-tree-box.side {
+    width: 100px;
+    font-size: 10px;
+  }
+
+  .md-tree-box.main {
+    min-width: 130px;
+    font-size: 11px;
+  }
+}
 
         /* =====================================
            FEATURE CARDS
@@ -1844,75 +1968,129 @@ function GovernanceCard({
    ORGANIZATIONAL CHART
 ========================================= */
 
-function OrganizationalChart() {
+type OrgNode = {
+  label: string;
+  side?: string; // box shown beside this node (IQAC Coordinator)
+  children?: OrgNode[];
+};
 
-  const departments = [
-    "Head of the Department",
-    "Administrative Office",
-    "Training & Placement",
-    "Alumni Cell",
-    "Physical Education",
-    "Library",
-    "Cells & Committees",
-  ];
+const orgTree: OrgNode = {
+  label: "Governing Body",
+  children: [
+    {
+      label: "Chairman",
+      children: [
+        {
+          label: "Principal",
+          side: "IQAC Coordinator",
+          children: [
+            {
+              label: "Head of the Department",
+              children: [
+                { label: "Teaching Members" },
+                { label: "Non-Teaching Members" },
+              ],
+            },
+            {
+              label: "Administrative Office",
+              children: [
+                {
+                  label: "Dispatch Section",
+                  children: [
+                    {
+                      label: "Account Section",
+                      children: [
+                        {
+                          label: "Establishment Section",
+                          children: [{ label: "Student Section" }],
+                        },
+                      ],
+                    },
+                  ],
+                },
+                { label: "Transport Section" },
+                {
+                  label: "Maintenance Section",
+                  children: [
+                    { label: "Supervisor / Civil / Electrical" },
+                    { label: "Security" },
+                    { label: "Stores" },
+                  ],
+                },
+                { label: "Dispensary" },
+                { label: "Canteen" },
+                {
+                  label: "Hostel / Mess",
+                  children: [
+                    { label: "Deputy Warden / Hostel Staff" },
+                    { label: "Mess Staff" },
+                  ],
+                },
+              ],
+            },
+            { label: "Training & Placement" },
+            { label: "Alumni Cell" },
+            { label: "Physical Education" },
+            { label: "Library" },
+            { label: "Cells and Committees Members" },
+          ],
+        },
+      ],
+    },
+  ],
+};
+
+function OrgBranch({ node, depth }: { node: OrgNode; depth: number }) {
+  const tone = depth <= 2 ? "main" : "dept";
 
   return (
+    <li>
+      <div className="md-tree-row">
+        <div className={`md-tree-box ${tone}`}>{node.label}</div>
 
+        {node.side && (
+          <>
+            <span className="md-tree-link" aria-hidden="true" />
+            <div className="md-tree-box side">{node.side}</div>
+          </>
+        )}
+      </div>
+
+      {node.children && (
+        <ul>
+          {node.children.map((child) => (
+            <OrgBranch key={child.label} node={child} depth={depth + 1} />
+          ))}
+        </ul>
+      )}
+    </li>
+  );
+}
+
+function OrganizationalChart() {
+  return (
     <div className="md-content-body">
-
       <h3 className="md-subheading">
         Institutional Organizational Structure
       </h3>
 
-      <div className="md-org-chart">
+      <p className="md-tree-hint">
+        Scroll sideways to view the complete chart.
+      </p>
 
-        <div className="md-org-node main">
-          Governing Body
+      <div
+        className="md-tree-scroll"
+        role="img"
+        aria-label="Organizational chart of St. Lourdes Engineering College, from the Governing Body down to departments and sections"
+      >
+        <div className="md-tree">
+          <ul>
+            <OrgBranch node={orgTree} depth={0} />
+          </ul>
         </div>
-
-        <div className="md-org-connector" />
-
-        <div className="md-org-node main">
-          Chairman
-        </div>
-
-        <div className="md-org-connector" />
-
-        <div className="md-org-principal-row">
-
-          <div className="md-org-node main">
-            Principal
-          </div>
-
-          <div className="md-org-node highlight">
-            IQAC Coordinator
-          </div>
-
-        </div>
-
-        <div className="md-org-connector" />
-
-        <div className="md-org-departments">
-
-          {departments.map((department) => (
-
-            <div
-              className="md-org-node department"
-              key={department}
-            >
-              {department}
-            </div>
-
-          ))}
-
-        </div>
-
       </div>
-
     </div>
-
   );
-
 }
 
 /* =========================================

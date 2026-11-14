@@ -77,8 +77,7 @@ const navItems: NavItem[] = [
     to: '/gallery',
     children: [
       { label: 'Gallery', to: '/gallery' },
-
-      { label: 'Facilities', to: '/gallery#facilities' },
+{ label: 'Facilities', to: '/facilities' },
     ],
   },
   { label: 'Placement', to: '/placement' },

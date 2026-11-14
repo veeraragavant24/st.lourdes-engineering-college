@@ -193,18 +193,21 @@ export default function NewsEvents() {
     return itemDate >= today;
   };
 
-  // NEWS
+  // News never expires automatically.
+  // It stays visible until the admin removes it.
   const newsItems = uniqueItems
-    .filter(
-      (item) =>
-        item.type?.trim().toLowerCase() === "news" &&
-        isVisible(item)
-    )
-    .sort(
-      (a, b) =>
-        new Date(b.date).getTime() -
-        new Date(a.date).getTime()
-    );
+    .filter((item) => item.type?.trim().toLowerCase() === "news")
+    .sort((a, b) => {
+      const timeA = new Date(a.date).getTime();
+      const timeB = new Date(b.date).getTime();
+
+      // Records with an invalid date go to the end
+      if (Number.isNaN(timeA)) return 1;
+      if (Number.isNaN(timeB)) return -1;
+
+      // Newest news first
+      return timeB - timeA;
+    });
 
   // EVENTS
   const upcomingEvents = uniqueItems

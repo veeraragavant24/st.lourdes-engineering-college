@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import {
@@ -11,6 +12,10 @@ import {
   Newspaper,
   CalendarDays,
   Image as ImageIcon,
+  Building2,
+  BedDouble,
+  Utensils,
+  CheckCircle2,
 } from 'lucide-react';
 
 const API_BASE_URL = (
@@ -24,8 +29,13 @@ interface LoginResponse {
   message?: string;
 }
 
+type AdminPortal = 'news-events' | 'hostel';
+
 export default function AdminLogin() {
   const navigate = useNavigate();
+
+  const [selectedPortal, setSelectedPortal] =
+    useState<AdminPortal>('news-events');
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -33,6 +43,24 @@ export default function AdminLogin() {
   const [rememberMe, setRememberMe] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+
+  const portalDetails = {
+    'news-events': {
+      title: 'News & Events Management',
+      description: 'Manage college news, events, announcements and photographs.',
+      destination: '/admin/news-events',
+    },
+    hostel: {
+      title: 'Hostel Management',
+      description: 'Manage hostel rooms, mess menus, wardens, gallery and notices.',
+      destination: '/hosteladmin',
+    },
+  };
+
+  const handlePortalChange = (portal: AdminPortal) => {
+    setSelectedPortal(portal);
+    setError('');
+  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -76,12 +104,19 @@ export default function AdminLogin() {
 
       const storage = rememberMe ? localStorage : sessionStorage;
 
+      // Save authentication details
       storage.setItem('adminToken', data.token);
 
       if (data.name) storage.setItem('adminName', data.name);
       if (data.email) storage.setItem('adminEmail', data.email);
 
-      navigate('/admin/news-events', { replace: true });
+      // Save selected dashboard
+      storage.setItem('adminPortal', selectedPortal);
+
+      // Navigate to selected dashboard
+      navigate(portalDetails[selectedPortal].destination, {
+        replace: true,
+      });
     } catch (err) {
       console.error('Admin login error:', err);
       setError(
@@ -129,40 +164,40 @@ export default function AdminLogin() {
             </div>
 
             <h1 className="font-serif text-5xl font-bold leading-tight text-white xl:text-6xl">
-              College News
+              College
               <br />
-              <span className="text-[#e8c56c]">& Events</span>
+              <span className="text-[#e8c56c]">Administration</span>
               <br />
-              Admin Portal
+              Portal
             </h1>
 
             <p className="mt-6 max-w-lg text-base leading-8 text-white/75">
-              A secure administration portal to manage college announcements,
-              student achievements, technical events, campus activities and
-              important institutional updates.
+              A centralized administration portal to manage college
+              announcements, events, hostel facilities and important
+              institutional information.
             </p>
 
             <div className="mt-10 space-y-5">
               {[
                 {
                   icon: Newspaper,
-                  title: 'Manage College News',
-                  description: 'Publish announcements and achievements.',
+                  title: 'News & Events Management',
+                  description: 'Publish announcements and college events.',
                 },
                 {
                   icon: CalendarDays,
-                  title: 'Manage Upcoming Events',
-                  description: 'Create and update college programmes.',
+                  title: 'College Activities',
+                  description: 'Manage programmes and achievements.',
                 },
                 {
-                  icon: ImageIcon,
-                  title: 'Upload Event Photographs',
-                  description: 'Manage campus photos and event images.',
+                  icon: Building2,
+                  title: 'Hostel Management',
+                  description: 'Manage boys and girls hostel facilities.',
                 },
                 {
-                  icon: ShieldCheck,
-                  title: 'Secure Content Management',
-                  description: 'Control published and draft content.',
+                  icon: Utensils,
+                  title: 'Mess & Room Management',
+                  description: 'Update mess menus and room availability.',
                 },
               ].map((item) => (
                 <div key={item.title} className="flex items-center gap-4">
@@ -182,8 +217,8 @@ export default function AdminLogin() {
           </div>
 
           <p className="text-xs tracking-wide text-white/50">
-            © {new Date().getFullYear()} ST. Lourdes Engineering College. All
-            rights reserved.
+            © {new Date().getFullYear()} ST. Lourdes Engineering College.
+            All rights reserved.
           </p>
         </div>
       </section>
@@ -214,7 +249,8 @@ export default function AdminLogin() {
 
           <div className="rounded-3xl border border-[#eadfd2] bg-white p-7 shadow-[0_20px_60px_rgba(75,11,32,0.09)] sm:p-10">
 
-            <div className="mb-8 text-center">
+            {/* LOGIN HEADING */}
+            <div className="mb-7 text-center">
               <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-[#70152f] shadow-lg shadow-[#70152f]/20">
                 <Lock size={29} className="text-[#e8c56c]" />
               </div>
@@ -228,10 +264,99 @@ export default function AdminLogin() {
               </h2>
 
               <p className="mt-3 text-sm text-slate-500">
-                Sign in to manage College News & Events
+                Select your administration department to continue.
               </p>
             </div>
 
+            {/* ADMIN PORTAL SELECTION */}
+            <div className="mb-7">
+              <label className="mb-3 block text-sm font-semibold text-[#481024]">
+                Choose Management Portal
+              </label>
+
+              <div className="grid grid-cols-2 gap-3">
+
+                {/* NEWS AND EVENTS */}
+                <button
+                  type="button"
+                  onClick={() => handlePortalChange('news-events')}
+                  disabled={isLoading}
+                  className={`relative flex min-h-[145px] flex-col items-center justify-center rounded-2xl border-2 p-4 text-center transition ${
+                    selectedPortal === 'news-events'
+                      ? 'border-[#70152f] bg-[#70152f]/5 shadow-md'
+                      : 'border-[#eadfd2] bg-[#fffdfa] hover:border-[#ad8536]'
+                  }`}
+                >
+                  {selectedPortal === 'news-events' && (
+                    <CheckCircle2
+                      size={19}
+                      className="absolute right-3 top-3 text-[#70152f]"
+                    />
+                  )}
+
+                  <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-[#70152f]">
+                    <Newspaper size={24} className="text-[#e8c56c]" />
+                  </div>
+
+                  <span className="text-sm font-bold text-[#70152f]">
+                    News & Events
+                  </span>
+
+                  <span className="mt-1 text-xs text-slate-500">
+                    Content Management
+                  </span>
+                </button>
+
+                {/* HOSTEL MANAGEMENT */}
+                <button
+                  type="button"
+                  onClick={() => handlePortalChange('hostel')}
+                  disabled={isLoading}
+                  className={`relative flex min-h-[145px] flex-col items-center justify-center rounded-2xl border-2 p-4 text-center transition ${
+                    selectedPortal === 'hostel'
+                      ? 'border-[#70152f] bg-[#70152f]/5 shadow-md'
+                      : 'border-[#eadfd2] bg-[#fffdfa] hover:border-[#ad8536]'
+                  }`}
+                >
+                  {selectedPortal === 'hostel' && (
+                    <CheckCircle2
+                      size={19}
+                      className="absolute right-3 top-3 text-[#70152f]"
+                    />
+                  )}
+
+                  <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-[#70152f]">
+                    <BedDouble size={24} className="text-[#e8c56c]" />
+                  </div>
+
+                  <span className="text-sm font-bold text-[#70152f]">
+                    Hostel Management
+                  </span>
+
+                  <span className="mt-1 text-xs text-slate-500">
+                    Hostel Administration
+                  </span>
+                </button>
+
+              </div>
+            </div>
+
+            {/* SELECTED PORTAL DESCRIPTION */}
+            <div className="mb-6 rounded-xl border border-[#eadfd2] bg-[#fcf9f4] p-3">
+              <p className="text-xs font-bold uppercase tracking-wider text-[#ad8536]">
+                Selected Portal
+              </p>
+
+              <p className="mt-1 text-sm font-bold text-[#70152f]">
+                {portalDetails[selectedPortal].title}
+              </p>
+
+              <p className="mt-1 text-xs leading-5 text-slate-500">
+                {portalDetails[selectedPortal].description}
+              </p>
+            </div>
+
+            {/* ERROR MESSAGE */}
             {error && (
               <div
                 role="alert"
@@ -241,6 +366,7 @@ export default function AdminLogin() {
               </div>
             )}
 
+            {/* LOGIN FORM */}
             <form onSubmit={handleSubmit} className="space-y-6">
 
               {/* EMAIL */}
@@ -336,12 +462,17 @@ export default function AdminLogin() {
                 disabled={isLoading}
                 className="flex w-full items-center justify-center gap-3 rounded-xl bg-[#70152f] py-4 text-sm font-bold text-white shadow-lg shadow-[#70152f]/20 transition hover:-translate-y-0.5 hover:bg-[#8b1d3d] hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-60"
               >
-                {isLoading ? 'Signing in...' : 'Sign In'}
+                {isLoading
+                  ? 'Signing in...'
+                  : `Sign In to ${
+                      selectedPortal === 'hostel' ? 'Hostel' : 'News & Events'
+                    }`}
 
                 {!isLoading && <ArrowRight size={18} />}
               </button>
             </form>
 
+            {/* BACK TO WEBSITE */}
             <div className="mt-8 border-t border-[#eee5dc] pt-6 text-center">
               <Link
                 to="/"

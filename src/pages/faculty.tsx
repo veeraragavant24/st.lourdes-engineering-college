@@ -1,5 +1,4 @@
-
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 type FacultyMember = {
   id: number;
@@ -165,6 +164,9 @@ export default function Faculty() {
   const [selectedFaculty, setSelectedFaculty] =
     useState<FacultyMember | null>(null);
 
+  const gridRef = useRef<HTMLElement | null>(null);
+
+  // Heading reveal (scroll animation)
   useEffect(() => {
     const page = document.querySelector(".faculty-page");
     if (!page) return;
@@ -199,6 +201,66 @@ export default function Faculty() {
     return () => observer.disconnect();
   }, []);
 
+  // Fly-in and settle animation for the faculty cards
+  useEffect(() => {
+    const grid = gridRef.current;
+    if (!grid) return;
+
+    const reduceMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
+
+    if (reduceMotion || typeof IntersectionObserver === "undefined") {
+      return;
+    }
+
+    const cards = Array.from(
+      grid.querySelectorAll<HTMLElement>(".faculty-card")
+    );
+
+    // Uses layout positions (offsetLeft/offsetTop), which are not
+    // affected by transforms, so it stays correct on resize.
+    const setup = () => {
+      const originX = grid.offsetWidth / 2;
+      const originY = grid.offsetHeight / 2;
+
+      cards.forEach((card, i) => {
+        const cardX = card.offsetLeft + card.offsetWidth / 2;
+        const cardY = card.offsetTop + card.offsetHeight / 2;
+
+        card.style.setProperty("--fly-x", `${originX - cardX}px`);
+        card.style.setProperty("--fly-y", `${originY - cardY}px`);
+        card.style.setProperty(
+          "--fly-rot",
+          `${i % 2 === 0 ? -14 : 14}deg`
+        );
+        card.style.setProperty("--fly-delay", `${i * 160}ms`);
+      });
+    };
+
+    setup();
+    cards.forEach((card) => card.classList.add("fly-ready"));
+    window.addEventListener("resize", setup);
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) {
+          cards.forEach((card) => card.classList.add("fly-in"));
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.15 }
+    );
+
+    observer.observe(grid);
+
+    return () => {
+      window.removeEventListener("resize", setup);
+      observer.disconnect();
+    };
+  }, []);
+
+  // Profile popup: lock scroll and close on Escape
   useEffect(() => {
     if (!selectedFaculty) return;
 
@@ -247,15 +309,8 @@ export default function Faculty() {
           width: 100%;
           max-width: 1440px;
           margin: 0 auto;
-          padding: 48px 5% 76px;
+          padding: 110px 5% 76px;
         }
-
-        .faculty-container {
-  width: 100%;
-  max-width: 1440px;
-  margin: 0 auto;
-  padding: 110px 5% 76px;
-}
 
         .faculty-heading {
           margin-bottom: 36px;
@@ -311,6 +366,7 @@ export default function Faculty() {
 
         /* Faculty card grid */
         .faculty-grid {
+          position: relative;
           display: grid;
           grid-template-columns: repeat(4, minmax(0, 1fr));
           align-items: stretch;
@@ -323,7 +379,7 @@ export default function Faculty() {
           border: 1px solid #e3d1a7;
           border-radius: 12px;
           background: #fffdf9;
-          box-shadow: 0 5px 18px #45101a0a;
+          box-shadow: 0 5px 18px #453d100a;
           transition:
             transform .35s ease,
             border-color .35s ease,
@@ -334,13 +390,56 @@ export default function Faculty() {
           transform: translateY(-7px);
           border-color: var(--gold);
           box-shadow:
-            0 16px 32px #45101a16,
-            0 0 0 1px #d6ad5524;
+            0 16px 32px #99840ee1,
+            0 0 0 1px #dba329d0;
+        }
+
+        /* Fly-in and settle animation */
+        .faculty-card.fly-ready {
+          opacity: 0;
+          transform: translate3d(var(--fly-x, 0), var(--fly-y, 0), 0)
+            rotate(var(--fly-rot, 0deg)) scale(.4);
+          will-change: transform, opacity;
+        }
+
+        .faculty-card.fly-ready.fly-in {
+          opacity: 1;
+          transform: none;
+          animation: facultyFly 1.1s cubic-bezier(.22, 1, .36, 1) backwards;
+          animation-delay: var(--fly-delay, 0ms);
+        }
+
+        /* Keeps hover working after the animation finishes */
+        .faculty-card.fly-ready.fly-in:hover {
+          transform: translateY(-7px);
+          border-color: var(--gold);
+          box-shadow:
+            0 16px 32px #99840ee1,
+            0 0 0 1px #dba329d0;
+        }
+
+        @keyframes facultyFly {
+          0% {
+            opacity: 0;
+            transform: translate3d(var(--fly-x), var(--fly-y), 0)
+              rotate(var(--fly-rot)) scale(.4);
+          }
+          20% {
+            opacity: 1;
+          }
+          75% {
+            opacity: 1;
+            transform: translate3d(0, 6px, 0) rotate(1.5deg) scale(1.03);
+          }
+          100% {
+            opacity: 1;
+            transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
+          }
         }
 
         .faculty-card-photo-wrap {
           position: relative;
-          height: 245px;
+          height: 260px;
           overflow: hidden;
           background: #eee5d8;
         }
@@ -373,7 +472,7 @@ export default function Faculty() {
 
         .faculty-card-body {
           display: flex;
-          min-height: 218px;
+          min-height: 100px;
           flex-direction: column;
           align-items: center;
           padding: 21px 15px 18px;
@@ -444,7 +543,7 @@ export default function Faculty() {
           text-align: center;
         }
 
-        /* Scroll reveal animations */
+        /* Scroll reveal animations (heading) */
         .faculty-page [data-reveal] {
           opacity: 0;
           transition:
@@ -680,7 +779,7 @@ export default function Faculty() {
 
         @media (max-width: 760px) {
           .faculty-container {
-            padding: 36px 4% 50px;
+            padding: 100px 4% 50px;
           }
 
           .faculty-grid {
@@ -737,7 +836,7 @@ export default function Faculty() {
 
         @media (max-width: 520px) {
           .faculty-container {
-            padding: 30px 16px 40px;
+            padding: 90px 16px 40px;
           }
 
           .faculty-grid {
@@ -787,7 +886,7 @@ export default function Faculty() {
             right: 10px;
           }
         }
-      
+
         @media (prefers-reduced-motion: reduce) {
           .faculty-page *,
           .faculty-page *::before,
@@ -803,17 +902,6 @@ export default function Faculty() {
             transform: none;
           }
         }
-          @media (max-width: 760px) {
-  .faculty-container {
-    padding: 100px 4% 50px;
-  }
-}
-
-@media (max-width: 520px) {
-  .faculty-container {
-    padding: 90px 16px 40px;
-  }
-}
       `}</style>
 
       <div className="faculty-container">
@@ -838,54 +926,44 @@ export default function Faculty() {
         </header>
 
         <section
+          ref={gridRef}
           className="faculty-grid"
           aria-label="Faculty directory"
         >
-          {facultyMembers.map((faculty, index) => (
-              <article
-                className="faculty-card"
-                key={faculty.id}
-                data-reveal="up"
-                style={
-                  {
-                    "--reveal-delay": `${(index % 4) * 100}ms`,
-                  } as React.CSSProperties
-                }
-              >
-                <div className="faculty-card-photo-wrap">
-                  <img
-                    className="faculty-card-photo"
-                    src={faculty.image}
-                    alt={faculty.name}
-                    loading="lazy"
-                    onError={(event) => {
-                      event.currentTarget.style.visibility = "hidden";
-                    }}
-                  />
-                </div>
+          {facultyMembers.map((faculty) => (
+            <article className="faculty-card" key={faculty.id}>
+              <div className="faculty-card-photo-wrap">
+                <img
+                  className="faculty-card-photo"
+                  src={faculty.image}
+                  alt={faculty.name}
+                  loading="lazy"
+                  onError={(event) => {
+                    event.currentTarget.style.visibility = "hidden";
+                  }}
+                />
+              </div>
 
-                <div className="faculty-card-body">
-                  <h2 className="faculty-card-name">
-                    {faculty.name}
-                  </h2>
+              <div className="faculty-card-body">
+                <h2 className="faculty-card-name">{faculty.name}</h2>
 
-                  <p className="faculty-card-designation">
-                    {faculty.designation}
-                  </p>
+                <p className="faculty-card-designation">
+                  {faculty.designation}
+                </p>
 
-                  <p className="faculty-card-department">
-                    {faculty.department}
-                  </p>
+                <p className="faculty-card-department">
+                  {faculty.department}
+                </p>
 
-                  <button
-                    className="faculty-view-button"
-                    type="button"
-                    onClick={() => setSelectedFaculty(faculty)}
-                  >
-                    View Profile <span aria-hidden="true">→</span>
-                  </button>
-                </div>
-              </article>
+                <button
+                  className="faculty-view-button"
+                  type="button"
+                  onClick={() => setSelectedFaculty(faculty)}
+                >
+                  View Profile <span aria-hidden="true">→</span>
+                </button>
+              </div>
+            </article>
           ))}
         </section>
       </div>
@@ -920,9 +998,7 @@ export default function Faculty() {
             </div>
 
             <div className="faculty-profile-content">
-              <p className="faculty-profile-kicker">
-                Faculty Profile
-              </p>
+              <p className="faculty-profile-kicker">Faculty Profile</p>
 
               <h2 className="faculty-profile-name">
                 {selectedFaculty.name}

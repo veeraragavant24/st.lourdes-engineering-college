@@ -206,19 +206,20 @@ export default function Management() {
             #751a30,
             var(--dark-maroon)
           );
-          box-shadow: 0 12px 35px #42101a18;
-          animation: lm-enter 0.7s ease both;
+            box-shadow:
+     box-shadow: 0 12px 35px #42101a18;
+  animation: lm-enter 0.7s ease both;
           transition:
             transform 0.3s ease,
             box-shadow 0.3s ease;
         }
 
-        .lm-card:hover {
-          transform: translateY(-7px);
-          box-shadow:
-            0 15px 35px #64142625,
-            0 0 20px #d4af5a35;
-        }
+       .lm-card:hover {
+  transform: translateY(-7px);
+  box-shadow:
+    0 18px 45px rgba(233, 197, 113, 0.94),
+    0 0 30px rgba(212, 177, 70, 0.75);
+}
 
         /* 3D FLIP CONTAINER */
 
