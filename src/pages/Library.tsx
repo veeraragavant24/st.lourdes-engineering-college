@@ -225,29 +225,33 @@ const Library: React.FC = () => {
           transform: translate(0,0) !important;
         }
 
-        /* HERO */
+        /* HERO — clean split layout, solid colour and subtle shadows */
 
-.library-hero {
-  display: grid;
-  grid-template-columns: 46% 54%;
+        .library-hero {
+          display: grid;
+          grid-template-columns: 46% 54%;
+          min-height: 480px;
+          /* Extend the hero behind the existing navbar without editing Navbar.tsx */
+          margin-top: -100px;
+          padding-top:200px;
+          box-sizing: border-box;
+          position: relative;
+          overflow: hidden;
+          background: var(--maroon);
+          box-shadow: 0 10px 28px rgba(35, 12, 22, 0.12);
+        }
 
-  min-height: 380;
-  padding: 50px 40px;
-  box-sizing: border-box;
-  position: relative;
-  overflow: hidden;
-  background: var(--maroon);
-}
         .library-hero-content {
           position: relative;
           z-index: 2;
-          background: linear-gradient(120deg,var(--dark),var(--maroon));
+          background: linear-gradient(120deg, var(--dark), var(--maroon));
           color: white;
           padding: 65px 25px 55px max(5vw,calc((100vw - 1200px)/2));
           display: flex;
           flex-direction: column;
           justify-content: center;
           animation: libHeroFade 1s ease both;
+          text-shadow: 0 2px 10px rgba(0, 0, 0, 0.22);
         }
 
         .library-eyebrow {
@@ -289,11 +293,11 @@ const Library: React.FC = () => {
         }
 
         .library-hero-image {
-          min-height: 340px;
+          min-height: 380px;
           position: relative;
           overflow: hidden;
-          clip-path: polygon(13% 0,100% 0,100% 100%,25% 100%,0 0);
-          margin-left: -55px;
+          margin-left: 0;
+          box-shadow: -12px 0 26px rgba(25, 8, 15, 0.16);
         }
 
         .library-hero-image img {
@@ -941,6 +945,8 @@ const Library: React.FC = () => {
           .library-hero {
             grid-template-columns: 1fr;
             min-height: auto;
+            margin-top: 0;
+            padding-top: 0;
           }
 
           .library-hero-content {

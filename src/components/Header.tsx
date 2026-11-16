@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { Menu, X, Search, GraduationCap, ChevronDown } from 'lucide-react';
 import { siteConfig } from '@/data/siteConfig';
-
+import SearchBar from './SearchBar';
 interface NavItem {
   label: string;
   to: string;
@@ -627,30 +627,13 @@ xl:px-1 xl:text-[11px] 2xl:px-1.5 2xl:text-[12px] ${
           </div>
         </div>
 
-        {/* Search bar */}
-        {searchOpen && (
-          <div className="border-t border-gold/20 bg-maroon-800/95 px-5 py-4 backdrop-blur-md sm:px-8 lg:px-12">
-            <div className="mx-auto flex max-w-7xl items-center gap-3">
-              <Search className="h-5 w-5 text-gold/70" />
-
-              <input
-                type="text"
-                placeholder="Search programs, events, departments..."
-                className="flex-1 bg-transparent text-ivory placeholder:text-ivory/40 focus:outline-none"
-                autoFocus
-              />
-
-              <button
-                type="button"
-                onClick={() => setSearchOpen(false)}
-                className="text-ivory/60 hover:text-gold-100"
-                aria-label="Close search"
-              >
-                <X className="h-5 w-5" />
-              </button>
-            </div>
-          </div>
-        )}
+     
+       {/* Separate SearchBar component */}
+{searchOpen && (
+  <div className="border-t border-gold/20 bg-maroon-800/95 px-5 py-4 backdrop-blur-md sm:px-8 lg:px-12">
+    <SearchBar onClose={() => setSearchOpen(false)} />
+  </div>
+)}
       </header>
 
       {/* Mobile navigation drawer */}
