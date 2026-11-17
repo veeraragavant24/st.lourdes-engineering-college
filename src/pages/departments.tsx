@@ -22,6 +22,7 @@ import {
   Database,
 } from 'lucide-react';
 
+
 import type { LucideIcon } from 'lucide-react';
 
 /* =========================================================
@@ -296,48 +297,146 @@ function DepartmentStyles() {
       /* ================= HERO ================= */
 
       .dept-hero {
-        position: relative;
-        overflow: hidden;
-        isolation: isolate;
-        padding: 125px 0 58px;
-        color: #fff;
-        background: linear-gradient(
-          112deg,
-          #580F26 0%,
-          #76132F 52%,
-          #5A1026 100%
-        );
-      }
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  padding: 125px 0 75px;
+  color: #fff;
 
-      .dept-hero::before {
-        content: "";
-        position: absolute;
-        z-index: -1;
-        width: 420px;
-        height: 420px;
-        right: -170px;
-        top: -245px;
-        border: 1px solid rgba(216,181,76,.18);
-        border-radius: 50%;
-      }
+  background:
+    linear-gradient(
+      90deg,
+      #580F26 0%,
+      #68112C 35%,
+      rgba(88,15,38,.88) 45%,
+      rgba(88,15,38,.25) 100%
+    ),
+    url("/hero/depatmenthero.png");
 
-      .dept-hero::after {
-        content: "";
-        position: absolute;
-        z-index: -1;
-        width: 300px;
-        height: 300px;
-        right: -100px;
-        bottom: -230px;
-        border: 1px solid rgba(216,181,76,.16);
-        border-radius: 50%;
-      }
+  background-size: cover;
+  background-position: center, right center;
+  background-repeat: no-repeat;
+}
 
-    .dept-hero-inner {
+.dept-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+
+  background:
+    linear-gradient(
+      90deg,
+      #580F26 0%,
+      rgba(88,15,38,.95) 25%,
+      rgba(88,15,38,.45) 25%,
+      rgba(88,15,38,.25) 25%
+    ),
+    linear-gradient(
+      0deg,
+      #5A1026 0%,
+      transparent 10%
+    );
+}
+
+.dept-hero::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  width: 420px;
+  height: 420px;
+  right: -170px;
+  top: -245px;
+  border: 1px solid rgba(216,181,76,.18);
+  border-radius: 50%;
+}
+
+.dept-hero-inner {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: 1.05fr .95fr;
   align-items: center;
-  gap: 0;
+  gap: 30px;
+  position: relative;
+  z-index: 1;
+}
+
+.dept-hero-inner > div:first-child {
+  max-width: 700px;
+  position: relative;
+  z-index: 2;
+}
+
+/* HERO IMAGE */
+
+.dept-hero-visual {
+  position: relative;
+  width: 100%;
+  height: 340px;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.dept-hero-visual img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    rgba(0,0,0,.35) 12%,
+    black 38%,
+    black 100%
+  );
+
+  mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    rgba(0,0,0,.35) 12%,
+    black 38%,
+    black 100%
+  );
+
+  filter: saturate(.8) contrast(1.05);
+}
+
+/* MAROON BLENDING */
+
+.dept-hero-visual::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+
+  background:
+    linear-gradient(
+      to right,
+      #580F26 0%,
+      rgba(88,15,38,.35) 30%,
+      transparent 70%
+    ),
+    linear-gradient(
+      to top,
+      #5A1026 0%,
+      transparent 35%
+    ),
+    linear-gradient(
+      to bottom,
+      #76132F 0%,
+      transparent 30%
+    );
+}
+
+.dept-hero-visual::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  box-shadow: inset 0 0 65px 25px rgba(74,16,34,.45);
 }
 
 .dept-hero-inner > div:first-child {
@@ -1476,8 +1575,6 @@ export default function Departments() {
               successful career.
             </p>
           </div>
-
-        
 
          
 

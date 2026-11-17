@@ -94,7 +94,7 @@ export default function Contact() {
         eyebrow="Get in Touch"
         title="Contact Us"
         description="Have a question about admissions, programs, or campus life? We're here to help. Reach out and we'll get back to you."
-        image="https://images.pexels.com/photos/11932106/pexels-photo-11932106.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1080&fit=crop"
+        image="/about/campus3.png"
         breadcrumb="Contact Us"
       />
 

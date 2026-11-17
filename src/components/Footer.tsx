@@ -1,6 +1,5 @@
 import { Link } from 'react-router-dom';
 import {
-  GraduationCap,
   MapPin,
   Mail,
   Phone,
@@ -12,7 +11,6 @@ import {
   ArrowRight,
 } from 'lucide-react';
 import { siteConfig } from '@/data/siteConfig';
-import { programs } from '@/data/programs';
 
 const quickLinks = [
   { label: 'Home', to: '/' },
@@ -23,6 +21,17 @@ const quickLinks = [
   { label: 'Admission', to: '/admission' },
   { label: 'Facilities', to: '/gallery#facilities' },
   { label: 'Contact Us', to: '/contact' },
+];
+
+// Slugs must match the `slug` values added to the departments array on the Departments page.
+const departmentLinks = [
+  { label: 'B.E. CSE', slug: 'be-cse' },
+  { label: 'B.E. CSE (Cyber Security)', slug: 'be-cse-cyber-security' },
+  { label: 'B.Tech. AI & DS', slug: 'btech-aids' },
+  { label: 'B.Tech. IT', slug: 'btech-it' },
+  { label: 'B.E. ECE', slug: 'be-ece' },
+  { label: 'MBA', slug: 'mba' },
+  { label: 'M.E. CSE', slug: 'me-cse' },
 ];
 
 const socialIcons = [
@@ -43,27 +52,25 @@ export default function Footer() {
       <div className="pointer-events-none absolute -left-20 -bottom-20 h-64 w-64 rounded-full bg-gold/5" />
       <div className="pointer-events-none absolute right-10 top-10 h-40 w-40 rounded-full bg-gold/5" />
 
-      <div className="relative mx-auto max-w-7xl px-5 py-16 sm:px-8 lg:px-12">
+      <div className="relative z-10 mx-auto max-w-7xl px-5 py-16 sm:px-8 lg:px-12">
         <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-4">
           {/* About */}
           <div>
-           <div className="flex items-center gap-4">
-  <img
-    src="/logos/logo.png"
-    alt="St. Lourdes Engineering College Logo"
-    className="h-20 w-20 shrink-0 object-contain"
-  />
+            <div className="flex items-center gap-4">
+              <img
+                src="/logos/logo.png"
+                alt="St. Lourdes Engineering College Logo"
+                className="h-20 w-20 shrink-0 object-contain"
+              />
 
-  <div className="flex flex-col">
-    <p className="font-serif text-xl font-bold text-ivory">
-      ST. Lourdes
-    </p>
+              <div className="flex flex-col">
+                <p className="font-serif text-xl font-bold text-ivory">ST. Lourdes</p>
 
-    <p className="font-sans text-xs font-semibold uppercase tracking-[0.15em] text-gold-100">
-      Engineering College
-    </p>
-  </div>
-</div>
+                <p className="font-sans text-xs font-semibold uppercase tracking-[0.15em] text-gold-100">
+                  Engineering College
+                </p>
+              </div>
+            </div>
             <p className="mt-4 text-sm leading-relaxed text-ivory/60">
               A pioneering engineering institution in Chennai, committed to quality education,
               innovation, and industry-relevant skills since {siteConfig.established}.
@@ -99,13 +106,14 @@ export default function Footer() {
             <h3 className="font-serif text-lg font-semibold text-gold-100">Departments</h3>
             <div className="mt-4 h-px w-12 bg-gold/40" />
             <ul className="mt-4 space-y-2.5">
-              {programs.map((p) => (
-                <li key={p.id}>
+              {departmentLinks.map((d) => (
+                <li key={d.slug}>
                   <Link
-                    to={`/programs#${p.slug}`}
+                    // Opens the Departments page with this department pre-selected
+                    to={`/departments?dept=${d.slug}`}
                     className="text-sm text-ivory/60 transition-colors hover:text-gold-100 hover:pl-1"
                   >
-                    {p.shortName}
+                    {d.label}
                   </Link>
                 </li>
               ))}
@@ -120,9 +128,12 @@ export default function Footer() {
               <div className="flex gap-3">
                 <MapPin className="mt-0.5 h-5 w-5 shrink-0 text-gold" strokeWidth={1.5} />
                 <p className="text-sm leading-relaxed text-ivory/60">
-                  {siteConfig.address.line1}<br />
-                  {siteConfig.address.line2}<br />
-                  {siteConfig.address.line3}<br />
+                  {siteConfig.address.line1}
+                  <br />
+                  {siteConfig.address.line2}
+                  <br />
+                  {siteConfig.address.line3}
+                  <br />
                   {siteConfig.address.line4}
                 </p>
               </div>

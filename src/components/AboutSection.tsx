@@ -20,7 +20,7 @@ export default function AboutSection() {
               aria-hidden="true"
             />
             <img
-              src="/about/campus2.png"
+              src="/about/frontview.png"
               alt="ST. Lourdes Engineering College campus"
               className="relative h-80 w-full rounded-3xl object-cover shadow-xl sm:h-[440px]"
               loading="lazy"
@@ -38,7 +38,7 @@ export default function AboutSection() {
             <div className="mt-5 h-[3px] w-16 bg-gradient-to-r from-gold to-transparent" />
 
             <p className="mt-6 text-base leading-8 text-charcoal/75">
-           ST. Lourdes Engineering College is a pioneering institution in Chennai. ST. Lourdes Engineering College founded by Ln. Dr. S. Peter, which is one of the reputed Engineering Colleges started under self-financing scheme in the year 2009. ST. Lourdes Engineering College is one among the best Christian Minority Institutions in Chennai and this institution is established under Loordhu Ammal Educational Trust. ST. Lourdes Engineering College is located in NH45, at the best and peaceful place in Chennai city.s.
+           ST. Lourdes Engineering College is a pioneering institution in Chennai. ST. Lourdes Engineering College founded by Ln. Dr. S. Peter, which is one of the reputed Engineering Colleges started under self-financing scheme in the year 2009. ST. Lourdes Engineering College is one among the best Christian Minority Institutions in Chennai and this institution is established under Loordhu Ammal Educational Trust. ST. Lourdes Engineering College is located in NH45, at the best and peaceful place in Chennai city.
             </p>
 
             <Link

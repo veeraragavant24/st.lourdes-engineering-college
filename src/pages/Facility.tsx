@@ -57,7 +57,7 @@ export default function Facility() {
         eyebrow="World-Class Infrastructure"
         title="Facilities"
         description="Explore the facilities and infrastructure available at ST. Lourdes Engineering College."
-        image="https://images.pexels.com/photos/8199762/pexels-photo-8199762.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1080&fit=crop"
+        image="/hero/campus4.png"
         breadcrumb="Facilities"
       />
 

@@ -33,7 +33,7 @@ export const siteConfig = {
 export const heroSlides = [
   {
     image:
-      'https://images.pexels.com/photos/11932106/pexels-photo-11932106.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1080&fit=crop',
+      '/hero/campus4.png',
     eyebrow: 'LEARN • INNOVATE • GROW • LEAD',
     title: 'Engineering Excellence for a Brighter Tomorrow',
     description:

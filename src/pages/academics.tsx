@@ -167,30 +167,50 @@ function AcademicsStyles() {
         box-sizing: border-box;
       }
 
-      .academics-hero {
-        position: relative;
-        overflow: hidden;
-        padding: 100px 24px 58px;
-        color: #fff;
-        background:
-          radial-gradient(
-            circle at 88% 25%,
-            rgba(216,181,76,.14),
-            transparent 25%
-          ),
-          linear-gradient(
-            115deg,
-            var(--academic-maroon-dark),
-            var(--academic-maroon)
-          );
-      }
+     .academics-hero {
+  position: relative;
+  overflow: hidden;
+  padding: 250px 24px 58px;
+  color: #fff;
 
-      .academics-hero-inner {
-        max-width: 1220px;
-        margin: 0 auto;
-        position: relative;
-        z-index: 1;
-      }
+  /* Fallback background */
+  background-color: var(--academic-maroon-dark);
+}
+
+/* Hero background image */
+.academics-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+
+  background-image: url("/cources/coursehero.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* Dark maroon overlay */
+.academics-hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+
+  background: linear-gradient(
+    90deg,
+    rgba(74, 16, 34, 0.90) 0%,
+    rgba(74, 16, 34, 0.72) 45%,
+    rgba(74, 16, 34, 0.35) 100%
+  );
+}
+
+.academics-hero-inner {
+  max-width: 1220px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
 
       .academics-hero-decoration {
         position: absolute;

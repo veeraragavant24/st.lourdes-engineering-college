@@ -22,7 +22,7 @@ type CommitteeMember = {
 const members: CommitteeMember[] = [
   {
     sno: 1,
-    name: "Dr.K.Balakannan",
+    name: "Dr. B. R. Ramesh Bapu.",
     designation: "Head of the Institution",
     position: "Convenor",
     type: "convenor",

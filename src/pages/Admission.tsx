@@ -568,7 +568,7 @@ export default function Admission() {
         eyebrow="Admissions 2026–27"
         title="Admission to ST. Lourdes"
         description="Begin your engineering journey with a guided, transparent admission process designed to help you every step of the way."
-        image="https://images.pexels.com/photos/8441786/pexels-photo-8441786.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1080&fit=crop"
+        image="/hero/slide23.png"
         breadcrumb="Admission"
       />
 

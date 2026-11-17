@@ -73,7 +73,7 @@ export default function About() {
                 future engineers and leaders can thrive.
               </p>
                 <p className="mt-4 text-base leading-relaxed text-charcoal/70">
-                Strategically located on NH45, St. Lourdes Engineering College offers a serene and conducive learning environment within Chennai city. The campus provides a peaceful atmosphere that supports academic excellence, innovation, and holistic student developmen
+                Strategically located on NH45, St. Lourdes Engineering College offers a serene and conducive learning environment within Chennai city. The campus provides a peaceful atmosphere that supports academic excellence, innovation, and holistic student development.
               </p>
               <div className="mt-8 grid grid-cols-3 gap-4">
                 <div className="rounded-xl border border-gold/15 bg-ivory p-4 text-center">
@@ -94,7 +94,7 @@ export default function About() {
             <div className="relative">
               <div className="overflow-hidden rounded-2xl shadow-xl">
                 <img
-                  src="/about/campus2.png"
+                  src="/about/campus3.png"
                   alt="Campus building"
                   className="w-full object-cover"
                   loading="lazy"

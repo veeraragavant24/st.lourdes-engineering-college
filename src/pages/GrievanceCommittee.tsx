@@ -12,7 +12,7 @@ import {
 } from 'lucide-react';
 
 const members = [
-  { name: 'Dr. K. Balakannan', role: 'Principal', position: 'Convenor', featured: true },
+  { name: 'Dr. B. R. Ramesh Bapu.', role: 'Principal', position: 'Convenor', featured: true },
   { name: 'Mr. A. Mosses', role: 'Dean', position: 'Member' },
   { name: 'Mr. J. Sivamurugan', role: 'HoD / CSE', position: 'Member' },
   { name: 'Mrs. V. Suvarnavani', role: 'HoD / ECE', position: 'Member' },
