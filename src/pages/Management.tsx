@@ -663,7 +663,7 @@ export default function Management() {
 
         @media (max-width: 600px) {
           .lourdes-management {
-            padding: 38px 18px 55px;
+            padding: 100px 18px 55px;
           }
 
           .lm-heading {

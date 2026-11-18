@@ -511,7 +511,7 @@ export default function Principal() {
   opacity: 1;
   transform: none;
   will-change: auto;
-}
+      }
 
 /* Animation delays */
 
@@ -674,7 +674,7 @@ export default function Principal() {
   opacity: 1;
   transform: none;
 }
-
+      }
 
         /* ACCESSIBILITY */
 
@@ -693,16 +693,23 @@ export default function Principal() {
           }
         }
           /* Keep the Principal hero below the fixed header */
+/* Hero extends under the fixed header so the header can be transparent */
 .principal-page-content {
-  margin-top: 90px;
+  margin-top: 0;
   position: relative;
   z-index: 1;
 }
 
-/* Responsive spacing */
-@media (max-width: 768px) {
-  .principal-page-content {
-    margin-top: 75px;
+/* Keep hero content clear of the header instead of using margin */
+@media (max-width: 900px) {
+  .principal-hero {
+    padding-top: 110px;
+  }
+}
+
+@media (max-width: 600px) {
+  .principal-hero {
+    padding-top: 100px;
   }
 }
       `}</style>
