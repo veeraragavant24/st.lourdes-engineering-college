@@ -436,7 +436,7 @@ className={`whitespace-nowrap font-sans text-[10px] font-semibold uppercase trac
           {/* Desktop and laptop navigation */}
           
 <nav
-  className="hidden 2xl:flex flex-1 min-w-0 items-center justify-between gap-1.5 ml-4"
+  className="hidden xl:flex flex-1 min-w-0 items-center justify-between gap-1.5 ml-4"
   aria-label="Main navigation"
 >
 

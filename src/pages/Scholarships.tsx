@@ -853,13 +853,11 @@ const Scholarships: React.FC = () => {
         @media (max-width: 650px) {
 
           .scholarship-hero {
-            min-height: 175px;
-            padding: 22px 20px 25px;
+            min-height: auto;
+            padding: 100px 20px 35px;
           }
 
-.scholarships-page {
-  padding-top: 75px;
-}
+      }
 
           .scholarship-breadcrumb {
             gap: 7px;

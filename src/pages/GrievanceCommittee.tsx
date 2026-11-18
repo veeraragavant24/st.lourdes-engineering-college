@@ -441,7 +441,7 @@ export default function GrievanceCommittee() {
 
           .grc-hero {
             min-height: 255px;
-            padding: 35px 0;
+            padding: 110px 0px -100px;
             background-position: 58% center;
           }
 

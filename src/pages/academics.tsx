@@ -1138,11 +1138,7 @@ function AcademicsStyles() {
         }
       }
 
-      @media(max-width:600px) {
-        .programme-detail {
-          padding-top: 72px;
-        }
-
+            @media(max-width:600px) {
         .academics-card-actions {
           align-items: stretch;
         }
@@ -1151,8 +1147,8 @@ function AcademicsStyles() {
           flex: 1 1 100%;
         }
 
-        .programme-detail-hero {
-          padding: 38px 19px 34px;
+              .programme-detail-hero {
+          padding: 100px 19px 34px;
         }
 
         .programme-detail-hero::after {
@@ -1213,7 +1209,7 @@ function AcademicsStyles() {
       /* Mobile */
       @media (max-width: 600px) {
         .academics-hero {
-          padding: 42px 20px 38px;
+          padding: 100px 20px 38px;
         }
 
         .academics-hero-decoration {

@@ -826,16 +826,13 @@ export default function Eligibility() {
 
         /* MOBILE */
 
+            
+
         @media (max-width: 600px) {
           .eligibility-hero {
             min-height: auto;
-            padding: 28px 20px 35px;
+            padding: 100px 20px 35px;
           }
- 
-.eligibility-page {
-  padding-top: 75px;
-}
-
           .eligibility-breadcrumb {
             gap: 7px;
             margin-bottom: 25px;
