@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 
 const libraryImage =
@@ -168,7 +167,7 @@ const Library: React.FC = () => {
   }, []);
 
   const toggleAccordion = (index: number) => {
-    setActiveAccordion((current) => current === index ? null : index);
+    setActiveAccordion((current) => (current === index ? null : index));
   };
 
   return (
@@ -225,33 +224,54 @@ const Library: React.FC = () => {
           transform: translate(0,0) !important;
         }
 
-        /* HERO — clean split layout, solid colour and subtle shadows */
+        /* HERO — full-width photo with maroon overlay */
 
         .library-hero {
-          display: grid;
-          grid-template-columns: 46% 54%;
-          min-height: 480px;
-          /* Extend the hero behind the existing navbar without editing Navbar.tsx */
-          margin-top: -100px;
-          padding-top:200px;
-          box-sizing: border-box;
           position: relative;
           overflow: hidden;
+          /* Extend the hero behind the existing navbar without editing Navbar.tsx */
+          margin-top: 5px;
+          padding-top: 100px;
+          min-height: 440px;
+          display: flex;
+          align-items: center;
           background: var(--maroon);
-          box-shadow: 0 10px 28px rgba(35, 12, 22, 0.12);
+        }
+
+        .library-hero-bg {
+          position: absolute;
+          inset: 0;
+          z-index: 0;
+        }
+
+        .library-hero-bg img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          object-position: center;
+          animation: libImageReveal 1.3s ease both;
+        }
+
+        .library-hero-bg::after {
+          content: "";
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(
+            90deg,
+            rgba(72, 18, 37, 0.96) 0%,
+            rgba(100, 28, 50, 0.88) 45%,
+            rgba(100, 28, 50, 0.6) 100%
+          );
         }
 
         .library-hero-content {
           position: relative;
           z-index: 2;
-          background: linear-gradient(120deg, var(--dark), var(--maroon));
+          width: min(1200px, 92%);
+          margin: 0 auto;
+          padding: 50px 0;
           color: white;
-          padding: 65px 25px 55px max(5vw,calc((100vw - 1200px)/2));
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
           animation: libHeroFade 1s ease both;
-          text-shadow: 0 2px 10px rgba(0, 0, 0, 0.22);
         }
 
         .library-eyebrow {
@@ -259,24 +279,24 @@ const Library: React.FC = () => {
           align-items: center;
           gap: 18px;
           color: var(--light-gold);
-          font-size: 19px;
+          font-size: 13px;
           font-weight: 700;
-          letter-spacing: 3px;
-          margin-bottom: 15px;
+          letter-spacing: 4px;
+          margin-bottom: 14px;
         }
 
         .library-eyebrow i {
           display: block;
-          height: 1px;
-          width: 80px;
+          height: 2px;
+          width: 38px;
           background: var(--gold);
         }
 
         .library-hero h1 {
-          font-family: Georgia,serif;
-          font-size: clamp(32px,4vw,55px);
-          font-weight: 500;
-          line-height: 1.17;
+          font-family: Georgia, serif;
+          font-size: clamp(34px, 4.5vw, 56px);
+          font-weight: 700;
+          line-height: 1.15;
           margin: 0;
           color: white;
         }
@@ -287,27 +307,11 @@ const Library: React.FC = () => {
         }
 
         .library-hero-content > p {
-          font-size: 16px;
+          font-size: 17px;
+          line-height: 1.8;
           margin: 18px 0 0;
           color: #fff5e8;
-        }
-
-        .library-hero-image {
-          min-height: 380px;
-          position: relative;
-          overflow: hidden;
-          margin-left: 0;
-          box-shadow: -12px 0 26px rgba(25, 8, 15, 0.16);
-        }
-
-        .library-hero-image img {
-          height: 100%;
-          width: 100%;
-          position: absolute;
-          inset: 0;
-          object-fit: cover;
-          object-position: center;
-          animation: libImageReveal 1.3s ease both;
+          max-width: 620px;
         }
 
         /* ABOUT */
@@ -943,24 +947,22 @@ const Library: React.FC = () => {
           }
 
           .library-hero {
-            grid-template-columns: 1fr;
-            min-height: auto;
             margin-top: 0;
             padding-top: 0;
+            min-height: 380px;
           }
 
           .library-hero-content {
-            padding: 42px 7% 35px;
+            width: 88%;
+            padding: 45px 0;
           }
 
           .library-hero h1 {
             font-size: clamp(30px,8vw,42px);
           }
 
-          .library-hero-image {
-            min-height: 220px;
-            margin: 0;
-            clip-path: none;
+          .library-hero-content > p {
+            font-size: 15px;
           }
 
           .library-about {
@@ -1135,8 +1137,13 @@ const Library: React.FC = () => {
 
         {/* HERO */}
         <section className="library-hero">
+          <div className="library-hero-bg">
+            <img src={libraryImage} alt="MIET Central Library" />
+          </div>
+
           <div className="library-hero-content">
             <div className="library-eyebrow">
+              <i />
               <span>LIBRARY</span>
               <i />
             </div>
@@ -1147,10 +1154,6 @@ const Library: React.FC = () => {
             </h1>
 
             <p>A hub for learning, research and innovation</p>
-          </div>
-
-          <div className="library-hero-image">
-            <img src={libraryImage} alt="MIET Central Library" />
           </div>
         </section>
 

@@ -353,7 +353,7 @@ key={item.id ?? `${item.type}-${item.title}-${item.date}`}
               rgba(112, 21, 47, .94) 43%,
               rgba(112, 21, 47, .25) 100%
             ),
-            url("https://images.unsplash.com/photo-1562774053-701939374585?auto=format&fit=crop&w=1800&q=85")
+            url("/hero/newseventshero.png")
             center 48% / cover no-repeat;
         }
 

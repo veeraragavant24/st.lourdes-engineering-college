@@ -12,6 +12,7 @@ import { useState, type FormEvent } from 'react';
 import PageHero from '@/components/PageHero';
 import { siteConfig } from '@/data/siteConfig';
 import { useAdmissionModal } from '@/components/AdmissionModalContext';
+import { api } from '@/services/api';
 
 interface ContactForm {
   name: string;
@@ -61,26 +62,33 @@ export default function Contact() {
   const [errors, setErrors] = useState<FormErrors>({});
   const [status, setStatus] = useState<Status>('idle');
 
-  const handleSubmit = (e: FormEvent) => {
-    e.preventDefault();
-    const validationErrors = validate(formData);
-    if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors);
-      return;
-    }
-    setErrors({});
-    setStatus('submitting');
-    // No backend configured — simulate demo submission
-    setTimeout(() => setStatus('demo-success'), 1000);
-  };
+const handleSubmit = async (e: FormEvent) => {
+  e.preventDefault();
+  const validationErrors = validate(formData);
+  if (Object.keys(validationErrors).length > 0) {
+    setErrors(validationErrors);
+    return;
+  }
+  setErrors({});
+  setStatus('submitting');
 
-  const updateField = (field: keyof ContactForm, value: string) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
-    if (errors[field as keyof FormErrors]) {
-      setErrors((prev) => ({ ...prev, [field]: undefined }));
-    }
-  };
+  const result = await api.submitAdmissionEnquiry({
+    name: formData.name,
+    email: formData.email,
+    phone: formData.phone,
+    program: `Contact Form: ${formData.subject}`, // goes to the "Course" field in the email
+    message: formData.message,
+  });
 
+  setStatus(result.success ? 'success' : 'error');
+};
+
+const updateField = (field: keyof ContactForm, value: string) => {
+  setFormData((prev) => ({ ...prev, [field]: value }));
+  if (errors[field as keyof FormErrors]) {
+    setErrors((prev) => ({ ...prev, [field]: undefined }));
+  }
+};
   const inputClass = (error?: string) =>
     `w-full rounded-lg border px-4 py-3 text-sm text-charcoal transition-colors duration-200 focus:outline-none focus:ring-2 ${
       error
@@ -328,6 +336,12 @@ export default function Contact() {
                       </p>
                     )}
                   </div>
+                  {status === 'error' && (
+  <p className="flex items-center gap-1.5 rounded-lg bg-red-50 px-4 py-2 text-sm text-red-600">
+    <AlertCircle className="h-4 w-4" />
+    Sorry, your message could not be sent. Please try again or call us directly.
+  </p>
+)}
 
                   <button type="submit" disabled={status === 'submitting'} className="btn-gold w-full disabled:opacity-60">
                     {status === 'submitting' ? (
@@ -348,17 +362,18 @@ export default function Contact() {
               )}
             </div>
 
-            {/* Map + quick contact */}
-            <div className="flex flex-col gap-6">
-              <div className="overflow-hidden rounded-2xl border border-gold/10 shadow-sm">
-                <iframe
-                  title="ST. Lourdes Engineering College location"
-                  src="https://www.openstreetmap.org/export/embed.html?bbox=80.07%2C12.90%2C80.14%2C12.95&layer=mapnik&marker=12.925%2C80.105"
-                  className="h-80 w-full"
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                />
-              </div>
+           {/* Map + quick contact */}
+<div className="flex flex-col gap-6">
+  <div className="overflow-hidden rounded-2xl border border-gold/10 shadow-sm">
+    <iframe
+      title="ST. Lourdes Engineering College location"
+      src="https://maps.google.com/maps?q=St.+Lourdes+Engineering+College,+Erandam+Kattalai,+Tharapakkam,+Anagaputhur,+Chennai+600128&z=15&hl=en&output=embed"
+      className="h-80 w-full"
+      loading="lazy"
+      referrerPolicy="no-referrer-when-downgrade"
+      allowFullScreen
+    />
+  </div>
 
               <div className="rounded-2xl border border-gold/10 bg-white p-6 shadow-sm">
                 <h3 className="font-serif text-lg font-bold text-maroon-700">Quick Actions</h3>

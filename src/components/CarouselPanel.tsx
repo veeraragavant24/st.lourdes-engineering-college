@@ -268,7 +268,7 @@ export default function CarouselPanel({
         .news-event-viewport {
           position: relative;
           width: 100%;
-          height: 300px;
+          height: 330px;
           overflow: hidden;
         }
 

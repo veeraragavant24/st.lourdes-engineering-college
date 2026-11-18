@@ -19,14 +19,14 @@ export const siteConfig = {
   phones: ['+91 818181 6735', '+91 81900 50400', '+91 81900 50600', '+91 81900 30500'],
   // External links — configurable placeholders. Replace with verified URLs.
   whatsapp: '', // e.g. 'https://wa.me/91XXXXXXXXXX'
-  mapUrl: 'https://www.google.com/maps/search/?api=1&query=ST+Lourdes+Engineering+College+Chennai',
-  social: {
-    facebook: '',
-    instagram: '',
-    linkedin: '',
-    youtube: '',
-    twitter: '',
-  },
+  mapUrl: 'https://www.google.com/maps?ll=12.988451,80.122519&z=16&t=m&hl=en&gl=IN&mapclient=embed&cid=10062433920862023198',
+social: {
+  facebook: 'https://facebook.com/yourpage',
+  instagram: 'https://instagram.com/yourpage',
+  linkedin: 'https://linkedin.com/company/yourpage',
+  youtube: 'https://youtube.com/@yourchannel',
+  twitter: 'https://twitter.com/yourpage',
+},
   year: '2026',
 };
 

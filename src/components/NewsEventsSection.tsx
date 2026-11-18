@@ -24,6 +24,156 @@ type Raw = NewsEventItem & {
   excerpt?: string | null;
 };
 
+/* ---------- internal CSS ---------- */
+
+const styles = `
+.ne-section {
+  position: relative;
+  overflow: hidden;
+  border-top: 1px solid rgba(216, 181, 76, 0.6);
+  border-bottom: 1px solid rgba(216, 181, 76, 0.6);
+  background-color: #F2E6CC;
+  padding: 4rem 0;
+}
+
+/* Decorative glows */
+.ne-glows {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+}
+.ne-glow {
+  position: absolute;
+  height: 24rem;
+  width: 24rem;
+  border-radius: 9999px;
+  filter: blur(120px);
+}
+.ne-glow-gold {
+  top: -8rem;
+  right: -8rem;
+  background-color: rgba(216, 181, 76, 0.3);
+}
+.ne-glow-maroon {
+  bottom: -8rem;
+  left: -8rem;
+  background-color: rgba(110, 24, 50, 0.15);
+}
+
+/* Shared container padding */
+.ne-heading,
+.ne-body {
+  position: relative;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 80rem;
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+}
+.ne-heading {
+  margin-bottom: 3rem;
+}
+
+/* Section heading */
+.ne-heading-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.ne-line {
+  height: 1px;
+  flex: 1 1 0%;
+}
+.ne-line-left {
+  background-image: linear-gradient(to right, transparent, #A06F10);
+}
+.ne-line-right {
+  background-image: linear-gradient(to left, transparent, #A06F10);
+}
+.ne-eyebrow {
+  margin: 0;
+  font-size: 0.75rem;
+  line-height: 1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.3em;
+  color: #7A5410;
+}
+.ne-title {
+  margin: 1.25rem 0 0;
+  text-align: center;
+  font-family: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+  font-size: 1.875rem;
+  line-height: 2.25rem;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  color: #3A0C1A;
+}
+.ne-title-accent {
+  color: #9A6A0C;
+}
+.ne-subtitle {
+  margin: 0.75rem 0 0;
+  text-align: center;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  font-weight: 500;
+  color: #4A3F44;
+}
+
+/* News and Events panels */
+.ne-grid {
+  display: grid;
+  gap: 2rem;
+}
+.ne-panel {
+  border-radius: 1rem;
+  border: 1px solid rgba(164, 122, 67, 0.5);
+  background-color: #401222;
+  padding: 1.5rem;
+  box-shadow: 0 18px 45px rgba(58, 12, 26, 0.28);
+  transition: border-color 0.3s ease;
+}
+.ne-panel:hover {
+  border-color: rgba(216, 184, 117, 0.8);
+}
+
+/* >= 640px */
+@media (min-width: 640px) {
+  .ne-section {
+    padding: 5rem 0;
+  }
+  .ne-heading,
+  .ne-body {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+  .ne-title {
+    font-size: 2.25rem;
+    line-height: 2.5rem;
+  }
+  .ne-panel {
+    padding: 1.75rem;
+  }
+}
+
+/* >= 1024px */
+@media (min-width: 1024px) {
+  .ne-section {
+    padding: 6rem 0;
+  }
+  .ne-heading,
+  .ne-body {
+    padding-left: 3rem;
+    padding-right: 3rem;
+  }
+  .ne-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.75rem;
+  }
+}
+`;
+
 /* ---------- helpers (same rules as the News & Events page) ---------- */
 
 const getIndiaDateKey = (value: string | Date): string | null => {
@@ -161,38 +311,36 @@ export default function NewsEventsSection() {
       : 'No events available at the moment.';
 
   return (
-    <section className="relative overflow-hidden border-y border-[#D8B54C]/60 bg-[#F2E6CC] py-16 sm:py-20 lg:py-24">
+    <section className="ne-section">
+      <style>{styles}</style>
 
       {/* Decorative glows */}
-      <div className="pointer-events-none absolute inset-0">
-        <div className="absolute -top-32 -right-32 h-96 w-96 rounded-full bg-[#D8B54C]/30 blur-[120px]" />
-        <div className="absolute -bottom-32 -left-32 h-96 w-96 rounded-full bg-[#6E1832]/15 blur-[120px]" />
+      <div className="ne-glows">
+        <div className="ne-glow ne-glow-gold" />
+        <div className="ne-glow ne-glow-maroon" />
       </div>
 
       {/* Section heading */}
-      <div className="relative mx-auto mb-12 max-w-7xl px-5 sm:px-8 lg:px-12">
-        <div className="flex items-center gap-4">
-          <div className="h-px flex-1 bg-gradient-to-r from-transparent to-[#A06F10]" />
-          <p className="text-xs font-bold uppercase tracking-[0.3em] text-[#7A5410]">
-            Latest Updates
-          </p>
-          <div className="h-px flex-1 bg-gradient-to-l from-transparent to-[#A06F10]" />
+      <div className="ne-heading">
+        <div className="ne-heading-row">
+          <div className="ne-line ne-line-left" />
+          <p className="ne-eyebrow">Latest Updates</p>
+          <div className="ne-line ne-line-right" />
         </div>
 
-        <h2 className="mt-5 text-center font-serif text-3xl font-bold tracking-tight text-[#3A0C1A] sm:text-4xl">
-          News &amp; <span className="text-[#9A6A0C]">Events</span>
+        <h2 className="ne-title">
+          News &amp; <span className="ne-title-accent">Events</span>
         </h2>
 
-        <p className="mt-3 text-center text-sm font-medium text-[#4A3F44]">
+        <p className="ne-subtitle">
           Stay connected with the latest stories and upcoming events.
         </p>
       </div>
 
       {/* News and Events panels */}
-      <div className="relative mx-auto max-w-7xl px-5 sm:px-8 lg:px-12">
-        <div className="grid gap-8 lg:grid-cols-2 lg:gap-7">
-
-          <div className="rounded-2xl border border-[#A47A43]/50 bg-[#401222] p-6 shadow-[0_18px_45px_rgba(58,12,26,0.28)] transition duration-300 hover:border-[#D8B875]/80 sm:p-7">
+      <div className="ne-body">
+        <div className="ne-grid">
+          <div className="ne-panel">
             <CarouselPanel
               title="Latest News"
               icon={Newspaper}
@@ -205,7 +353,7 @@ export default function NewsEventsSection() {
             />
           </div>
 
-          <div className="rounded-2xl border border-[#A47A43]/50 bg-[#401222] p-6 shadow-[0_18px_45px_rgba(58,12,26,0.28)] transition duration-300 hover:border-[#D8B875]/80 sm:p-7">
+          <div className="ne-panel">
             <CarouselPanel
               title="Upcoming Events"
               icon={CalendarDays}
@@ -217,9 +365,8 @@ export default function NewsEventsSection() {
               direction="horizontal"
             />
           </div>
-
         </div>
       </div>
     </section>
   );
-}
+} 

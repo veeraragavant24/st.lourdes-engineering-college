@@ -11,7 +11,7 @@ import {
   ArrowRight,
 } from 'lucide-react';
 import { siteConfig } from '@/data/siteConfig';
-
+import type { CSSProperties } from 'react';
 const quickLinks = [
   { label: 'Home', to: '/' },
   { label: 'About ST. Lourdes', to: '/about' },
@@ -35,16 +35,69 @@ const departmentLinks = [
 ];
 
 const socialIcons = [
-  { name: 'Facebook', icon: Facebook, url: siteConfig.social.facebook },
-  { name: 'Instagram', icon: Instagram, url: siteConfig.social.instagram },
-  { name: 'LinkedIn', icon: Linkedin, url: siteConfig.social.linkedin },
-  { name: 'YouTube', icon: Youtube, url: siteConfig.social.youtube },
-  { name: 'Twitter', icon: Twitter, url: siteConfig.social.twitter },
+  { name: 'Facebook', icon: Facebook, url: siteConfig.social.facebook, color: '#3b5998', dark: '#365492', light: '#4a69ad' },
+  { name: 'Instagram', icon: Instagram, url: siteConfig.social.instagram, color: '#e4405f', dark: '#d81c3f', light: '#e46880' },
+  { name: 'LinkedIn', icon: Linkedin, url: siteConfig.social.linkedin, color: '#0077b5', dark: '#005a8c', light: '#3399cc' },
+  { name: 'YouTube', icon: Youtube, url: siteConfig.social.youtube, color: '#ff0000', dark: '#cc0000', light: '#ff4d4d' },
+  { name: 'Twitter', icon: Twitter, url: siteConfig.social.twitter, color: '#00aced', dark: '#097aa5', light: '#53b9e0' },
 ];
+const socialCss = `
+  .ft-social-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .ft-tile {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: #fff8ee;
+    color: #5a0f20;
+    text-decoration: none;
+    /* gold edge (3D side) + soft shadow */
+    box-shadow: -3px 3px 0 #b8923a, -6px 8px 10px rgba(0, 0, 0, 0.35);
+    transition: transform 0.35s ease, background 0.35s ease,
+                color 0.35s ease, box-shadow 0.35s ease;
+  }
+
+  .ft-tile-icon {
+    width: 18px;
+    height: 18px;
+  }
+
+  /* hover / keyboard focus: lift and turn into the brand colour */
+  .ft-tile:hover,
+  .ft-tile:focus-visible {
+    background: var(--c);
+    color: #ffffff;
+    transform: translate(4px, -4px);
+    box-shadow: -5px 5px 0 var(--cd), -10px 14px 16px rgba(0, 0, 0, 0.45);
+    outline: none;
+  }
+
+  /* link not configured */
+  .ft-tile--off {
+    opacity: 0.35;
+    pointer-events: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ft-tile { transition: none; }
+  }
+`;
 
 export default function Footer() {
   return (
-    <footer className="relative overflow-hidden bg-gradient-to-br from-maroon-700 via-maroon-800 to-maroon-900">
+       <footer className="relative overflow-hidden bg-gradient-to-br from-maroon-700 via-maroon-800 to-maroon-900">
+      <style>{socialCss}</style>
+
       {/* Decorative top border */}
       <div className="h-1 bg-gradient-to-r from-gold via-gold-100 to-gold" />
 
@@ -164,34 +217,34 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Social icons */}
-        <div className="mt-10 flex items-center gap-3 border-t border-gold/10 pt-6">
+                      {/* Social icons */}
+        <div className="mt-10 flex flex-wrap items-center gap-6 border-t border-gold/10 py-6">
           <span className="text-xs uppercase tracking-widest text-ivory/40">Follow Us</span>
-          <div className="flex gap-2">
-            {socialIcons.map(({ name, icon: Icon, url }) =>
-              url ? (
-                <a
-                  key={name}
-                  href={url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={name}
-                  className="flex h-9 w-9 items-center justify-center rounded-full border border-gold/30 text-gold/70 transition-all duration-300 hover:border-gold hover:bg-gold hover:text-maroon-700"
-                >
-                  <Icon className="h-4 w-4" strokeWidth={1.5} />
-                </a>
-              ) : (
-                <span
-                  key={name}
-                  aria-label={`${name} (link not configured)`}
-                  className="flex h-9 w-9 items-center justify-center rounded-full border border-ivory/10 text-ivory/20"
-                  title="Link not configured"
-                >
-                  <Icon className="h-4 w-4" strokeWidth={1.5} />
-                </span>
-              )
-            )}
-          </div>
+
+          <ul className="ft-social-list">
+            {socialIcons.map(({ name, icon: Icon, url, color, dark }) => {
+              const vars = { '--c': color, '--cd': dark } as CSSProperties;
+              return (
+                <li key={name} style={vars}>
+                  {url ? (
+                    <a
+                      href={url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={name}
+                      className="ft-tile"
+                    >
+                      <Icon className="ft-tile-icon" strokeWidth={1.5} />
+                    </a>
+                  ) : (
+                    <span aria-label={`${name} (link not configured)`} className="ft-tile ft-tile--off">
+                      <Icon className="ft-tile-icon" strokeWidth={1.5} />
+                    </span>
+                  )}
+                </li>
+              );
+            })}
+          </ul>
         </div>
 
         {/* Copyright */}

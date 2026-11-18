@@ -24,9 +24,9 @@ const highlights: Highlight[] = [
       'Spacious reading halls and group study rooms',
     ],
     buttonLabel: 'Explore Library',
-    buttonLink: '/gallery#library',
+    buttonLink: '/facilities',
     image:
-      'https://images.pexels.com/photos/9572692/pexels-photo-9572692.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&fit=crop',
+      '/facilites/liberary (1).png',
     icon: BookOpen,
   },
   {
@@ -41,9 +41,9 @@ const highlights: Highlight[] = [
       'Recreational and study facilities',
     ],
     buttonLabel: 'Explore Hostel',
-    buttonLink: '/gallery#hostel',
+    buttonLink: '/facilities',
     image:
-      'https://images.pexels.com/photos/5158945/pexels-photo-5158945.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&fit=crop',
+      '/facilites/hostel.png',
     icon: Building2,
   },
   {
