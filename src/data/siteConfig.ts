@@ -32,8 +32,18 @@ social: {
 
 export const heroSlides = [
   {
-    image:
-      '/hero/campus4.png',
+    type: 'video',
+    video: '/hero/home-video.mp4',
+    eyebrow: 'LEARN • INNOVATE • GROW • LEAD',
+    title: 'Experience Excellence at St. Lourdes',
+    description:
+      'Discover a world of innovation, knowledge and opportunities at St. Lourdes Engineering College.',
+    primaryCta: { label: 'Explore Programs', to: '/programs' },
+    secondaryCta: { label: 'Apply for Admission', to: '/admission' },
+  },
+  {
+    type: 'image',
+    image: '/hero/campus4.png',
     eyebrow: 'LEARN • INNOVATE • GROW • LEAD',
     title: 'Engineering Excellence for a Brighter Tomorrow',
     description:
@@ -42,8 +52,8 @@ export const heroSlides = [
     secondaryCta: { label: 'Apply for Admission', to: '/admission' },
   },
   {
-    image:
-      'https://images.pexels.com/photos/3861960/pexels-photo-3861960.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1080&fit=crop',
+    type: 'image',
+    image: 'https://images.pexels.com/photos/3861960/pexels-photo-3861960.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1080&fit=crop',
     eyebrow: 'LEARN • INNOVATE • GROW • LEAD',
     title: 'Where Innovation Meets Opportunity',
     description:
@@ -52,8 +62,8 @@ export const heroSlides = [
     secondaryCta: { label: 'Apply for Admission', to: '/admission' },
   },
   {
-    image:
-      'https://images.pexels.com/photos/39192309/pexels-photo-39192309.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1080&fit=crop',
+    type: 'image',
+    image: 'https://images.pexels.com/photos/39192309/pexels-photo-39192309.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1080&fit=crop',
     eyebrow: 'LEARN • INNOVATE • GROW • LEAD',
     title: 'Shaping Future Engineers & Leaders',
     description:

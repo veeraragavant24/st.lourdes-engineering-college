@@ -76,6 +76,12 @@ function HeroStyles() {
           rgba(var(--hero-maroon-900), .2)
         );
       }
+        .hero-slide video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
 
       /* ================= DECORATIVE ACCENT ================= */
 
@@ -590,13 +596,16 @@ export default function HeroSlider() {
   }, [slideCount]);
 
   // Auto-play: restarts every time the slide changes
-  useEffect(() => {
-    if (isPaused || slideCount < 2) return;
+ useEffect(() => {
+  if (isPaused || slideCount < 2) return;
 
-    const timer = window.setTimeout(next, AUTO_PLAY_MS);
-    return () => window.clearTimeout(timer);
-  }, [current, isPaused, next, slideCount]);
+  // Video slides advance when the video finishes.
+  if (heroSlides[current].type === 'video') return;
 
+  const timer = window.setTimeout(next, AUTO_PLAY_MS);
+
+  return () => window.clearTimeout(timer);
+}, [current, isPaused, next, slideCount]);
   // Pause when browser tab is hidden
   useEffect(() => {
     const onVisibility = () => setIsPaused(document.hidden);
@@ -622,18 +631,42 @@ export default function HeroSlider() {
     >
       <HeroStyles />
 
-      {/* Slides */}
-      {heroSlides.map((slide, idx) => (
-        <div
-          key={idx}
-          className={`hero-slide ${idx === current ? 'is-active' : ''}`}
-          aria-hidden={idx !== current}
-        >
-          <img src={slide.image} alt="" loading="eager" />
-          <div className="hero-overlay-side" />
-          <div className="hero-overlay-bottom" />
-        </div>
-      ))}
+    {/* Slides */}
+{heroSlides.map((slide, idx) => (
+  <div
+    key={idx}
+    className={`hero-slide ${idx === current ? 'is-active' : ''}`}
+    aria-hidden={idx !== current}
+  >
+    {slide.type === 'video' ? (
+      <video
+        ref={(el) => {
+          if (el) {
+            if (idx === current) {
+              el.play().catch(() => {});
+            } else {
+              el.pause();
+              el.currentTime = 0;
+            }
+          }
+        }}
+        src={slide.video}
+        autoPlay
+        muted
+        playsInline
+        preload="auto"
+        onEnded={() => {
+          if (idx === current) next();
+        }}
+      />
+    ) : (
+      <img src={slide.image} alt="" loading="eager" />
+    )}
+
+    <div className="hero-overlay-side" />
+    <div className="hero-overlay-bottom" />
+  </div>
+))}
 
       {/* Content */}
       <div className="hero-content">
