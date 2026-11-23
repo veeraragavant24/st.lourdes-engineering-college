@@ -60,7 +60,7 @@ const highlights: Highlight[] = [
     buttonLabel: 'Placement Overview',
     buttonLink: '/placement',
     image:
-      'https://images.pexels.com/photos/39192309/pexels-photo-39192309.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&fit=crop',
+      '/facilites/placement.png',
     icon: Briefcase,
   },
 ];
@@ -81,54 +81,55 @@ export default function CampusHighlights() {
           </p>
         </div>
 
-        {/* Cards */}
-        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3 lg:gap-6">
-          {highlights.map((h) => {
-            const Icon = h.icon;
-            return (
-              <article
-                key={h.id}
-                className="group flex flex-col overflow-hidden rounded-2xl border border-gold/10 bg-ivory shadow-sm transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-maroon-900/15"
-              >
-                {/* Image */}
-                <div className="relative h-56 overflow-hidden">
-                  <img
-                    src={h.image}
-                    alt=""
-                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
-                    loading="lazy"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-maroon-900/30 to-transparent" />
-                  {/* Overlapping circular icon */}
-                  <div className="absolute -bottom-7 left-6 flex h-14 w-14 items-center justify-center rounded-full border-2 border-gold bg-white shadow-lg transition-transform duration-300 group-hover:scale-110">
-                    <Icon className="h-7 w-7 text-maroon-600" strokeWidth={1.5} />
-                  </div>
-                </div>
+{/* Cards */}
+<div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3 lg:gap-6">
+  {highlights.map((h) => {
+    const Icon = h.icon;
+    return (
+      <article
+        key={h.id}
+        className="group flex flex-col overflow-hidden rounded-2xl border border-gold/10 bg-ivory shadow-sm transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-maroon-900/15"
+      >
+        {/* Image + icon wrapper (NO overflow-hidden here) */}
+        <div className="relative z-10 h-56">
+          {/* Inner wrapper clips only the image */}
+          <div className="absolute inset-0 overflow-hidden">
+            <img
+              src={h.image}
+              alt=""
+              className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+              loading="lazy"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-maroon-900/30 to-transparent" />
+          </div>
 
-                {/* Content */}
-                <div className="flex flex-1 flex-col p-6 pt-10">
-                  <h3 className="font-serif text-xl font-bold text-maroon-700">{h.title}</h3>
-                  <p className="mt-3 text-sm leading-relaxed text-charcoal/60">{h.description}</p>
-                  <ul className="mt-4 space-y-2">
-                    {h.features.map((f) => (
-                      <li key={f} className="flex items-start gap-2 text-sm text-charcoal/70">
-                        <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-gold" />
-                        {f}
-                      </li>
-                    ))}
-                  </ul>
-                  <Link
-                    to={h.buttonLink}
-                    className="btn-maroon mt-6 self-start"
-                  >
-                    {h.buttonLabel}
-                    <ArrowRight className="h-4 w-4" />
-                  </Link>
-                </div>
-              </article>
-            );
-          })}
+          {/* Overlapping circular icon (now free to overflow) */}
+          <div className="absolute -bottom-7 left-6 z-20 flex h-14 w-14 items-center justify-center rounded-full border-2 border-gold bg-white shadow-lg transition-transform duration-300 group-hover:scale-110">
+            <Icon className="h-7 w-7 text-maroon-600" strokeWidth={1.5} />
+          </div>
         </div>
+
+        {/* Content */}
+        <div className="relative z-0 flex flex-1 flex-col p-6 pt-10">
+          <h3 className="font-serif text-xl font-bold text-maroon-700">{h.title}</h3>
+          <p className="mt-3 text-sm leading-relaxed text-charcoal/60">{h.description}</p>
+          <ul className="mt-4 space-y-2">
+            {h.features.map((f) => (
+              <li key={f} className="flex items-start gap-2 text-sm text-charcoal/70">
+                <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-gold" />
+                {f}
+              </li>
+            ))}
+          </ul>
+          <Link to={h.buttonLink} className="btn-maroon mt-6 self-start">
+            {h.buttonLabel}
+            <ArrowRight className="h-4 w-4" />
+          </Link>
+        </div>
+      </article>
+    );
+  })}
+</div>
       </div>
     </section>
   );

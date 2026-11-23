@@ -850,7 +850,7 @@ export default function Placement() {
         eyebrow="YOUR CAREER. OUR COMMITMENT."
         title="Career & Placement Assistance"
         description="With an experienced team and extensive industry connections, we help you find the right opportunities to take your career to the next level."
-        image="https://images.pexels.com/photos/39192317/pexels-photo-39192317.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1080&fit=crop"
+        image="/facilites/placement.png"
         breadcrumb="Placement"
       />
 

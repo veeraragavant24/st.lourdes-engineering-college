@@ -59,6 +59,14 @@ function EligibilityTable({
     </div>
   );
 }
+const capSparkles = [
+  { x: "-6%",  y: "6%",   s: 14, d: 0 },
+  { x: "96%",  y: "4%",   s: 18, d: 0.5 },
+  { x: "20%",  y: "-14%", s: 10, d: 1.0 },
+  { x: "80%",  y: "-12%", s: 12, d: 1.5 },
+  { x: "-4%",  y: "72%",  s: 9,  d: 0.8 },
+  { x: "100%", y: "64%",  s: 11, d: 1.9 },
+];
 
 export default function Eligibility() {
   return (
@@ -99,12 +107,30 @@ export default function Eligibility() {
               </div>
             </div>
 
-            <div className="eligibility-hero-icon">
-              <GraduationCap size={112} strokeWidth={1} />
-              <span className="hero-icon-check">
-                <CheckCircle2 size={35} />
-              </span>
-            </div>
+
+{/* after */}
+<div className="eligibility-hero-icon" aria-hidden="true">
+  <div className="cap-toss-icon">
+    <GraduationCap size={112} strokeWidth={1} />
+    <span className="hero-icon-check">
+      <CheckCircle2 size={35} />
+    </span>
+  </div>
+
+  {capSparkles.map((p, i) => (
+    <span
+      key={i}
+      className="cap-sparkle"
+      style={{
+        left: p.x,
+        top: p.y,
+        width: p.s,
+        height: p.s,
+        animationDelay: `${p.d}s`,
+      }}
+    />
+  ))}
+</div>
           </div>
         </div>
       </section>
@@ -1004,6 +1030,44 @@ export default function Eligibility() {
             animation: none;
           }
         }
+          .cap-toss-icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  transform-origin: 50% 80%;
+  animation: cap-toss 4.5s cubic-bezier(.3, .7, .3, 1) infinite;
+}
+
+@keyframes cap-toss {
+  0%   { transform: translateY(0) rotate(0deg) scale(1, 1); }
+  8%   { transform: translateY(2px) rotate(0deg) scale(1.04, .96); }
+  28%  { transform: translateY(-34px) rotate(-14deg) scale(1, 1); }
+  44%  { transform: translateY(-46px) rotate(10deg); }
+  62%  { transform: translateY(-12px) rotate(-5deg); }
+  72%  { transform: translateY(0) rotate(2deg) scale(1.03, .97); }
+  80%  { transform: translateY(-4px) rotate(-1deg) scale(1, 1); }
+  88%, 100% { transform: translateY(0) rotate(0deg) scale(1, 1); }
+}
+
+.cap-sparkle {
+  position: absolute;
+  background: linear-gradient(135deg, #fff1b0, #d8b54c);
+  clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%);
+  filter: drop-shadow(0 0 6px rgba(241, 207, 98, .9));
+  opacity: 0;
+  pointer-events: none;
+  animation: cap-twinkle 2.25s ease-in-out infinite;
+}
+
+@keyframes cap-twinkle {
+  0%, 100% { opacity: 0; transform: scale(0) rotate(0deg); }
+  35%      { opacity: 1; transform: scale(1.15) rotate(45deg); }
+  55%      { opacity: .85; transform: scale(.8) rotate(80deg); }
+  75%      { opacity: 0; transform: scale(0) rotate(120deg); }
+}
       `}</style>
     </div>
   );

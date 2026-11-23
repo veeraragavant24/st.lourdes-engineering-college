@@ -92,44 +92,55 @@ export default function AdmissionModal() {
   };
 
   const inputClass = (error?: string) =>
-    `w-full rounded-lg border px-4 py-3 text-sm text-charcoal transition-colors duration-200 focus:outline-none focus:ring-2 ${
+    `w-full rounded-lg border px-3 py-2 text-sm text-charcoal transition-colors duration-200 focus:outline-none focus:ring-2 sm:px-4 sm:py-3 ${
       error
         ? 'border-red-400 focus:ring-red-300'
         : 'border-maroon-200 focus:border-gold focus:ring-gold/30'
     }`;
 
-  return (
-    <div className="fixed inset-0 z-[70] flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-maroon-900/70 backdrop-blur-sm animate-fade-in" onClick={handleClose} />
+  const labelClass = 'mb-1 block text-xs font-medium text-charcoal sm:mb-1.5 sm:text-sm';
 
-      <div className="relative z-10 max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-2xl bg-white shadow-2xl animate-scale-in">
+  return (
+    <div className="fixed inset-0 z-[70] flex items-center justify-center p-3 sm:p-4">
+      <div
+        className="absolute inset-0 bg-maroon-900/70 backdrop-blur-sm animate-fade-in"
+        onClick={handleClose}
+      />
+
+      <div className="relative z-10 max-h-[85dvh] w-full max-w-[22rem] overflow-y-auto rounded-xl bg-white shadow-2xl animate-scale-in sm:max-h-[90vh] sm:max-w-lg sm:rounded-2xl">
         {/* Header */}
-        <div className="relative overflow-hidden rounded-t-2xl bg-gradient-to-br from-maroon-600 to-maroon-800 px-6 py-6 sm:px-8">
+        <div className="relative overflow-hidden rounded-t-xl bg-gradient-to-br from-maroon-600 to-maroon-800 px-4 py-4 sm:rounded-t-2xl sm:px-8 sm:py-6">
           <div className="absolute right-0 top-0 h-32 w-32 -translate-y-12 translate-x-12 rounded-full bg-gold/10" />
           <div className="relative flex items-start justify-between">
             <div>
               <p className="eyebrow text-gold-100">Admission Enquiry</p>
-              <h2 className="mt-1 font-serif text-2xl font-bold text-ivory">Begin Your Journey</h2>
-              <p className="mt-1 text-sm text-ivory/70">Fill in your details and we'll get back to you.</p>
+              <h2 className="mt-0.5 font-serif text-lg font-bold text-ivory sm:mt-1 sm:text-2xl">
+                Begin Your Journey
+              </h2>
+              <p className="mt-0.5 text-xs text-ivory/70 sm:mt-1 sm:text-sm">
+                Fill in your details and we'll get back to you.
+              </p>
             </div>
             <button
               onClick={handleClose}
-              className="rounded-full p-1.5 text-ivory/70 transition-colors hover:bg-white/10 hover:text-ivory"
+              className="rounded-full p-1 text-ivory/70 transition-colors hover:bg-white/10 hover:text-ivory sm:p-1.5"
               aria-label="Close form"
             >
-              <X className="h-5 w-5" />
+              <X className="h-4 w-4 sm:h-5 sm:w-5" />
             </button>
           </div>
         </div>
 
         {/* Body */}
-        <div className="px-6 py-6 sm:px-8">
+        <div className="px-4 py-4 sm:px-8 sm:py-6">
           {(status === 'success' || status === 'demo-success') && (
-            <div className="text-center py-6">
-              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-green-50">
-                <CheckCircle2 className="h-9 w-9 text-green-600" />
+            <div className="py-3 text-center sm:py-6">
+              <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-green-50 sm:h-16 sm:w-16">
+                <CheckCircle2 className="h-7 w-7 text-green-600 sm:h-9 sm:w-9" />
               </div>
-              <h3 className="mt-4 font-serif text-xl font-bold text-maroon-700">Enquiry Received!</h3>
+              <h3 className="mt-3 font-serif text-lg font-bold text-maroon-700 sm:mt-4 sm:text-xl">
+                Enquiry Received!
+              </h3>
               <p className="mt-2 text-sm text-charcoal/70">
                 Thank you for your interest in ST. Lourdes Engineering College.
                 {status === 'demo-success' && (
@@ -140,16 +151,16 @@ export default function AdmissionModal() {
                 )}
                 {status === 'success' && ' Our admissions team will contact you shortly.'}
               </p>
-              <button onClick={handleClose} className="btn-maroon mt-6">
+              <button onClick={handleClose} className="btn-maroon mt-4 sm:mt-6">
                 Close
               </button>
             </div>
           )}
 
           {status !== 'success' && status !== 'demo-success' && (
-            <form onSubmit={handleSubmit} className="space-y-4" noValidate>
+            <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4" noValidate>
               <div>
-                <label htmlFor="adm-name" className="mb-1.5 block text-sm font-medium text-charcoal">
+                <label htmlFor="adm-name" className={labelClass}>
                   Full Name <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -167,9 +178,9 @@ export default function AdmissionModal() {
                 )}
               </div>
 
-              <div className="grid gap-4 sm:grid-cols-2">
+              <div className="grid gap-3 sm:grid-cols-2 sm:gap-4">
                 <div>
-                  <label htmlFor="adm-email" className="mb-1.5 block text-sm font-medium text-charcoal">
+                  <label htmlFor="adm-email" className={labelClass}>
                     Email <span className="text-red-500">*</span>
                   </label>
                   <input
@@ -188,7 +199,7 @@ export default function AdmissionModal() {
                 </div>
 
                 <div>
-                  <label htmlFor="adm-phone" className="mb-1.5 block text-sm font-medium text-charcoal">
+                  <label htmlFor="adm-phone" className={labelClass}>
                     Phone <span className="text-red-500">*</span>
                   </label>
                   <input
@@ -208,7 +219,7 @@ export default function AdmissionModal() {
               </div>
 
               <div>
-                <label htmlFor="adm-program" className="mb-1.5 block text-sm font-medium text-charcoal">
+                <label htmlFor="adm-program" className={labelClass}>
                   Program of Interest
                 </label>
                 <select
@@ -226,7 +237,7 @@ export default function AdmissionModal() {
               </div>
 
               <div>
-                <label htmlFor="adm-message" className="mb-1.5 block text-sm font-medium text-charcoal">
+                <label htmlFor="adm-message" className={labelClass}>
                   Message <span className="text-red-500">*</span>
                 </label>
                 <textarea
@@ -234,7 +245,7 @@ export default function AdmissionModal() {
                   rows={4}
                   value={formData.message}
                   onChange={(e) => updateField('message', e.target.value)}
-                  className={`${inputClass(errors.message)} resize-none`}
+                  className={`${inputClass(errors.message)} max-h-20 resize-none sm:max-h-none`}
                   placeholder="Tell us about your interests or questions..."
                 />
                 {errors.message && (
@@ -260,7 +271,7 @@ export default function AdmissionModal() {
                 )}
               </button>
 
-              <p className="text-center text-xs text-charcoal/50">
+              <p className="text-center text-[11px] text-charcoal/50 sm:text-xs">
                 Demo form — ready for .NET Web API integration. No data is sent to a server yet.
               </p>
             </form>

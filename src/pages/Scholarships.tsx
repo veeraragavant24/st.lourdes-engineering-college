@@ -59,7 +59,15 @@ const Scholarships: React.FC = () => {
               </p>
             </div>
 
-          
+           {/* PASTE HERE */}
+            <div className="ripple-medal" aria-hidden="true">
+              <span className="ripple-ring" />
+              <span className="ripple-ring" style={{ animationDelay: "1s" }} />
+              <span className="ripple-ring" style={{ animationDelay: "2s" }} />
+              <span className="ripple-core">
+                <Award size={30} strokeWidth={1.8} />
+              </span>
+            </div>
 
           </div>
         </div>
@@ -1107,6 +1115,66 @@ const Scholarships: React.FC = () => {
           .scholarship-contact-button svg {
             transition: none;
           }
+        }
+                  /* =========================================
+           RIPPLE MEDAL ANIMATION
+        ========================================= */
+
+        .ripple-medal {
+          position: relative;
+          width: 76px;
+          height: 76px;
+          flex-shrink: 0;
+          margin-left: auto;
+          margin-right: 6%;
+          pointer-events: none;
+        }
+
+        .ripple-ring {
+          position: absolute;
+          inset: 0;
+          border: 2px solid #f1cf62;
+          border-radius: 50%;
+          opacity: 0;
+          animation: ripple-out 3s ease-out infinite;
+        }
+
+        @keyframes ripple-out {
+          0%   { transform: scale(.6); opacity: .9; }
+          100% { transform: scale(2.6); opacity: 0; }
+        }
+
+        .ripple-core {
+          position: absolute;
+          inset: 8px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border: 2px solid #f1cf62;
+          border-radius: 50%;
+          background: #d9b052;
+          color: #5a1226;
+          animation: ripple-pulse 3s ease-in-out infinite;
+        }
+
+        @keyframes ripple-pulse {
+          0%, 100% { transform: scale(1); }
+          50%      { transform: scale(1.1); }
+        }
+
+        @media (max-width: 650px) {
+          .ripple-medal {
+            width: 52px;
+            height: 52px;
+            margin-right: 4%;
+          }
+          .ripple-core { inset: 6px; }
+          .ripple-core svg { width: 22px; height: 22px; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .ripple-ring { animation: none; opacity: 0; }
+          .ripple-core { animation: none; }
         }
 
       `}</style>
