@@ -1125,6 +1125,7 @@ const Scholarships: React.FC = () => {
           width: 76px;
           height: 76px;
           flex-shrink: 0;
+          margin-top: -40px;
           margin-left: auto;
           margin-right: 6%;
           pointer-events: none;
