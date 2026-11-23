@@ -139,7 +139,7 @@ className="rail-gold-shine group flex flex-col items-center gap-1 rounded-tl-2xl
         </button>
 
         {/* Circular contact icons */}
-        <div className="rail-gold-shine flex flex-col items-center gap-3 border-l border-gold/40 bg-maroon-800/90 py-4 backdrop-blur-md">
+        <div className="rail-gold-shine mt-6 flex flex-col items-center gap-3 border-l border-gold/40 bg-maroon-800/90 py-4 backdrop-blur-md">
 
           {items.map((item) => {
             const Icon = item.icon;

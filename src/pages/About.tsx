@@ -181,7 +181,7 @@ const aboutCss = `
   .ab-stat {
     border-radius: 0.75rem;
     border: 1px solid rgba(var(--gold-rgb), 0.15);
-    background-color: #C9A45C;
+    background-color: #ecb84f;
     padding: 1rem;
     text-align: center;
   }
