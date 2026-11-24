@@ -770,14 +770,7 @@ export default function HeroSlider() {
         <ChevronLeft aria-hidden="true" />
       </button>
 
-      <button
-        type="button"
-        onClick={next}
-        className="hero-arrow hero-arrow-next"
-        aria-label="Next slide"
-      >
-        <ChevronRight aria-hidden="true" />
-      </button>
+    
 
       {/* Pagination dots */}
       <div className="hero-dots">

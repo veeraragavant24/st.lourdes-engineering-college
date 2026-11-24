@@ -423,7 +423,7 @@ export default function AntiRaggingCommittee() {
               rgba(85,7,23,.92) 42%,
               rgba(65,5,17,.35) 100%
             ),
-            url('/images/college-campus.jpg')
+            url('/about/Against Ragging.png')
             center 43% / cover no-repeat;
 
           color: #fff;

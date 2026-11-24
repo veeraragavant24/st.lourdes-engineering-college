@@ -405,7 +405,7 @@ useEffect(() => {
           isolation: isolate;
           color: #fff;
           background:
-            url('/images/college-campus.jpg')
+            url('/about/Empowered Women .png')
             center 42% / cover no-repeat;
         }
 

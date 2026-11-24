@@ -118,7 +118,7 @@ export default function GrievanceCommittee() {
               rgba(103, 19, 41, .94) 43%,
               rgba(54, 16, 27, .38) 100%
             ),
-            url('/images/campus.jpg') center 43% / cover no-repeat;
+            url('/about/grievance1.png') center 43% / cover no-repeat;
           border-bottom: 3px solid var(--gold);
         }
 

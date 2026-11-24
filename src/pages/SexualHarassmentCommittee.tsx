@@ -173,21 +173,14 @@ export default function SexualHarassmentCommittee() {
             );
         }
 
-        .shrc-hero::before {
-          content: "";
-          position: absolute;
-          inset: 0;
-          z-index: -1;
-          opacity: .12;
-          background-image:
-            linear-gradient(
-              135deg,
-              transparent 45%,
-              rgba(255,255,255,.25) 46%,
-              transparent 47%
-            );
-          background-size: 36px 36px;
-        }
+       .shrc-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  opacity: .25;
+  background: url('/about/Harassment.png') center 43% / cover no-repeat;
+}
 .shrc-hero-inner {
   width: min(1160px, calc(100% - 48px));
   margin: 0 auto;
