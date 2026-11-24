@@ -20,53 +20,61 @@ type CommitteeMember = {
 const committeeMembers: CommitteeMember[] = [
   {
     id: 1,
-    name: "Mrs. Suvarna Vani.V",
-    designation: "Asst. Professor",
+    name: "Mrs. V. Suvarnavani",
+    designation: "HoD",
     department: "ECE",
     position: "Chair Person",
   },
   {
     id: 2,
-    name: "Mrs. G.Geetha",
+    name: "Mrs.C.Karthiga",
     designation: "Asst. Professor",
     department: "IT",
     position: "Member",
   },
   {
     id: 3,
-    name: "Mrs. Shanthi C",
+    name: "Mrs. Swathisri",
     designation: "Asst. Professor",
-    department: "MECH",
+    department: "AIDS",
     position: "Member",
   },
   {
     id: 4,
-    name: "Mrs. Jenit Chinna Rani J",
+    name: "Mrs.A.Agalya",
     designation: "Asst. Professor",
     department: "S&H",
     position: "Member",
   },
   {
     id: 5,
-    name: "Mrs. Lavanya M",
+    name: "Mrs.V.Ezhilarasi",
     designation: "Asst. Professor",
     department: "ECE",
     position: "Member",
   },
   {
     id: 6,
-    name: "Mrs. M.Meena",
+    name: "Mrs.V. Maha ",
     designation: "Asst. Professor",
     department: "MBA",
     position: "Member",
   },
   {
     id: 7,
-    name: "Mrs. Sathya. M",
-    designation: "Office Staff",
-    department: "Office",
+    name: "Mrs.R.Ramya",
+    designation: "Asst. Professor",
+    department: "IT",
     position: "Member",
   },
+   {
+    id: 8,
+    name: "Mrs.K.Sharmiladevi",
+    designation: "Asst. Professor",
+    department: "CSE",
+    position: "Member",
+  },
+  
 ];
 
 const objectives = [
@@ -196,7 +204,7 @@ useEffect(() => {
       <section className="wec-about wec-container">
         <div className="wec-about-image">
           <img
-            src="/images/women-empowerment.jpg"
+            src="/about/womenemp.png"
             alt="Women students collaborating at college"
           />
           <div className="wec-image-decoration" />

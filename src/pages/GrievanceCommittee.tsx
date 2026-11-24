@@ -13,12 +13,13 @@ import {
 
 const members = [
   { name: 'Dr. B. R. Ramesh Bapu.', role: 'Principal', position: 'Convenor', featured: true },
-  { name: 'Mr. A. Mosses', role: 'Dean', position: 'Member' },
-  { name: 'Mr. J. Sivamurugan', role: 'HoD / CSE', position: 'Member' },
-  { name: 'Mrs. V. Suvarnavani', role: 'HoD / ECE', position: 'Member' },
-  { name: 'Mr. M. Senthilkumar', role: 'HoD / Civil', position: 'Member' },
-  { name: 'Mr. S.H. Syed Vasiyulla', role: 'HoD / EEE', position: 'Member' },
-  { name: 'Mrs. M. Meena', role: 'HoD / MBA', position: 'Member' },
+  { name: 'Dr. J. Sivamurugan', role: 'HoD / CSE', position: 'Co-ordinator' },
+  
+  { name: 'Mr. Nagendra Pramoths', role: 'Assistant Professor', position: 'Member' },
+  { name: 'Mr.J.Maria Lenin Prathap ', role: 'HoD /  S&H', position: 'Member' },
+  { name: 'Dr.S.Raja', role: 'Assistant Professor', position: 'Member' },
+  { name: 'Mr.M.John S Kumar', role: 'HoD / Cyber Security  ', position: 'Member' },
+  { name: 'Mrs.A.Agalya', role: 'Assistant Professor ', position: 'Member' },
 ];
 
 export default function GrievanceCommittee() {
@@ -108,7 +109,7 @@ export default function GrievanceCommittee() {
   isolation: isolate;
   display: flex;
   align-items: center;
-  min-height: 250px;
+  min-height: 280px;
  padding: 130px 0 42px;
           color: white;
           background:
@@ -737,12 +738,13 @@ export default function GrievanceCommittee() {
                     <p>{member.role}</p>
                   </div>
 
-                  {member.featured && (
-                    <span className="grc-role">
-                      <Crown size={12} fill="currentColor" />
-                      Convenor
-                    </span>
-                  )}
+              {(member.featured || member.position === 'Co-ordinator') && (
+  <span className="grc-role">
+    {member.featured && <Crown size={12} fill="currentColor" />}
+    {member.position}
+  </span>
+)}
+                 
                 </article>
               ))}
             </div>

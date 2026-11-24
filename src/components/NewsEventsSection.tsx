@@ -283,11 +283,11 @@ export default function NewsEventsSection() {
       return key ? key >= today : false;
     };
 
-    const news = unique
-      .filter((i) => i.type?.trim().toLowerCase() === 'news' && isVisible(i))
-      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-      .slice(0, MAX_ITEMS)
-      .map(toNewsItem);
+  const news = unique
+  .filter((i) => i.type?.trim().toLowerCase() === 'news')
+  .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+  .slice(0, MAX_ITEMS)
+  .map(toNewsItem);
 
     const events = unique
       .filter((i) => i.type?.trim().toLowerCase() === 'event' && isVisible(i))

@@ -9,6 +9,7 @@ import {
   GraduationCap,
   ShieldAlert,
   Users,
+  Crown,
 } from "lucide-react";
 
 type CommitteeMember = {
@@ -23,66 +24,54 @@ const members: CommitteeMember[] = [
   {
     sno: 1,
     name: "Dr. B. R. Ramesh Bapu.",
-    designation: "Head of the Institution",
+    designation: "Principal",
     position: "Convenor",
     type: "convenor",
   },
   {
     sno: 2,
-    name: "Inspector Of Police – Kundrathur Police station",
-    designation: "Inspector of Police.",
-    position: "Member",
+    name: "Dr. J. Sivamurugan",
+    designation: "HoD / CSE ",
+    position: "Co-ordinator",
   },
   {
     sno: 3,
-    name: "Mr.Joseph Emmanuel S",
-    designation: "NGO",
+    name: "Mrs. V. Suvarnavani",
+    designation: "HoD / ECE",
     position: "Member",
   },
   {
     sno: 4,
-    name: "Mr. A. Mosses",
-    designation: "Senior Faculty",
+    name: "Mr.S.Hemanth Prasath ",
+    designation: "Assistant Professor",
     position: "Member",
   },
   {
     sno: 5,
-    name: "Mr. J.Sivamurugan",
-    designation: "Senior Faculty",
+    name: "Mr.M.John S Kumar",
+    designation: "HoD / Cyber Security  ",
     position: "Member",
   },
   {
     sno: 6,
-    name: "Mrs. V.Suvarnavani",
-    designation: "Senior Faculty",
+    name: "Mr.A.Sivakumar ",
+    designation: "Assistant Professor",
     position: "Member",
   },
   {
     sno: 7,
-    name: "Mr.K. Dasaradhan",
-    designation: "Faculty",
+    name: "Mr.J.Maria Lenin Prathap ",
+    designation: "HoD /  S&H",
     position: "Member",
   },
   {
     sno: 8,
-    name: "Mr. R. Kumaresh",
-    designation: "III year",
-    position: "Student Representative",
-    type: "student",
-  },
-  {
-    sno: 9,
-    name: "Ms. R. Bagavathy sen",
-    designation: "III year",
-    position: "Student Representative",
-    type: "student",
-  },
-  {
-    sno: 10,
-    name: "Mr. Rajendran",
-    designation: "Non Teaching",
+    name: "Mrs.C.Karthiga",
+    designation: "Assistant Professor",
     position: "Member",
+    
   },
+
 ];
 
 export default function AntiRaggingCommittee() {
@@ -286,13 +275,14 @@ export default function AntiRaggingCommittee() {
 
                   <td>{member.designation}</td>
 
-                  <td>
-                    <span
-                      className={`ar-position ${member.type || "member"}`}
-                    >
-                      {member.position}
-                    </span>
-                  </td>
+                 <td>
+  <span className={`ar-position ${member.type || "member"}`}>
+    {member.type === "convenor" && (
+      <Crown size={12} fill="currentColor" />
+    )}
+    {member.position}
+  </span>
+</td>
                 </tr>
               ))}
             </tbody>
@@ -748,15 +738,17 @@ export default function AntiRaggingCommittee() {
           font-weight: 600;
         }
 
-        .ar-position {
-          display: inline-block;
-          padding: 5px 15px;
-          border-radius: 30px;
-          text-align: center;
-          white-space: nowrap;
-          font-size: 12px;
-          font-weight: 700;
-        }
+       .ar-position {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 15px;
+  border-radius: 30px;
+  text-align: center;
+  white-space: nowrap;
+  font-size: 12px;
+  font-weight: 700;
+}
 
         .ar-position.convenor {
           color: #4c3000;

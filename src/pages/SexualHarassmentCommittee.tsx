@@ -20,45 +20,41 @@ const committeeMembers = [
     position: 'Chair Person',
   },
   {
-    name: 'Mrs. C. Shanthi',
-    designation: 'AP',
+    name: 'Mrs.C.Karthiga',
+    designation: 'Assistant Professor',
     position: 'Member',
   },
   {
-    name: 'Mrs. G. Geetha',
-    designation: 'AP',
+    name: 'Mrs. Swathisri',
+    designation: 'Assistant Professor',
     position: 'Member',
   },
   {
-    name: 'Mrs. A. Cecilia Susana',
-    designation: 'AP',
+    name: 'Mrs.A.Agalya',
+    designation: 'Assistant Professor',
     position: 'Member',
   },
   {
-    name: 'Mrs. M. Meena',
-    designation: 'AP',
+    name: 'Mrs.V.Ezhilarasi',
+    designation: 'Assistant Professor',
     position: 'Member',
   },
   {
-    name: 'Mrs. J. Jenit Chinna rani',
-    designation: 'AP',
+    name: 'Mrs.V. Maha ',
+    designation: 'Assistant Professor',
     position: 'Member',
   },
   {
-    name: 'Ms. Devarapalli Lavanya',
-    designation: 'II Year',
-    position: 'Student Representative',
+    name: 'Mrs.R.Ramya',
+    designation: 'Assistant Professor',
+    position: 'Member',
   },
   {
-    name: 'Ms. Deepa Anuradha. A',
-    designation: 'III Year',
-    position: 'Student Representative',
+    name: 'Mrs.K.Sharmiladevi',
+    designation: 'Assistant Professor',
+    position: 'Member',
   },
-  {
-    name: 'Ms. Viyanna Shiney',
-    designation: 'III Year',
-    position: 'Student Representative',
-  },
+
 ];
 
 const supportPoints = [
