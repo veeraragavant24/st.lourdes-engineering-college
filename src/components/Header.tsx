@@ -427,7 +427,7 @@ className="h-16 w-16 shrink-0 object-contain transition-transform duration-300 g
               </span>
 
               <span
-className={`whitespace-nowrap font-sans text-[10px] font-semibold uppercase tracking-[0.1em] transition-colors duration-300 sm:text-xs lg:text-sm sm:tracking-[0.16em] lg:tracking-[0.2em] ${subtitleColor}`}              >
+className={`whitespace-nowrap font-serif text-[10px] font-semibold uppercase tracking-[0.1em] transition-colors duration-300 sm:text-xs lg:text-sm sm:tracking-[0.16em] lg:tracking-[0.2em] ${subtitleColor}`}              >
                 Engineering College
               </span>
             </div>

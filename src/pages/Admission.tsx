@@ -665,7 +665,7 @@ export default function Admission() {
 
           <div className="adm-prog-grid">
             {programs.map((p) => (
-              <Link key={p.id} to={`/programs#${p.slug}`} className="adm-prog-card">
+<Link key={p.id} to={`/academics?programme#${p.slug}`} className="adm-prog-card">
                 <div className="adm-icon-circle adm-prog-icon">
                   <Award strokeWidth={1.5} />
                 </div>

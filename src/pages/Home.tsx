@@ -604,26 +604,26 @@ export default function Home() {
            RESPONSIVE
         ========================================= */
 
-        @media (max-width: 640px) {
+       @media (max-width: 640px) {
 
-          .home-academics-section {
-            padding: 50px 18px;
-          }
+  .home-academics-section {
+    padding: 50px 18px;
+  }
 
-          .home-academics-preview {
-            grid-template-columns: 1fr;
-            gap: 18px;
-          }
+  .home-academics-preview {
+    grid-template-columns: 1fr;
+    grid-auto-rows: 1fr;      /* NEW: all cards take the height of the tallest one */
+    gap: 18px;
+  }
 
-          .home-academics-card,
-          .home-academics-card-inner {
-            min-height: 260px;
-          }
+  .home-academics-card,
+  .home-academics-card-inner {
+    min-height: 300px;        /* a bit taller so the long UG text fits comfortably */
+  }
 
-          .home-academics-card-face {
-            padding: 23px;
-          }
-
+  .home-academics-card-face {
+    padding: 23px;
+  }
           .home-academics-back {
             padding: 0;
           }

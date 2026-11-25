@@ -787,14 +787,18 @@ export default function Faculty() {
             gap: 15px;
           }
 
-          .faculty-card-photo-wrap {
-            height: 195px;
-          }
+            .faculty-card-photo-wrap {
+    height: 250px;          /* was 195px: bigger photo */
+  }
 
-          .faculty-card-body {
-            min-height: 205px;
-            padding: 16px 10px;
-          }
+  .faculty-card-body {
+    min-height: 0;          /* was 205px: removes the extra white space */
+    padding: 12px 10px 14px;
+  }
+
+  .faculty-card-department {
+    margin-bottom: 12px;    /* tighter gap above the button */
+  }
 
           .faculty-card-name {
             font-size: 16px;
@@ -804,22 +808,21 @@ export default function Faculty() {
             padding: 14px;
           }
 
-          .faculty-profile-panel {
-            grid-template-columns: minmax(0, 1fr);
-            gap: 18px;
-            max-height: 92vh;
-            padding: 20px;
-            border-radius: 15px;
-          }
+        .faculty-profile-panel {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 14px;
+  max-height: 85vh;       /* was 92vh */
+  padding: 16px;          /* was 20px */
+  border-radius: 14px;
+}
 
-          .faculty-profile-photo-wrap {
-            width: 100%;
-            max-width: 300px;
-            height: 280px;
-            min-height: 0;
-            margin: 0 auto;
-          }
-
+.faculty-profile-photo-wrap {
+  width: 100%;
+  max-width: 250px;       /* was 300px */
+  height: 230px;          /* was 280px */
+  min-height: 0;
+  margin: 0 auto;
+}
           .faculty-profile-photo {
             min-height: 0;
           }
@@ -843,14 +846,14 @@ export default function Faculty() {
             gap: 12px;
           }
 
-          .faculty-card-photo-wrap {
-            height: 155px;
-          }
+           .faculty-card-photo-wrap {
+    height: 210px;          /* was 155px */
+  }
 
-          .faculty-card-body {
-            min-height: 215px;
-            padding: 14px 8px;
-          }
+  .faculty-card-body {
+    min-height: 0;          /* was 215px */
+    padding: 10px 8px 12px;
+  }
 
           .faculty-card-name {
             font-size: 14px;
@@ -870,22 +873,33 @@ export default function Faculty() {
           }
 
           .faculty-profile-panel {
-            padding: 17px;
-          }
+  padding: 14px;          /* was 17px */
+}
 
-          .faculty-profile-photo-wrap {
-            height: 245px;
-          }
+.faculty-profile-photo-wrap {
+  height: 200px;          /* was 245px */
+  max-width: 220px;
+}
 
-          .faculty-profile-name {
-            font-size: 27px;
-          }
+.faculty-profile-name {
+  font-size: 22px;        /* was 27px */
+}
 
           .faculty-profile-close {
             top: 10px;
             right: 10px;
           }
         }
+          .faculty-profile-biography,
+.faculty-profile-details li,
+.faculty-profile-details p {
+  font-size: 11.5px;
+  line-height: 1.7;
+}
+
+.faculty-profile-overlay {
+  padding: 10px;
+}
 
         @media (prefers-reduced-motion: reduce) {
           .faculty-page *,

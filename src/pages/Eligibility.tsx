@@ -1,6 +1,7 @@
 
 import React from "react";
 import {
+  Home,
   BookOpen,
   Settings,
   GraduationCap,
@@ -9,6 +10,7 @@ import {
   ArrowRight,
   Award,
 } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const academicEligibility = [
   { number: "01", community: "General Category", percentage: "45.00 %" },
@@ -78,10 +80,15 @@ export default function Eligibility() {
 
         <div className="eligibility-hero-inner">
           <div className="eligibility-breadcrumb">
-            <a href="/">Home</a>
-            <ChevronRight size={14} />
-            <a href="/academics">Academics</a>
-            <ChevronRight size={14} />
+            <Link to="/">
+  <Home size={14} />
+  <span>Home</span>
+</Link>
+
+<ChevronRight size={14} />
+
+<Link to="/admission">Admission</Link>
+<ChevronRight size={14} />
             <span>Eligibility</span>
           </div>
 
@@ -258,10 +265,11 @@ export default function Eligibility() {
             </p>
           </div>
 
-          <a href="/admission" className="eligibility-admission-link">
+          <Link
+  to="/admission" className="eligibility-admission-link">
             Admission Details
             <ArrowRight size={17} />
-          </a>
+          </Link>
         </div>
 
       </main>
@@ -354,21 +362,29 @@ export default function Eligibility() {
           font-size: 13px;
           color: rgba(255,255,255,0.72);
         }
+.eligibility-breadcrumb a {
+  display: inline-flex;          /* icon and text on the same line */
+  align-items: center;
+  gap: 6px;
+  color: rgba(255,255,255,0.85);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
 
-        .eligibility-breadcrumb a {
-          color: rgba(255,255,255,0.85);
-          text-decoration: none;
-          transition: color 0.3s ease;
-        }
+.eligibility-breadcrumb a svg {
+  display: block;
+  flex-shrink: 0;
+}
 
-        .eligibility-breadcrumb a:hover {
-          color: var(--eligibility-gold);
-        }
+.eligibility-breadcrumb a:hover {
+  color: var(--eligibility-gold);
+}
 
-        .eligibility-breadcrumb span {
-          color: var(--eligibility-gold);
-          font-weight: 600;
-        }
+/* Only the last item (Eligibility) is gold and bold */
+.eligibility-breadcrumb > span {
+  color: var(--eligibility-gold);
+  font-weight: 600;
+}
 
         .eligibility-hero-content {
           display: flex;

@@ -15,6 +15,7 @@ import {
   Phone,
   BookOpen,
 } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Scholarships: React.FC = () => {
   return (
@@ -28,16 +29,15 @@ const Scholarships: React.FC = () => {
         <div className="scholarship-hero-inner">
 
           <div className="scholarship-breadcrumb">
-            <a href="/">
-              <Home size={14} />
-              <span>Home</span>
-            </a>
+          <Link to="/">
+  <Home size={14} />
+  <span>Home</span>
+</Link>
 
-            <ChevronRight size={14} />
+<ChevronRight size={14} />
 
-            <a href="/admission">Admission</a>
-
-            <ChevronRight size={14} />
+<Link to="/admission">Admission</Link>
+<ChevronRight size={14} />
 
             <span className="breadcrumb-active">Scholarships</span>
           </div>
@@ -257,13 +257,13 @@ const Scholarships: React.FC = () => {
             </p>
           </div>
 
-          <a
-            href="/contact"
-            className="scholarship-contact-button"
-          >
-            Contact Admissions
-            <ArrowRight size={21} />
-          </a>
+         <Link
+  to="/contact#contact-section"
+  className="scholarship-contact-button"
+>
+  Contact Admissions
+  <ArrowRight size={21} />
+</Link>
 
         </section>
 

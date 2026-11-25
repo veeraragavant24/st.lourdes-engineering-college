@@ -952,7 +952,7 @@ export default function Placement() {
               <ArrowRight size={18} />
             </button>
 
-            <Link to="/programs" className="placement-outline-button">
+            <Link to="/academics" className="placement-outline-button">
               Explore Programs
               <ChevronRight size={18} />
             </Link>

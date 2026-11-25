@@ -1623,12 +1623,12 @@ function CourseCard({ course, index }: CourseCardProps) {
               </Link>
 
               <Link
-                to="/admission"
-                className="academics-apply-button"
-              >
-                Apply for Admission
-                <ArrowRight aria-hidden="true" />
-              </Link>
+  to="/contact#contact-section"
+  className="academics-apply-button"
+>
+  Apply for Admission
+  <ArrowRight aria-hidden="true" />
+</Link>
             </div>
           </div>
         </div>
@@ -2364,12 +2364,12 @@ export default function Academics() {
               </div>
 
               <Link
-                to="/admission"
-                className="academics-apply-button"
-              >
-                Apply for Admission
-                <ArrowRight aria-hidden="true" />
-              </Link>
+  to="/contact#contact-section"
+  className="academics-apply-button"
+>
+  Apply for Admission
+  <ArrowRight aria-hidden="true" />
+</Link>
             </section>
           </main>
         </>

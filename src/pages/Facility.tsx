@@ -176,7 +176,7 @@ export default function Facility() {
       <section className="section-pad bg-white">
         <div className="mx-auto max-w-7xl">
           <div className="mb-14 text-center">
-            <p className="eyebrow">World-Class Infrastructure</p>
+            <p className="eyebrow"></p>
 
             <h2 className="mt-3 font-serif text-3xl font-bold text-maroon-700 sm:text-4xl lg:text-5xl">
               Our Campus Facilities
