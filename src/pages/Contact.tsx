@@ -894,6 +894,12 @@ export default function Contact() {
             transform: none !important;
           }
         }
+          .ct-hero {
+  position: relative;
+  padding: 60px 0 4rem;   /* was: 60px 0 0 */
+  background-color: var(--ct-maroon);
+  color: #fff;
+}
       `}</style>
 
       {/* HERO */}
@@ -1171,27 +1177,7 @@ export default function Contact() {
         </div>
       </section>
 
-      {/* BOTTOM ADMISSION BANNER */}
-      <section className="ct-banner-section">
-        <Reveal from="up">
-          <div className="ct-banner">
-            <div className="ct-banner-ring-1" />
-            <div className="ct-banner-ring-2" />
-
-            <div className="ct-banner-inner">
-              <h2 className="ct-banner-title">Your Future Starts Here</h2>
-              <p className="ct-banner-text">
-                Take the next step towards your academic and professional goals.
-                Connect with St. Lourdes Engineering College today.
-              </p>
-              <button onClick={openModal} className="ct-apply">
-                Apply Now
-                <ArrowRight />
-              </button>
-            </div>
-          </div>
-        </Reveal>
-      </section>
+ 
     </main>
   );
 }

@@ -550,6 +550,42 @@ function HeroStyles() {
         .hero-title { font-size: 60px; line-height: 1.1; }
       }
 
+
+/* ================= MOBILE: SMALLER SLIDER CONTROLS ================= */
+
+@media (max-width: 767px) {
+  /* pagination dots */
+  .hero-dots {
+    bottom: 16px;
+    gap: 6px;
+  }
+
+  .hero-dot {
+    width: 6px;
+    height: 6px;
+    min-width: 0;      /* stops global button styles from enlarging them */
+    min-height: 0;
+  }
+
+  .hero-dot.is-active {
+    width: 18px;
+  }
+
+  /* prev / next arrows */
+  .hero-arrow {
+    width: 32px;
+    height: 32px;
+  }
+
+  .hero-arrow svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .hero-arrow-prev { left: 8px; }
+  .hero-arrow-next { right: 8px; }
+}
+
       /* ================= ACCESSIBILITY ================= */
 
       @media (prefers-reduced-motion: reduce) {

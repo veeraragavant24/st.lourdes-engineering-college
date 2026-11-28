@@ -1170,7 +1170,9 @@ useEffect(() => {
   transform: translateY(38px);
 }
 
-.wec-page .wec-reveal-visible {
+.wec-page .wec-reveal-up.wec-reveal-visible,
+.wec-page .wec-reveal-left.wec-reveal-visible,
+.wec-page .wec-reveal-right.wec-reveal-visible {
   opacity: 1;
   transform: translate3d(0,0,0);
 }
@@ -1207,11 +1209,11 @@ useEffect(() => {
 .wec-page .wec-objective-card {
   cursor: default;
   transition:
+    opacity .8s ease,
     transform .35s cubic-bezier(.2,.7,.2,1),
     box-shadow .35s ease,
     border-color .35s ease;
 }
-
 .wec-page .wec-objective-card:hover {
   transform: translateY(-9px) scale(1.015);
   border-color: rgba(214,173,83,.75);
@@ -1287,6 +1289,28 @@ useEffect(() => {
     opacity: 1;
     transform: none;
     transition: none;
+  }
+}
+/* Objective cards: icon circle fully inside the card */
+.wec-page .wec-objective-card {
+  overflow: hidden;           /* nothing sticks out of the card */
+}
+
+@media (max-width: 600px) {
+  .wec-page .wec-objective-grid {
+    gap: 12px;                /* normal spacing, no extra room needed */
+  }
+
+  .wec-page .wec-objective-card {
+    min-height: 0;            /* removes the empty space at the bottom */
+    padding: 18px 10px 22px;
+  }
+
+  .wec-page .wec-objective-icon {
+    width: 52px;
+    height: 52px;
+    margin: 0 auto 10px;      /* was a negative top margin, which pushed it outside */
+    border-width: 3px;
   }
 }
       `}</style>

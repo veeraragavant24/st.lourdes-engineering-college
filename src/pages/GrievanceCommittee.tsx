@@ -534,11 +534,12 @@ export default function GrievanceCommittee() {
         .grc .grc-reveal-left  { transform: translateX(-65px); }  /* left -> settle  */
         .grc .grc-reveal-right { transform: translateX(65px); }   /* right -> settle */
 
-        .grc .grc-reveal-visible {
-          opacity: 1;
-          transform: translate(0, 0);
-        }
-
+       .grc .grc-reveal-up.grc-reveal-visible,
+.grc .grc-reveal-left.grc-reveal-visible,
+.grc .grc-reveal-right.grc-reveal-visible {
+  opacity: 1;
+  transform: translate(0, 0);
+}
         /* After entrance ends, restore fast hover transitions */
         .grc .grc-member.grc-reveal-done {
           will-change: auto;
@@ -560,65 +561,90 @@ export default function GrievanceCommittee() {
         .grc .grc-member.grc-reveal-visible:hover  { transform: translateY(-5px); }
         .grc .grc-concern.grc-reveal-visible:hover { transform: translateY(-5px); }
 
-        /* ---------- RESPONSIVE ---------- */
-        @media (min-width: 1500px) {
-          .grc-content { padding-top: 38px; }
-        }
+/* ---------- RESPONSIVE ---------- */
+@media (min-width: 1500px) {
+  .grc-content { padding-top: 38px; }
+}
 
-        @media (max-width: 760px) {
-          .grc-container { width: calc(100% - 36px); }
+@media (max-width: 760px) {
+  .grc-container { width: calc(100% - 32px); }
 
-          .grc-hero {
-            min-height: 255px;
-            padding: 110px 0 36px;
-            background-position: 58% center;
-          }
+  .grc-hero {
+    min-height: 255px;
+    padding: 110px 0 36px;
+    background-position: 58% center;
+  }
 
-          .grc-layout { grid-template-columns: minmax(0, 1fr); }
+  .grc-layout { grid-template-columns: minmax(0, 1fr); }
 
-          .grc-concern { padding: 23px; }
-          .grc-concern-icon { margin-left: 0; }
-          .grc-concern h2 { font-size: 24px; }
-          .grc-contact-link { font-size: 11px; }
+  /* one card per row so names and badges have room */
+  .grc-member-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 10px;
+  }
 
-          .grc .grc-reveal-left  { transform: translateX(-40px); }
-          .grc .grc-reveal-right { transform: translateX(40px); }
-        }
+  .grc-member.featured { grid-column: auto; }
 
-        @media (max-width: 480px) {
-          .grc-container { width: calc(100% - 28px); }
+  .grc-member {
+    min-height: 66px;
+    padding: 10px 12px;
+  }
 
-          .grc-hero {
-            min-height: 245px;
-            padding: 100px 0 32px;
-          }
+  .grc-member h3 {
+    font-size: 13px;
+    overflow-wrap: break-word;   /* wrap at spaces, not mid-word */
+  }
 
-          .grc-hero h1 {
-            font-size: 32px;
-            letter-spacing: -.5px;
-          }
+  .grc-member p { font-size: 11px; }
 
-          .grc-hero-description { font-size: 12px; }
-          .grc-content { padding-top: 26px; }
-          .grc-heading h2 { font-size: 26px; }
-          .grc-heading p { font-size: 11px; }
+  .grc-concern { padding: 23px; }
+  .grc-concern-icon { margin-left: 0; }
+  .grc-concern h2 { font-size: 24px; }
+  .grc-contact-link { font-size: 11px; }
 
-          .grc-member-grid {
-            grid-template-columns: minmax(0, 1fr);
-            gap: 9px;
-          }
+  .grc .grc-reveal-left  { transform: translateX(-40px); }
+  .grc .grc-reveal-right { transform: translateX(40px); }
+}
 
-          .grc-member.featured { grid-column: auto; }
-          .grc-member { min-height: 65px; }
-          .grc-member h3 { font-size: 12px; }
+@media (max-width: 480px) {
+  .grc-container { width: calc(100% - 28px); }
 
-          .grc-role {
-            padding: 5px 8px;
-            font-size: 9px;
-          }
+  .grc-hero {
+    min-height: 245px;
+    padding: 100px 0 32px;
+  }
 
-          .grc-concern { padding: 22px; }
-        }
+  .grc-hero h1 {
+    font-size: 32px;
+    letter-spacing: -.5px;
+  }
+
+  .grc-hero-description { font-size: 12px; }
+  .grc-content { padding-top: 26px; }
+  .grc-heading h2 { font-size: 26px; }
+  .grc-heading p { font-size: 11px; }
+
+  .grc-member { gap: 9px; }
+
+  .grc-avatar,
+  .grc-member.featured .grc-avatar {
+    flex-basis: 34px;
+    width: 34px;
+    height: 34px;
+  }
+
+  .grc-role {
+    padding: 4px 8px;
+    font-size: 9px;
+    white-space: nowrap;
+  }
+
+  .grc-concern { padding: 22px; }
+
+  /* smaller slide distance so nothing pokes past the screen edge */
+  .grc .grc-reveal-left  { transform: translateX(-24px); }
+  .grc .grc-reveal-right { transform: translateX(24px); }
+}
       `}</style>
 
       {/* Hero */}

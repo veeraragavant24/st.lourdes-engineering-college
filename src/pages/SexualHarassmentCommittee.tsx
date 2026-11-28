@@ -569,10 +569,12 @@ export default function SexualHarassmentCommittee() {
         .shrc-page .shrc-reveal-left  { transform: translateX(-65px); }  /* left -> settle  */
         .shrc-page .shrc-reveal-right { transform: translateX(65px); }   /* right -> settle */
 
-        .shrc-page .shrc-reveal-visible {
-          opacity: 1;
-          transform: translate3d(0, 0, 0);
-        }
+       .shrc-page .shrc-reveal-up.shrc-reveal-visible,
+.shrc-page .shrc-reveal-left.shrc-reveal-visible,
+.shrc-page .shrc-reveal-right.shrc-reveal-visible {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
 
         /* After entrance ends, restore fast hover transitions */
         .shrc-page .shrc-member.shrc-reveal-done {
@@ -599,90 +601,105 @@ export default function SexualHarassmentCommittee() {
           .shrc-content-grid { width: min(1080px, 100%); }
         }
 
-        @media (max-width: 760px) {
-          .shrc-hero { min-height: 285px; }
+@media (max-width: 760px) {
+  .shrc-hero { min-height: 285px; }
 
-          .shrc-hero-inner {
-            width: calc(100% - 32px);
-            padding: 92px 0 30px;
-          }
+  .shrc-hero-inner {
+    width: calc(100% - 32px);
+    padding: 92px 0 30px;
+  }
 
-          .shrc-hero h1 { font-size: clamp(30px, 7vw, 42px); }
-          .shrc-hero-description { font-size: 13px; }
+  .shrc-hero h1 { font-size: clamp(30px, 7vw, 42px); }
+  .shrc-hero-description { font-size: 13px; }
 
-          .shrc-main { padding: 34px 18px 36px; }
+  .shrc-main { padding: 34px 16px 36px; }
 
-          .shrc-content-grid {
-            grid-template-columns: minmax(0, 1fr);
-            gap: 18px;
-          }
+  .shrc-content-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 18px;
+  }
 
-          .shrc-support {
-            min-height: auto;
-            padding: 24px;
-          }
+  /* one card per row so names and badges have room */
+  .shrc-members {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 10px;
+  }
 
-          .shrc-support h2 { font-size: 23px; }
-          .shrc-support-icon { margin-left: 0; }
+  .shrc-member-chair { grid-column: auto; }
 
-          .shrc-contact-button {
-            width: auto;
-            min-width: 210px;
-          }
+  .shrc-member {
+    min-height: 66px;
+    padding: 10px 12px;
+  }
 
-          .shrc-page .shrc-reveal-left  { transform: translateX(-40px); }
-          .shrc-page .shrc-reveal-right { transform: translateX(40px); }
-        }
+  .shrc-member-info h3 {
+    font-size: 13px;
+    overflow-wrap: break-word;   /* wrap at spaces, not mid-word */
+  }
 
-        @media (max-width: 480px) {
-          .shrc-hero { min-height: 270px; }
+  .shrc-support {
+    min-height: auto;
+    padding: 24px;
+  }
 
-          .shrc-hero-inner { padding: 90px 0 30px; }
+  .shrc-support h2 { font-size: 23px; }
+  .shrc-support-icon { margin-left: 0; }
 
-          .shrc-eyebrow {
-            font-size: 9px;
-            letter-spacing: 1.5px;
-          }
+  .shrc-contact-button {
+    width: auto;
+    min-width: 210px;
+  }
 
-          .shrc-hero h1 { font-size: 32px; }
+  .shrc-page .shrc-reveal-left  { transform: translateX(-40px); }
+  .shrc-page .shrc-reveal-right { transform: translateX(40px); }
+}
 
-          .shrc-breadcrumb {
-            gap: 6px;
-            font-size: 10px;
-          }
+@media (max-width: 480px) {
+  .shrc-hero { min-height: 270px; }
+  .shrc-hero-inner { padding: 90px 0 30px; }
 
-          .shrc-main { padding: 30px 14px; }
-          .shrc-section-heading { margin-bottom: 22px; }
-          .shrc-section-heading h2 { font-size: 27px; }
-          .shrc-section-heading p { font-size: 12px; }
+  .shrc-eyebrow {
+    font-size: 9px;
+    letter-spacing: 1.5px;
+  }
 
-          .shrc-members {
-            grid-template-columns: minmax(0, 1fr);
-            gap: 9px;
-          }
+  .shrc-hero h1 { font-size: 32px; }
 
-          .shrc-member-chair { grid-column: auto; }
+  .shrc-breadcrumb {
+    gap: 6px;
+    font-size: 10px;
+  }
 
-          .shrc-member {
-            min-height: 64px;
-            padding: 10px;
-          }
+  .shrc-main { padding: 30px 14px; }
+  .shrc-section-heading { margin-bottom: 22px; }
+  .shrc-section-heading h2 { font-size: 27px; }
+  .shrc-section-heading p { font-size: 12px; }
 
-          .shrc-member-info h3 { font-size: 12px; }
-          .shrc-member-info p { font-size: 10px; }
+  .shrc-member { gap: 9px; }
 
-          .shrc-role {
-            max-width: 108px;
-            white-space: normal;
-            font-size: 9px;
-          }
+  .shrc-avatar,
+  .shrc-member-chair .shrc-avatar {
+    flex-basis: 36px;
+    width: 36px;
+    height: 36px;
+  }
 
-          .shrc-support { padding: 22px 19px; }
+  .shrc-member-info { padding-left: 9px; }
+  .shrc-member-info p { font-size: 10px; }
 
-          .shrc-page .shrc-reveal-left  { transform: translateX(-25px); }
-          .shrc-page .shrc-reveal-right { transform: translateX(25px); }
-          .shrc-page .shrc-reveal-up    { transform: translateY(22px); }
-        }
+  .shrc-role {
+    padding: 4px 8px;
+    font-size: 9px;
+    white-space: nowrap;
+  }
+
+  .shrc-support { padding: 22px 19px; }
+
+  /* smaller slide distance so nothing pokes past the screen edge */
+  .shrc-page .shrc-reveal-left  { transform: translateX(-24px); }
+  .shrc-page .shrc-reveal-right { transform: translateX(24px); }
+  .shrc-page .shrc-reveal-up    { transform: translateY(22px); }
+}
       `}</style>
 
       {/* Hero */}

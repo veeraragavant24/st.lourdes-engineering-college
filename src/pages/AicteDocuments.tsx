@@ -500,6 +500,68 @@ export default function AicteDocuments() {
           .aicte-reveal { opacity:1; transform:none !important; }
           .aicte-hero-content,.aicte-hero-icon { animation:none; }
         }
+          /* ---------- MOBILE FIXES: no overflow ---------- */
+@media (max-width: 650px) {
+  /* panel header: let the badge wrap under the title instead of overflowing */
+  .aicte-panel-heading {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .aicte-panel-title {
+    flex: 1 1 100%;
+    min-width: 0;
+  }
+
+  .aicte-panel-title > div:last-child {
+    min-width: 0;
+  }
+
+  .aicte-document-count {
+    margin-left: 59px;        /* lines up with the title text */
+    white-space: normal;
+    flex-shrink: 1;
+  }
+
+  /* table: fit the screen so the View column is visible */
+  .aicte-table {
+    min-width: 0;
+    table-layout: fixed;
+  }
+
+  .aicte-table th:first-child { width: 48px; }
+  .aicte-table th:last-child  { width: 82px; }
+
+  .aicte-table th,
+  .aicte-table td {
+    padding: 10px 8px;
+    font-size: 12px;
+    overflow-wrap: break-word;
+    word-break: break-word;
+  }
+
+  .aicte-table td:first-child { font-size: 12px; }
+
+  /* compact View button: label only, no icons */
+  .aicte-view-button {
+    min-width: 0;
+    padding: 6px 8px;
+    gap: 4px;
+    font-size: 11px;
+    white-space: normal;
+    text-align: center;
+  }
+
+  .aicte-view-button svg { display: none; }
+
+  .aicte-showing { font-size: 12px; }
+}
+
+/* make sure the "visible" state always wins over the slide-in offsets */
+.aicte-page .aicte-reveal.aicte-visible {
+  opacity: 1;
+  transform: translate(0, 0);
+}
       `}</style>
 
       <section className="aicte-hero">
