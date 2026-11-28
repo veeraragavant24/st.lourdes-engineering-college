@@ -325,7 +325,8 @@ function AcademicsStyles() {
 
       .academics-benefit span {
         display: block;
-        color: var(--academic-muted);
+                 color: #000000;
+
         font-size: 12px;
       }
 
@@ -461,7 +462,7 @@ function AcademicsStyles() {
 
       .academics-course-description {
         margin: 0 0 17px;
-        color: #5F5558;
+      color: #000000;
         font-size: 13px;
         line-height: 1.85;
       }
@@ -477,7 +478,7 @@ function AcademicsStyles() {
         display: flex;
         align-items: flex-start;
         gap: 7px;
-        color: #51464A;
+        color: #000000;
         font-size: 12px;
         line-height: 1.7;
       }
@@ -507,7 +508,7 @@ function AcademicsStyles() {
         background: #FBF6E8;
         border: 1px solid #E9D9AF;
         border-radius: 5px;
-        color: #59404A;
+        color: #000000;
         font-size: 11px;
         line-height: 1.5;
       }
@@ -863,7 +864,7 @@ function AcademicsStyles() {
         margin: 3px 0;
         padding: 10px 11px;
         border-radius: 5px;
-        color: #65585C;
+       color: #000000;
         text-decoration: none;
         font-size: 12px;
         line-height: 1.5;
@@ -912,7 +913,7 @@ function AcademicsStyles() {
 
       .programme-section p {
         margin: 0 0 12px;
-        color: #5F5558;
+        color: #000000;
         font-size: 14px;
         line-height: 1.9;
       }
@@ -1051,7 +1052,7 @@ function AcademicsStyles() {
         background: #FBF6E8;
         border: 1px solid #E9D9AF;
         border-radius: 5px;
-        color: #59404A;
+        color: #000000;
         font-size: 13px;
         line-height: 1.55;
       }

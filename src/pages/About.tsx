@@ -1,19 +1,16 @@
 import { Link } from 'react-router-dom';
 import { useEffect, useRef, useState } from 'react';
+import type { CSSProperties } from 'react';
 import {
   Target,
   Eye,
   Lightbulb,
-  Award,
-  Users,
   BookOpen,
   ArrowRight,
   Building,
-  Heart,
 } from 'lucide-react';
 import PageHero from '@/components/PageHero';
 import { siteConfig } from '@/data/siteConfig';
-import { newsItems } from '@/data/news';
 
 const values = [
   {
@@ -33,11 +30,9 @@ const values = [
   },
 ];
 
-const administration = [
-  { role: 'Founder', name: 'Ln. Dr. S. Peter', detail: 'Founder & Correspondent' },
-  { role: 'Management', name: 'Loordhu Ammal Educational Trust', detail: 'Managing Trust' },
-  { role: 'Principal', name: 'To be updated', detail: 'Academic Head' },
-];
+/* sets the stagger delay for a reveal element */
+const delay = (ms: number) => ({ '--reveal-delay': `${ms}ms` }) as CSSProperties;
+
 function CountUp({
   end,
   suffix = '',
@@ -96,6 +91,7 @@ function CountUp({
     </p>
   );
 }
+
 /* ---------------- INTERNAL CSS ---------------- */
 const aboutCss = `
   /* Theme colours – replace with the exact values from your tailwind.config */
@@ -111,6 +107,33 @@ const aboutCss = `
     --charcoal-rgb: 38, 38, 38;
     --font-serif: 'Playfair Display', Georgia, 'Times New Roman', serif;
   }
+
+  /* stops the slide-in from creating a sideways scrollbar */
+  .ab-page { overflow-x: clip; }
+
+  /* ---------- Scroll reveal (replays on every scroll) ----------
+     left  : slides in from the left, then settles
+     right : slides in from the right, then settles
+     up    : content fades up
+  ---------------------------------------------------------------- */
+  .ab-page [data-reveal] {
+    opacity: 0;
+    will-change: opacity, transform;
+    transition:
+      opacity .8s ease,
+      transform .9s cubic-bezier(.2, .7, .2, 1);
+    transition-delay: var(--reveal-delay, 0ms);
+  }
+  .ab-page [data-reveal="left"]  { transform: translateX(-80px); }
+  .ab-page [data-reveal="right"] { transform: translateX(80px); }
+  .ab-page [data-reveal="up"]    { transform: translateY(38px); }
+  .ab-page [data-reveal].is-visible {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+
+  /* wrapper keeps the slide-in separate from the card's hover lift */
+  .ab-reveal-box { height: 100%; }
 
   /* ---------- Sections ---------- */
   .ab-bg-white { background-color: #ffffff; }
@@ -167,7 +190,7 @@ const aboutCss = `
     margin-top: 1.5rem;
     font-size: 1rem;
     line-height: 1.625;
-    color: rgba(var(--charcoal-rgb), 0.7);
+    color: #000000;
   }
   .ab-text-tight { margin-top: 1rem; }
 
@@ -184,8 +207,17 @@ const aboutCss = `
     background-color: #ecb84f;
     padding: 1rem;
     text-align: center;
+    transition:
+      transform 350ms cubic-bezier(.2, .7, .2, 1),
+      box-shadow 350ms ease,
+      border-color 350ms ease;
   }
-   .ab-stat-num {
+  .ab-stat:hover {
+    transform: translateY(-6px) scale(1.04);
+    border-color: rgba(var(--gold-rgb), 0.8);
+    box-shadow: 0 14px 26px rgba(90, 15, 32, 0.22);
+  }
+  .ab-stat-num {
     font-family: var(--font-serif);
     font-size: 1.875rem;
     line-height: 2.25rem;
@@ -199,7 +231,7 @@ const aboutCss = `
     line-height: 1rem;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    color: rgba(var(--charcoal-rgb), 0.5);
+    color: #000000;
   }
 
   /* Image + badge */
@@ -208,11 +240,19 @@ const aboutCss = `
     overflow: hidden;
     border-radius: 1rem;
     box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 400ms ease;
   }
   .ab-image {
     display: block;
     width: 100%;
     object-fit: cover;
+    transition: transform 650ms ease;
+  }
+  .ab-image-wrap:hover .ab-image {
+    transform: scale(1.05);
+  }
+  .ab-image-wrap:hover .ab-image-frame {
+    box-shadow: 0 28px 40px -8px rgba(90, 15, 32, 0.28);
   }
   .ab-image-border {
     pointer-events: none;
@@ -221,6 +261,11 @@ const aboutCss = `
     z-index: -10;
     border-radius: 1rem;
     border: 1px solid rgba(var(--gold-rgb), 0.15);
+    transition: inset 400ms ease, border-color 400ms ease;
+  }
+  .ab-image-wrap:hover .ab-image-border {
+    inset: -1rem;
+    border-color: rgba(var(--gold-rgb), 0.6);
   }
   .ab-badge {
     position: absolute;
@@ -233,11 +278,19 @@ const aboutCss = `
     background-color: var(--maroon-700);
     padding: 1rem 1.25rem;
     box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+    transition: transform 400ms cubic-bezier(.2, .7, .2, 1);
+  }
+  .ab-image-wrap:hover .ab-badge {
+    transform: translateY(-6px);
   }
   .ab-badge-icon {
     width: 2rem;
     height: 2rem;
     color: var(--gold);
+    transition: transform 400ms ease;
+  }
+  .ab-image-wrap:hover .ab-badge-icon {
+    transform: rotate(-8deg) scale(1.12);
   }
   .ab-badge-title {
     font-family: var(--font-serif);
@@ -266,16 +319,41 @@ const aboutCss = `
   }
 
   .ab-value-card {
+    position: relative;
+    height: 100%;
+    overflow: hidden;
     border-radius: 1rem;
     border: 1px solid rgba(var(--gold-rgb), 0.3);
     background-color: var(--maroon-700);
     padding: 1.75rem;
     box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-    transition: all 300ms ease;
+    transition:
+      transform 350ms cubic-bezier(.2, .7, .2, 1),
+      box-shadow 350ms ease,
+      border-color 350ms ease;
   }
+
+  /* gold line that grows along the bottom edge on hover */
+  .ab-value-card::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, var(--gold), #f3d98b, var(--gold));
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 450ms ease;
+  }
+
   .ab-value-card:hover {
-    transform: translateY(-0.25rem);
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 8px 10px -6px rgba(0, 0, 0, 0.2);
+    transform: translateY(-10px);
+    border-color: rgba(var(--gold-rgb), 0.8);
+    box-shadow: 0 24px 36px -8px rgba(0, 0, 0, 0.35), 0 8px 12px -6px rgba(0, 0, 0, 0.25);
+  }
+  .ab-value-card:hover::after {
+    transform: scaleX(1);
   }
 
   .ab-value-icon {
@@ -288,11 +366,17 @@ const aboutCss = `
     border: 1px solid rgba(var(--gold-rgb), 0.4);
     background-color: rgba(var(--gold-rgb), 0.1);
     color: var(--gold);
-    transition: all 300ms ease;
+    transition:
+      transform 400ms ease,
+      background-color 300ms ease,
+      color 300ms ease,
+      box-shadow 300ms ease;
   }
   .ab-value-card:hover .ab-value-icon {
     background-color: var(--gold);
     color: var(--maroon-700);
+    transform: rotate(-10deg) scale(1.12);
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.3);
   }
   .ab-value-icon svg {
     height: 1.75rem;
@@ -335,6 +419,10 @@ const aboutCss = `
     height: 2.5rem;
     width: 2.5rem;
     color: var(--gold);
+    transition: transform 400ms ease;
+  }
+  .ab-cta-inner:hover .ab-cta-icon {
+    transform: translateY(-5px) rotate(-8deg);
   }
   .ab-cta-title {
     margin-top: 1rem;
@@ -350,16 +438,91 @@ const aboutCss = `
       line-height: 2.25rem;
     }
   }
-  .ab-cta-btn { margin-top: 1.5rem; }
+  .ab-cta-btn {
+    margin-top: 1.5rem;
+    transition: transform 300ms ease, box-shadow 300ms ease;
+  }
+  .ab-cta-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 22px rgba(0, 0, 0, 0.25);
+  }
   .ab-cta-arrow {
     height: 1rem;
     width: 1rem;
+    transition: transform 300ms ease;
+  }
+  .ab-cta-btn:hover .ab-cta-arrow {
+    transform: translateX(5px);
+  }
+
+  /* ---------- Mobile: shorter slide distance ---------- */
+  @media (max-width: 640px) {
+    .ab-page [data-reveal="left"]  { transform: translateX(-35px); }
+    .ab-page [data-reveal="right"] { transform: translateX(35px); }
+    .ab-page [data-reveal="up"]    { transform: translateY(26px); }
+  }
+
+  /* ---------- Reduced motion ---------- */
+  @media (prefers-reduced-motion: reduce) {
+    .ab-page [data-reveal] {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+
+    .ab-stat,
+    .ab-image,
+    .ab-image-frame,
+    .ab-image-border,
+    .ab-badge,
+    .ab-badge-icon,
+    .ab-value-card,
+    .ab-value-card::after,
+    .ab-value-icon,
+    .ab-cta-icon,
+    .ab-cta-btn,
+    .ab-cta-arrow {
+      transition: none;
+    }
   }
 `;
 
 export default function About() {
+  const pageRef = useRef<HTMLDivElement>(null);
+
+  // Scroll reveal: add "is-visible" when an element enters the screen and
+  // remove it when it leaves, so the animation replays on the next scroll.
+  useEffect(() => {
+    const root = pageRef.current;
+    if (!root) return;
+
+    const elements = root.querySelectorAll<HTMLElement>('[data-reveal]');
+
+    if (!('IntersectionObserver' in window)) {
+      elements.forEach((el) => el.classList.add('is-visible'));
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+          } else {
+            entry.target.classList.remove('is-visible');
+          }
+        });
+      },
+      { threshold: 0.15, rootMargin: '0px 0px -40px 0px' }
+    );
+
+    elements.forEach((el) => observer.observe(el));
+
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <>
+    <div className="ab-page" ref={pageRef}>
       <style>{aboutCss}</style>
 
       <PageHero
@@ -374,7 +537,9 @@ export default function About() {
       <section className="section-pad ab-section ab-bg-white">
         <div className="ab-container">
           <div className="ab-story-grid">
-            <div>
+
+            {/* Story text: slides in from the left */}
+            <div data-reveal="left">
               <p className="eyebrow">Our Story</p>
               <h2 className="ab-title">ST. Lourdes Engineering College</h2>
               <div className="ab-divider-left" />
@@ -397,7 +562,9 @@ export default function About() {
                 atmosphere that supports academic excellence, innovation, and holistic student
                 development.
               </p>
-                           <div className="ab-stats">
+
+              {/* Stats: fade up */}
+              <div className="ab-stats" data-reveal="up" style={delay(200)}>
                 <div className="ab-stat">
                   <CountUp end={Number(siteConfig.established)} duration={2200} />
                   <p className="ab-stat-label">Established</p>
@@ -411,26 +578,30 @@ export default function About() {
                   <p className="ab-stat-label">Years</p>
                 </div>
               </div>
-              </div>
+            </div>
 
-            <div className="ab-image-wrap">
-              <div className="ab-image-frame">
-                <img
-                  src="/about/campus3.png"
-                  alt="Campus building"
-                  className="ab-image"
-                  loading="lazy"
-                />
-              </div>
-              <div className="ab-image-border" />
-              <div className="ab-badge">
-                <Building className="ab-badge-icon" strokeWidth={1.5} />
-                <div>
-                  <p className="ab-badge-title">Christian Minority</p>
-                  <p className="ab-badge-sub">Institution</p>
+            {/* Campus image: slides in from the right */}
+            <div data-reveal="right" style={delay(120)}>
+              <div className="ab-image-wrap">
+                <div className="ab-image-frame">
+                  <img
+                    src="/about/campus3.png"
+                    alt="Campus building"
+                    className="ab-image"
+                    loading="lazy"
+                  />
+                </div>
+                <div className="ab-image-border" />
+                <div className="ab-badge">
+                  <Building className="ab-badge-icon" strokeWidth={1.5} />
+                  <div>
+                    <p className="ab-badge-title">Christian Minority</p>
+                    <p className="ab-badge-sub">Institution</p>
+                  </div>
                 </div>
               </div>
             </div>
+
           </div>
         </div>
       </section>
@@ -438,24 +609,34 @@ export default function About() {
       {/* Mission / Vision / Values */}
       <section id="vision" className="section-pad ab-section ab-bg-ivory">
         <div className="ab-container">
-          <div className="ab-values-head">
+          <div className="ab-values-head" data-reveal="up">
             <p className="eyebrow">Guiding Principles</p>
             <h2 className="ab-title">Mission, Vision &amp; Values</h2>
             <div className="ab-divider-center" />
           </div>
 
           <div className="ab-values-grid">
-            {values.map((v) => {
+            {values.map((v, i) => {
               const Icon = v.icon;
+              // 1st card from the left, 2nd fades up, 3rd from the right
+              const direction = i === 0 ? 'left' : i === 1 ? 'up' : 'right';
               return (
-                <div key={v.title} className="ab-value-card">
-                  {/* Icon: golden on a soft gold-tinted circle */}
-                  <div className="ab-value-icon">
-                    <Icon strokeWidth={1.5} />
-                  </div>
+                // outer box slides in, inner card handles the hover
+                <div
+                  key={v.title}
+                  className="ab-reveal-box"
+                  data-reveal={direction}
+                  style={delay(i * 120)}
+                >
+                  <div className="ab-value-card">
+                    {/* Icon: golden on a soft gold-tinted circle */}
+                    <div className="ab-value-icon">
+                      <Icon strokeWidth={1.5} />
+                    </div>
 
-                  <h3 className="ab-value-title">{v.title}</h3>
-                  <p className="ab-value-text">{v.text}</p>
+                    <h3 className="ab-value-title">{v.title}</h3>
+                    <p className="ab-value-text">{v.text}</p>
+                  </div>
                 </div>
               );
             })}
@@ -463,17 +644,23 @@ export default function About() {
         </div>
       </section>
 
-      {/* CTA */}
+      {/* CTA: content fades up piece by piece */}
       <section className="ab-cta">
         <div className="ab-cta-inner">
-          <BookOpen className="ab-cta-icon" strokeWidth={1.5} />
-          <h2 className="ab-cta-title">Ready to join our academic community?</h2>
-          <Link to="/admission" className="btn-gold ab-cta-btn">
-            Apply for Admission
-            <ArrowRight className="ab-cta-arrow" />
-          </Link>
+          <div data-reveal="up">
+            <BookOpen className="ab-cta-icon" strokeWidth={1.5} />
+          </div>
+          <h2 className="ab-cta-title" data-reveal="up" style={delay(120)}>
+            Ready to join our academic community?
+          </h2>
+          <div data-reveal="up" style={delay(240)}>
+            <Link to="/admission" className="btn-gold ab-cta-btn">
+              Apply for Admission
+              <ArrowRight className="ab-cta-arrow" />
+            </Link>
+          </div>
         </div>
       </section>
-    </>
+    </div>
   );
 }

@@ -386,7 +386,7 @@ export default function AicteDocuments() {
           color: var(--a-maroon); font-family: Georgia,"Times New Roman",serif;
           font-size: clamp(21px,2.5vw,29px); line-height: 1.3; margin: 0 0 5px;
         }
-        .aicte-panel-title p { color: #67565c; font-size: 13px; line-height: 1.5; margin: 0; }
+        .aicte-panel-title p { color: #000000; font-size: 13px; line-height: 1.5; margin: 0; }
         .aicte-document-count {
           padding: 13px 18px; border-radius: 12px; border: 1px solid #efcf98;
           background: linear-gradient(135deg,#fff2d9,#ffe5bd); color: var(--a-maroon);
@@ -401,7 +401,7 @@ export default function AicteDocuments() {
         .aicte-search:focus-within { border-color: #bd8b37; box-shadow: 0 0 0 3px rgba(198,141,44,.1); }
         .aicte-search input { width: 100%; height: 43px; border: none; outline: none; background: transparent; color: #402b31; font-size: 13px; font-family: inherit; }
         .aicte-search input::placeholder { color: #a69a96; }
-        .aicte-toolbar-note { color: #88777a; font-size: 12px; }
+        .aicte-toolbar-note { color: #000000; font-size: 12px; }
         .aicte-table-wrap { width: 100%; overflow-x: auto; border: 1px solid #ead7c8; border-radius: 10px; }
         .aicte-table { width: 100%; border-collapse: collapse; min-width: 620px; table-layout: fixed; }
         .aicte-table th {
@@ -427,10 +427,10 @@ export default function AicteDocuments() {
         }
         .aicte-view-button:hover { background: #72142f; color: white; border-color: #72142f; transform: translateY(-2px); }
         .aicte-view-button.disabled { opacity: .55; cursor: not-allowed; filter: grayscale(.3); }
-        .aicte-empty { text-align: center; padding: 40px 15px; color: #89767a; }
+        .aicte-empty { text-align: center; padding: 40px 15px; color: #000000; }
         .aicte-empty svg { margin-bottom: 10px; color: #bd8b37; }
         .aicte-pagination-row { display: flex; justify-content: space-between; align-items: center; gap: 15px; padding-top: 18px; }
-        .aicte-showing { color: #64545a; font-size: 13px; }
+        .aicte-showing { color: #000000; font-size: 13px; }
         .aicte-pagination { display: flex; align-items: center; gap: 6px; }
         .aicte-page-button {
           min-width: 37px; height: 36px; padding: 0 9px; display: flex;
@@ -440,8 +440,7 @@ export default function AicteDocuments() {
         .aicte-page-button:hover:not(:disabled) { background: #fff0d8; border-color: #c99735; }
         .aicte-page-button.active { color: white; background: #781632; border-color: #781632; }
         .aicte-page-button:disabled { opacity: .35; cursor: not-allowed; }
-        .aicte-footer { display: flex; align-items: center; gap: 17px; padding: 23px 10px 0; color: #756269; font-size: 12px; }
-        .aicte-footer-line { height: 1px; flex: 1; background: linear-gradient(90deg,#d5a34c,#eadbd0); }
+.aicte-footer { display: flex; align-items: center; gap: 17px; padding: 23px 10px 0; color: #000000; font-size: 12px; }        .aicte-footer-line { height: 1px; flex: 1; background: linear-gradient(90deg,#d5a34c,#eadbd0); }
         .aicte-footer strong { color: #82451e; letter-spacing: 1px; font-size: 11px; }
         .aicte-reveal {
           opacity: 0; will-change: transform,opacity;

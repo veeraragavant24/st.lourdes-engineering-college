@@ -1,5 +1,4 @@
-
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import {
   Home,
   BookOpen,
@@ -61,18 +60,52 @@ function EligibilityTable({
     </div>
   );
 }
+
 const capSparkles = [
-  { x: "-6%",  y: "6%",   s: 14, d: 0 },
-  { x: "96%",  y: "4%",   s: 18, d: 0.5 },
-  { x: "20%",  y: "-14%", s: 10, d: 1.0 },
-  { x: "80%",  y: "-12%", s: 12, d: 1.5 },
-  { x: "-4%",  y: "72%",  s: 9,  d: 0.8 },
-  { x: "100%", y: "64%",  s: 11, d: 1.9 },
+  { x: "-6%", y: "6%", s: 14, d: 0 },
+  { x: "96%", y: "4%", s: 18, d: 0.5 },
+  { x: "20%", y: "-14%", s: 10, d: 1.0 },
+  { x: "80%", y: "-12%", s: 12, d: 1.5 },
+  { x: "-4%", y: "72%", s: 9, d: 0.8 },
+  { x: "100%", y: "64%", s: 11, d: 1.9 },
 ];
 
 export default function Eligibility() {
+  const pageRef = useRef<HTMLDivElement>(null);
+
+  // Scroll reveal: add "is-visible" when an element enters the screen and
+  // remove it when it leaves, so the animation replays on the next scroll.
+  useEffect(() => {
+    const root = pageRef.current;
+    if (!root) return;
+
+    const elements = root.querySelectorAll<HTMLElement>("[data-reveal]");
+
+    if (!("IntersectionObserver" in window)) {
+      elements.forEach((el) => el.classList.add("is-visible"));
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-visible");
+          } else {
+            entry.target.classList.remove("is-visible");
+          }
+        });
+      },
+      { threshold: 0.15, rootMargin: "0px 0px -40px 0px" }
+    );
+
+    elements.forEach((el) => observer.observe(el));
+
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <div className="eligibility-page">
+    <div className="eligibility-page" ref={pageRef}>
 
       {/* HERO SECTION */}
       <section className="eligibility-hero">
@@ -81,14 +114,14 @@ export default function Eligibility() {
         <div className="eligibility-hero-inner">
           <div className="eligibility-breadcrumb">
             <Link to="/">
-  <Home size={14} />
-  <span>Home</span>
-</Link>
+              <Home size={14} />
+              <span>Home</span>
+            </Link>
 
-<ChevronRight size={14} />
+            <ChevronRight size={14} />
 
-<Link to="/admission">Admission</Link>
-<ChevronRight size={14} />
+            <Link to="/admission">Admission</Link>
+            <ChevronRight size={14} />
             <span>Eligibility</span>
           </div>
 
@@ -114,30 +147,28 @@ export default function Eligibility() {
               </div>
             </div>
 
+            <div className="eligibility-hero-icon" aria-hidden="true">
+              <div className="cap-toss-icon">
+                <GraduationCap size={112} strokeWidth={1} />
+                <span className="hero-icon-check">
+                  <CheckCircle2 size={35} />
+                </span>
+              </div>
 
-{/* after */}
-<div className="eligibility-hero-icon" aria-hidden="true">
-  <div className="cap-toss-icon">
-    <GraduationCap size={112} strokeWidth={1} />
-    <span className="hero-icon-check">
-      <CheckCircle2 size={35} />
-    </span>
-  </div>
-
-  {capSparkles.map((p, i) => (
-    <span
-      key={i}
-      className="cap-sparkle"
-      style={{
-        left: p.x,
-        top: p.y,
-        width: p.s,
-        height: p.s,
-        animationDelay: `${p.d}s`,
-      }}
-    />
-  ))}
-</div>
+              {capSparkles.map((p, i) => (
+                <span
+                  key={i}
+                  className="cap-sparkle"
+                  style={{
+                    left: p.x,
+                    top: p.y,
+                    width: p.s,
+                    height: p.s,
+                    animationDelay: `${p.d}s`,
+                  }}
+                />
+              ))}
+            </div>
           </div>
         </div>
       </section>
@@ -148,66 +179,76 @@ export default function Eligibility() {
         {/* ACADEMIC ELIGIBILITY */}
         <section className="eligibility-section">
 
-          <div className="eligibility-section-heading">
-            <div className="eligibility-section-icon">
-              <BookOpen size={43} strokeWidth={1.7} />
-            </div>
+          {/* heading slides in from the left, table from the right */}
+          <div className="eligibility-reveal-box" data-reveal="left">
+            <div className="eligibility-section-heading">
+              <div className="eligibility-section-icon">
+                <BookOpen size={43} strokeWidth={1.7} />
+              </div>
 
-            <div className="eligibility-section-description">
-              <span className="eligibility-section-label">
-                HSC QUALIFICATION
-              </span>
+              <div className="eligibility-section-description">
+                <span className="eligibility-section-label">
+                  HSC QUALIFICATION
+                </span>
 
-              <h2>HSC (Academic) Eligibility</h2>
+                <h2>HSC (Academic) Eligibility</h2>
 
-              <p>
-                A pass in the HSC (Academic: both +1 and +2) or its equivalent
-                with a minimum average percentage in Mathematics, Physics and
-                Chemistry put together as given below.
-              </p>
+                <p>
+                  A pass in the HSC (Academic: both +1 and +2) or its equivalent
+                  with a minimum average percentage in Mathematics, Physics and
+                  Chemistry put together as given below.
+                </p>
+              </div>
             </div>
           </div>
 
-          <EligibilityTable
-            data={academicEligibility}
-            heading="Minimum average marks in Mathematics, Physics and Chemistry put together"
-          />
+          <div data-reveal="right" style={{ ["--reveal-delay" as string]: "120ms" }}>
+            <EligibilityTable
+              data={academicEligibility}
+              heading="Minimum average marks in Mathematics, Physics and Chemistry put together"
+            />
+          </div>
         </section>
 
         {/* VOCATIONAL ELIGIBILITY */}
         <section className="eligibility-section">
 
-          <div className="eligibility-section-heading">
-            <div className="eligibility-section-icon">
-              <Settings size={43} strokeWidth={1.7} />
-            </div>
+          {/* heading slides in from the right, table from the left */}
+          <div className="eligibility-reveal-box" data-reveal="right">
+            <div className="eligibility-section-heading">
+              <div className="eligibility-section-icon">
+                <Settings size={43} strokeWidth={1.7} />
+              </div>
 
-            <div className="eligibility-section-description">
-              <span className="eligibility-section-label">
-                VOCATIONAL QUALIFICATION
-              </span>
+              <div className="eligibility-section-description">
+                <span className="eligibility-section-label">
+                  VOCATIONAL QUALIFICATION
+                </span>
 
-              <h2>HSC (Vocational Subject) Eligibility</h2>
+                <h2>HSC (Vocational Subject) Eligibility</h2>
 
-              <p>
-                A pass in any one of the HSC (Vocational Subject: both +1 and
-                +2) as given below with any one of the Engineering related
-                subjects namely Mathematics, Physics or Chemistry with a
-                minimum average percentage put together as given below.
-              </p>
+                <p>
+                  A pass in any one of the HSC (Vocational Subject: both +1 and
+                  +2) as given below with any one of the Engineering related
+                  subjects namely Mathematics, Physics or Chemistry with a
+                  minimum average percentage put together as given below.
+                </p>
+              </div>
             </div>
           </div>
 
-          <EligibilityTable
-            data={vocationalEligibility}
-            heading="Minimum average marks in Related Subjects, Vocational Theory and Practical altogether"
-          />
+          <div data-reveal="left" style={{ ["--reveal-delay" as string]: "120ms" }}>
+            <EligibilityTable
+              data={vocationalEligibility}
+              heading="Minimum average marks in Related Subjects, Vocational Theory and Practical altogether"
+            />
+          </div>
         </section>
 
         {/* LATERAL ENTRY SCHEME */}
         <section className="lateral-entry-section">
 
-          <div className="lateral-entry-heading">
+          <div className="lateral-entry-heading" data-reveal="left">
             <div className="lateral-entry-icon">
               <GraduationCap size={48} strokeWidth={1.6} />
             </div>
@@ -224,7 +265,11 @@ export default function Eligibility() {
 
           <div className="lateral-entry-content">
 
-            <div className="lateral-entry-item">
+            <div
+              className="lateral-entry-item"
+              data-reveal="right"
+              style={{ ["--reveal-delay" as string]: "100ms" }}
+            >
               <CheckCircle2 size={24} />
 
               <p>
@@ -234,7 +279,11 @@ export default function Eligibility() {
               </p>
             </div>
 
-            <div className="lateral-entry-item">
+            <div
+              className="lateral-entry-item"
+              data-reveal="right"
+              style={{ ["--reveal-delay" as string]: "220ms" }}
+            >
               <CheckCircle2 size={24} />
 
               <p>
@@ -251,25 +300,26 @@ export default function Eligibility() {
           </div>
         </section>
 
-        {/* BOTTOM INFORMATION */}
-        <div className="eligibility-bottom-note">
-          <div className="eligibility-bottom-icon">
-            <BookOpen size={23} />
-          </div>
+        {/* BOTTOM INFORMATION: content fades up */}
+        <div className="eligibility-reveal-box eligibility-bottom-wrap" data-reveal="up">
+          <div className="eligibility-bottom-note">
+            <div className="eligibility-bottom-icon">
+              <BookOpen size={23} />
+            </div>
 
-          <div>
-            <h3>Plan Your Admission Journey</h3>
-            <p>
-              Candidates are advised to ensure that they meet the prescribed
-              eligibility requirements before applying for admission.
-            </p>
-          </div>
+            <div>
+              <h3>Plan Your Admission Journey</h3>
+              <p>
+                Candidates are advised to ensure that they meet the prescribed
+                eligibility requirements before applying for admission.
+              </p>
+            </div>
 
-          <Link
-  to="/admission" className="eligibility-admission-link">
-            Admission Details
-            <ArrowRight size={17} />
-          </Link>
+            <Link to="/admission" className="eligibility-admission-link">
+              Admission Details
+              <ArrowRight size={17} />
+            </Link>
+          </div>
         </div>
 
       </main>
@@ -280,34 +330,59 @@ export default function Eligibility() {
            MAROON & GOLD DESIGN
         ========================================= */
 
-  .eligibility-page {
-  --eligibility-maroon: #70152f;
-  --eligibility-dark: #4b1025;
-  --eligibility-gold: #d6ad55;
-  --eligibility-light-gold: #f9e8bd;
-  --eligibility-cream: #fcfaf6;
-  --eligibility-text: #51454a;
+        .eligibility-page {
+          --eligibility-maroon: #70152f;
+          --eligibility-dark: #4b1025;
+          --eligibility-gold: #d6ad55;
+          --eligibility-light-gold: #f9e8bd;
+          --eligibility-cream: #fcfaf6;
+          --eligibility-text: #51454a;
 
-  width: 100%;
-  min-height: 100vh;
-  padding-top: 0;
-  background: var(--eligibility-cream);
-  color: var(--eligibility-text);
-  font-family: inherit;
-  overflow: hidden;
-}
+          width: 100%;
+          min-height: 100vh;
+          padding-top: 0;
+          background: var(--eligibility-cream);
+          color: var(--eligibility-text);
+          font-family: inherit;
+          overflow: hidden;
+        }
 
         .eligibility-page * {
           box-sizing: border-box;
         }
 
+        /* =========================================
+           SCROLL REVEAL (replays on every scroll)
+           left  : slides in from the left, then settles
+           right : slides in from the right, then settles
+           up    : content fades up
+        ========================================= */
+
+        .eligibility-page [data-reveal] {
+          opacity: 0;
+          will-change: opacity, transform;
+          transition:
+            opacity .8s ease,
+            transform .9s cubic-bezier(.2, .7, .2, 1);
+          transition-delay: var(--reveal-delay, 0ms);
+        }
+
+        .eligibility-page [data-reveal="left"]  { transform: translateX(-80px); }
+        .eligibility-page [data-reveal="right"] { transform: translateX(80px); }
+        .eligibility-page [data-reveal="up"]    { transform: translateY(38px); }
+
+        .eligibility-page [data-reveal].is-visible {
+          opacity: 1;
+          transform: translate3d(0, 0, 0);
+        }
+
         /* HERO */
 
         .eligibility-hero {
-  position: relative;
-  width: 100%;
-  min-height: 285px;
-  padding: 130px 6% 40px;
+          position: relative;
+          width: 100%;
+          min-height: 285px;
+          padding: 130px 6% 40px;
 
           background:
             radial-gradient(
@@ -362,29 +437,30 @@ export default function Eligibility() {
           font-size: 13px;
           color: rgba(255,255,255,0.72);
         }
-.eligibility-breadcrumb a {
-  display: inline-flex;          /* icon and text on the same line */
-  align-items: center;
-  gap: 6px;
-  color: rgba(255,255,255,0.85);
-  text-decoration: none;
-  transition: color 0.3s ease;
-}
 
-.eligibility-breadcrumb a svg {
-  display: block;
-  flex-shrink: 0;
-}
+        .eligibility-breadcrumb a {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          color: rgba(255,255,255,0.85);
+          text-decoration: none;
+          transition: color 0.3s ease;
+        }
 
-.eligibility-breadcrumb a:hover {
-  color: var(--eligibility-gold);
-}
+        .eligibility-breadcrumb a svg {
+          display: block;
+          flex-shrink: 0;
+        }
 
-/* Only the last item (Eligibility) is gold and bold */
-.eligibility-breadcrumb > span {
-  color: var(--eligibility-gold);
-  font-weight: 600;
-}
+        .eligibility-breadcrumb a:hover {
+          color: var(--eligibility-gold);
+        }
+
+        /* Only the last item (Eligibility) is gold and bold */
+        .eligibility-breadcrumb > span {
+          color: var(--eligibility-gold);
+          font-weight: 600;
+        }
 
         .eligibility-hero-content {
           display: flex;
@@ -494,6 +570,16 @@ export default function Eligibility() {
           background: #fff;
           box-shadow: 0 5px 20px rgba(67,35,26,0.045);
           overflow: hidden;
+          transition:
+            transform .35s cubic-bezier(.2, .7, .2, 1),
+            box-shadow .35s ease,
+            border-color .35s ease;
+        }
+
+        .eligibility-section-heading:hover {
+          transform: translateY(-6px);
+          border-color: #d6ad55;
+          box-shadow: 0 16px 32px rgba(67,35,26,0.13);
         }
 
         .eligibility-section-icon {
@@ -510,6 +596,14 @@ export default function Eligibility() {
             #4d1027
           );
           border-radius: 0 55px 55px 0;
+        }
+
+        .eligibility-section-icon svg {
+          transition: transform .4s ease;
+        }
+
+        .eligibility-section-heading:hover .eligibility-section-icon svg {
+          transform: rotate(-8deg) scale(1.15);
         }
 
         .eligibility-section-icon::after {
@@ -549,7 +643,7 @@ export default function Eligibility() {
         .eligibility-section-description p {
           max-width: 950px;
           margin: 0;
-          color: #62565b;
+          color: #000000;
           font-size: 14px;
           line-height: 1.75;
         }
@@ -563,6 +657,12 @@ export default function Eligibility() {
           border-radius: 13px;
           background: #fff;
           box-shadow: 0 5px 17px rgba(67,35,26,0.055);
+          transition: box-shadow .35s ease, border-color .35s ease;
+        }
+
+        .eligibility-table-wrapper:hover {
+          border-color: #d6ad55;
+          box-shadow: 0 14px 30px rgba(67,35,26,0.12);
         }
 
         .eligibility-table {
@@ -610,7 +710,7 @@ export default function Eligibility() {
           border-bottom: 1px solid #eee4d6;
           color: #42383b;
           font-size: 14px;
-          transition: background 0.25s ease;
+          transition: background 0.25s ease, box-shadow 0.25s ease;
         }
 
         .eligibility-table tbody tr:nth-child(even) {
@@ -623,6 +723,11 @@ export default function Eligibility() {
 
         .eligibility-table tbody tr:hover {
           background: #f8edda;
+        }
+
+        /* gold bar on the left edge of the hovered row */
+        .eligibility-table tbody tr:hover td:first-child {
+          box-shadow: inset 4px 0 0 var(--eligibility-gold);
         }
 
         .eligibility-table tbody tr:last-child td {
@@ -661,6 +766,12 @@ export default function Eligibility() {
           font-size: 14px;
           font-weight: 800;
           letter-spacing: 0.3px;
+          transition: transform .3s ease, box-shadow .3s ease;
+        }
+
+        .eligibility-table tbody tr:hover .eligibility-percentage {
+          transform: scale(1.1);
+          box-shadow: 0 4px 12px rgba(116, 21, 47, .15);
         }
 
         /* LATERAL ENTRY */
@@ -681,6 +792,16 @@ export default function Eligibility() {
               #fffaf0
             );
           box-shadow: 0 8px 24px rgba(97,61,17,0.07);
+          transition:
+            transform .35s cubic-bezier(.2, .7, .2, 1),
+            box-shadow .35s ease,
+            border-color .35s ease;
+        }
+
+        .lateral-entry-section:hover {
+          transform: translateY(-6px);
+          border-color: #d6ad55;
+          box-shadow: 0 18px 36px rgba(97,61,17,0.14);
         }
 
         .lateral-entry-heading {
@@ -702,6 +823,13 @@ export default function Eligibility() {
           border-radius: 15px;
           background: #ffedc5;
           color: #75152e;
+          transition: transform .4s ease, background-color .3s ease, color .3s ease;
+        }
+
+        .lateral-entry-section:hover .lateral-entry-icon {
+          transform: rotate(-8deg) scale(1.08);
+          background: #70152f;
+          color: #f5d58b;
         }
 
         .lateral-entry-title span {
@@ -737,26 +865,44 @@ export default function Eligibility() {
           flex-shrink: 0;
           margin-top: 2px;
           color: #c69a43;
+          transition: transform .3s ease;
+        }
+
+        .lateral-entry-item:hover svg {
+          transform: scale(1.25);
         }
 
         .lateral-entry-item p {
           margin: 0;
-          color: #51464a;
+          color: #000000;
           font-size: 14px;
           line-height: 1.85;
         }
 
         /* BOTTOM NOTE */
 
+        .eligibility-bottom-wrap {
+          margin-top: 42px;
+        }
+
         .eligibility-bottom-note {
           display: flex;
           align-items: center;
           gap: 18px;
-          margin-top: 42px;
           padding: 22px 25px;
           border: 1px solid #eadcc5;
           border-radius: 13px;
           background: #fff;
+          transition:
+            transform .35s cubic-bezier(.2, .7, .2, 1),
+            box-shadow .35s ease,
+            border-color .35s ease;
+        }
+
+        .eligibility-bottom-note:hover {
+          transform: translateY(-5px);
+          border-color: #d6ad55;
+          box-shadow: 0 14px 28px rgba(67,35,26,0.12);
         }
 
         .eligibility-bottom-icon {
@@ -769,6 +915,13 @@ export default function Eligibility() {
           border-radius: 12px;
           background: #f8ebd0;
           color: #74152f;
+          transition: transform .4s ease, background-color .3s ease, color .3s ease;
+        }
+
+        .eligibility-bottom-note:hover .eligibility-bottom-icon {
+          transform: rotate(-8deg) scale(1.1);
+          background: #70152f;
+          color: #f5d58b;
         }
 
         .eligibility-bottom-note h3 {
@@ -780,7 +933,7 @@ export default function Eligibility() {
 
         .eligibility-bottom-note p {
           margin: 0;
-          color: #71666a;
+          color: #000000;
           font-size: 13px;
           line-height: 1.6;
         }
@@ -802,36 +955,17 @@ export default function Eligibility() {
           transition: all 0.3s ease;
         }
 
+        .eligibility-admission-link svg {
+          transition: transform .3s ease;
+        }
+
         .eligibility-admission-link:hover {
           background: #a07a35;
           transform: translateY(-2px);
         }
 
-        /* ANIMATION */
-
-        @keyframes eligibilityFadeUp {
-          from {
-            opacity: 0;
-            transform: translateY(20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        .eligibility-section,
-        .lateral-entry-section,
-        .eligibility-bottom-note {
-          animation: eligibilityFadeUp 0.7s ease both;
-        }
-
-        .eligibility-section:nth-of-type(2) {
-          animation-delay: 0.12s;
-        }
-
-        .lateral-entry-section {
-          animation-delay: 0.2s;
+        .eligibility-admission-link:hover svg {
+          transform: translateX(5px);
         }
 
         /* TABLET */
@@ -868,9 +1002,11 @@ export default function Eligibility() {
 
         /* MOBILE */
 
-            
-
         @media (max-width: 600px) {
+          .eligibility-page [data-reveal="left"]  { transform: translateX(-35px); }
+          .eligibility-page [data-reveal="right"] { transform: translateX(35px); }
+          .eligibility-page [data-reveal="up"]    { transform: translateY(26px); }
+
           .eligibility-hero {
             min-height: auto;
             padding: 100px 20px 35px;
@@ -1039,51 +1175,71 @@ export default function Eligibility() {
           }
         }
 
+        /* HERO CAP ANIMATION */
+
+        .cap-toss-icon {
+          position: relative;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 100%;
+          height: 100%;
+          transform-origin: 50% 80%;
+          animation: cap-toss 4.5s cubic-bezier(.3, .7, .3, 1) infinite;
+        }
+
+        @keyframes cap-toss {
+          0%   { transform: translateY(0) rotate(0deg) scale(1, 1); }
+          8%   { transform: translateY(2px) rotate(0deg) scale(1.04, .96); }
+          28%  { transform: translateY(-34px) rotate(-14deg) scale(1, 1); }
+          44%  { transform: translateY(-46px) rotate(10deg); }
+          62%  { transform: translateY(-12px) rotate(-5deg); }
+          72%  { transform: translateY(0) rotate(2deg) scale(1.03, .97); }
+          80%  { transform: translateY(-4px) rotate(-1deg) scale(1, 1); }
+          88%, 100% { transform: translateY(0) rotate(0deg) scale(1, 1); }
+        }
+
+        .cap-sparkle {
+          position: absolute;
+          background: linear-gradient(135deg, #fff1b0, #d8b54c);
+          clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%);
+          filter: drop-shadow(0 0 6px rgba(241, 207, 98, .9));
+          opacity: 0;
+          pointer-events: none;
+          animation: cap-twinkle 2.25s ease-in-out infinite;
+        }
+
+        @keyframes cap-twinkle {
+          0%, 100% { opacity: 0; transform: scale(0) rotate(0deg); }
+          35%      { opacity: 1; transform: scale(1.15) rotate(45deg); }
+          55%      { opacity: .85; transform: scale(.8) rotate(80deg); }
+          75%      { opacity: 0; transform: scale(0) rotate(120deg); }
+        }
+
+        /* ACCESSIBILITY */
+
         @media (prefers-reduced-motion: reduce) {
-          .eligibility-section,
+          .eligibility-page [data-reveal] {
+            opacity: 1;
+            transform: none;
+            transition: none;
+          }
+
+          .eligibility-section-heading,
+          .eligibility-table-wrapper,
           .lateral-entry-section,
-          .eligibility-bottom-note {
+          .eligibility-bottom-note,
+          .eligibility-percentage,
+          .eligibility-admission-link,
+          .eligibility-admission-link svg {
+            transition: none;
+          }
+
+          .cap-toss-icon,
+          .cap-sparkle {
             animation: none;
           }
         }
-          .cap-toss-icon {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 100%;
-  transform-origin: 50% 80%;
-  animation: cap-toss 4.5s cubic-bezier(.3, .7, .3, 1) infinite;
-}
-
-@keyframes cap-toss {
-  0%   { transform: translateY(0) rotate(0deg) scale(1, 1); }
-  8%   { transform: translateY(2px) rotate(0deg) scale(1.04, .96); }
-  28%  { transform: translateY(-34px) rotate(-14deg) scale(1, 1); }
-  44%  { transform: translateY(-46px) rotate(10deg); }
-  62%  { transform: translateY(-12px) rotate(-5deg); }
-  72%  { transform: translateY(0) rotate(2deg) scale(1.03, .97); }
-  80%  { transform: translateY(-4px) rotate(-1deg) scale(1, 1); }
-  88%, 100% { transform: translateY(0) rotate(0deg) scale(1, 1); }
-}
-
-.cap-sparkle {
-  position: absolute;
-  background: linear-gradient(135deg, #fff1b0, #d8b54c);
-  clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%);
-  filter: drop-shadow(0 0 6px rgba(241, 207, 98, .9));
-  opacity: 0;
-  pointer-events: none;
-  animation: cap-twinkle 2.25s ease-in-out infinite;
-}
-
-@keyframes cap-twinkle {
-  0%, 100% { opacity: 0; transform: scale(0) rotate(0deg); }
-  35%      { opacity: 1; transform: scale(1.15) rotate(45deg); }
-  55%      { opacity: .85; transform: scale(.8) rotate(80deg); }
-  75%      { opacity: 0; transform: scale(0) rotate(120deg); }
-}
       `}</style>
     </div>
   );

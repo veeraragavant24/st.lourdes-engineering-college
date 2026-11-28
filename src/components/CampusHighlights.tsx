@@ -76,7 +76,7 @@ export default function CampusHighlights() {
             Campus Highlights
           </h2>
           <div className="mx-auto mt-4 h-px w-20 bg-gradient-to-r from-transparent via-gold to-transparent" />
-          <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-charcoal/60">
+          <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-black">
             Discover the facilities, learning resources, and student support that enrich campus life.
           </p>
         </div>
@@ -112,10 +112,10 @@ export default function CampusHighlights() {
         {/* Content */}
         <div className="relative z-0 flex flex-1 flex-col p-6 pt-10">
           <h3 className="font-serif text-xl font-bold text-maroon-700">{h.title}</h3>
-          <p className="mt-3 text-sm leading-relaxed text-charcoal/60">{h.description}</p>
+          <p className="mt-3 text-sm leading-relaxed text-black">{h.description}</p>
           <ul className="mt-4 space-y-2">
             {h.features.map((f) => (
-              <li key={f} className="flex items-start gap-2 text-sm text-charcoal/70">
+              <li key={f} className="flex items-start gap-2 text-sm text-black">
                 <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-gold" />
                 {f}
               </li>

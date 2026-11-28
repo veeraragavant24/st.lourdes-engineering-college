@@ -72,8 +72,8 @@ const departments: Department[] = [
     ],
     icon: Monitor,
     image:
-      'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1400&q=85',
-    url: 'https://www.slec.edu.in/departments/b-e-computer-science-and-engineering/',
+      '/department/CSE.png',
+    url: '/department/CSE.png',
   },
   {
     id: 2,
@@ -102,8 +102,8 @@ const departments: Department[] = [
     ],
     icon: ShieldCheck,
     image:
-      'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=1400&q=85',
-    url: 'https://www.slec.edu.in/departments/b-e-computer-science-and-engineering-cyber-security/',
+      '/department/CS.png',
+    url: '/department/CS.png',
   },
   {
     id: 3,
@@ -132,8 +132,8 @@ const departments: Department[] = [
     ],
     icon: Cpu,
     image:
-      'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=1400&q=85',
-    url: 'https://www.slec.edu.in/departments/b-e-electronics-and-communication-engineering/',
+      '/department/ECE.png',
+    url: '/department/ECE.png',
   },
   {
     id: 4,
@@ -162,8 +162,8 @@ const departments: Department[] = [
     ],
     icon: Database,
     image:
-      'https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=1400&q=85',
-    url: 'https://www.slec.edu.in/departments/b-tech-information-technology/',
+      '/department/It.png',
+    url: ' /department/It.png',
   },
   {
     id: 5,
@@ -192,8 +192,8 @@ const departments: Department[] = [
     ],
     icon: BrainCircuit,
     image:
-      'https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=1400&q=85',
-    url: 'https://www.slec.edu.in/departments/b-tech-artificial-intelligence-and-data-science/',
+      '/department/AIDS .png',
+    url: '/department/AIDS .png',
   },
   {
     id: 6,
@@ -222,8 +222,8 @@ const departments: Department[] = [
     ],
     icon: Code2,
     image:
-      'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1400&q=85',
-    url: 'https://www.slec.edu.in/departments/m-e-computer-science-and-engineering/',
+      '/department/ME.png',
+    url: '/department/ME.png',
   },
   {
     id: 7,
@@ -252,8 +252,8 @@ const departments: Department[] = [
     ],
     icon: BriefcaseBusiness,
     image:
-      'https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=1400&q=85',
-    url: 'https://www.slec.edu.in/departments/master-of-business-administration-mba/',
+      '/department/MBA.png',
+    url: '/department/MBA.png',
   },
 ];
 
@@ -724,7 +724,7 @@ function DepartmentStyles() {
       .dept-card-subtitle {
         display: block;
         margin-top: 5px;
-        color: #8B7B78;
+        color: #000000;
         font-family: Arial, sans-serif;
         font-size: 10px;
         font-weight: 600;
@@ -912,7 +912,7 @@ function DepartmentStyles() {
 
      .dept-hod p {
   margin: 0;
-  color: var(--dept-muted);
+ color: #000000;
   font-size: 14px;
   line-height: 1.8;
 }
@@ -935,7 +935,7 @@ function DepartmentStyles() {
 
      .dept-overview-text {
   margin: 0;
-  color: var(--dept-muted);
+ color: #000000;   
   font-size: 15px;
   line-height: 1.9;
 }
@@ -951,7 +951,7 @@ function DepartmentStyles() {
   display: flex;
   align-items: flex-start;
   gap: 11px;
-  color: #393138;
+  color: #000000;
   font-size: 14px;
   line-height: 1.8;
 }

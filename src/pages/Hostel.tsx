@@ -1,143 +1,254 @@
+
 import { Link } from 'react-router-dom';
-import { ChevronRight, ArrowRight } from 'lucide-react';
-import { hostelData, type HostelBlock } from '@/data/hostel';
+import {
+  ChevronRight,
+  ArrowRight,
+  GraduationCap,
+  ShieldCheck,
+  UtensilsCrossed,
+  Wifi,
+  BookOpen,
+  Droplets,
+  BedDouble,
+  Heart,
+  Coffee,
+  Clock,
+  Users,
+  Building2,
+  Sparkles,
+} from 'lucide-react';
+
 import { useAdmissionModal } from '@/components/AdmissionModalContext';
 
 /* =========================================================
-   STYLES (internal CSS)
+   HOSTEL PAGE STYLES
    ========================================================= */
 
 function HostelStyles() {
   return (
     <style>{`
       .hst-page {
-        --hst-maroon-700: #5A1427;
-        --hst-maroon-900: #3A0C19;
-        --hst-maroon-900-rgb: 58, 12, 25;
-        --hst-gold: #D4AF5A;
-        --hst-gold-100: #F0D88F;
-        --hst-gold-700: #8A6A24;
-        --hst-cream: #FBF7F2;
-        --hst-line: #E8DCC8;
-        --hst-muted: #6D5A58;
-        --hst-ink: #2A1A1D;
-        --hst-serif: 'Playfair Display', Georgia, 'Times New Roman', serif;
+        --maroon: #5A1427;
+        --maroon-dark: #3A0C19;
+        --gold: #D4AF5A;
+        --gold-light: #F0D88F;
+        --cream: #FBF7F2;
+        --ink: #2A1A1D;
+        --muted: #756365;
+        --line: #E8DCC8;
+        --serif: 'Playfair Display', Georgia, serif;
 
-        background: var(--hst-cream);
-        color: var(--hst-ink);
+        background: var(--cream);
+        color: var(--ink);
+        overflow: hidden;
       }
 
       .hst-page *,
       .hst-page *::before,
-      .hst-page *::after { box-sizing: border-box; }
-
-      /* ================= SHARED ================= */
+      .hst-page *::after {
+        box-sizing: border-box;
+      }
 
       .hst-wrap {
         width: 100%;
-        max-width: 75rem;
-        margin-inline: auto;
-        padding-inline: 20px;
+        max-width: 1200px;
+        margin: auto;
+        padding-inline: 24px;
       }
 
-      .hst-section { padding-block: 56px; }
-
-      .hst-head {
-        max-width: 40rem;
-        margin: 0 auto 44px;
-        text-align: center;
+      .hst-section {
+        padding-block: 85px;
       }
+
+      /* ================= ANIMATIONS ================= */
+
+      @keyframes hst-slide-left {
+        from {
+          opacity: 0;
+          transform: translateX(-100px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+
+      @keyframes hst-slide-right {
+        from {
+          opacity: 0;
+          transform: translateX(100px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+
+      @keyframes hst-fade-up {
+        from {
+          opacity: 0;
+          transform: translateY(35px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes hst-hero-image {
+        from {
+          opacity: 0;
+          transform: scale(1.08);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+
+      .hst-fade-up {
+        animation: hst-fade-up .85s ease both;
+      }
+
+      .hst-slide-left {
+        animation: hst-slide-left 1s cubic-bezier(.2,.7,.2,1) both;
+      }
+
+      .hst-slide-right {
+        animation: hst-slide-right 1s cubic-bezier(.2,.7,.2,1) both;
+      }
+
+      .hst-delay-1 { animation-delay: .15s; }
+      .hst-delay-2 { animation-delay: .3s; }
+      .hst-delay-3 { animation-delay: .45s; }
+
+      /* ================= COMMON HEADINGS ================= */
 
       .hst-eyebrow {
-        margin: 0;
-        color: var(--hst-gold-700);
+        color: #98752E;
         font-size: 12px;
-        font-weight: 700;
+        font-weight: 800;
         letter-spacing: .22em;
         text-transform: uppercase;
       }
 
-      .hst-h2 {
-        margin: 10px 0 0;
-        color: var(--hst-maroon-700);
-        font-family: var(--hst-serif);
-        font-size: 30px;
+      .hst-heading {
+        margin-top: 12px;
+        color: var(--maroon);
+        font-family: var(--serif);
+        font-size: 38px;
         font-weight: 700;
-        line-height: 1.15;
+        line-height: 1.2;
       }
 
-      .hst-sub {
-        margin: 14px 0 0;
-        color: var(--hst-muted);
+      .hst-description {
+        max-width: 700px;
+        margin: 16px auto 0;
+        color: var(--muted);
         font-size: 15px;
-        line-height: 1.7;
+        line-height: 1.9;
       }
 
-      .hst-grid2 {
-        display: grid;
-        gap: 28px;
-        grid-template-columns: 1fr;
+      .hst-section-head {
+        margin: 0 auto 50px;
+        max-width: 750px;
+        text-align: center;
       }
+
+      /* ================= BUTTONS ================= */
 
       .hst-btn {
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        gap: 8px;
-        padding: 14px 28px;
-        border-radius: 999px;
+        gap: 10px;
+        padding: 15px 28px;
+        border-radius: 50px;
+        border: 1px solid transparent;
         font-size: 14px;
         font-weight: 700;
         text-decoration: none;
         cursor: pointer;
-        border: 1.5px solid transparent;
-        transition: transform 250ms ease, background-color 250ms ease, color 250ms ease;
+        transition: all .3s ease;
       }
 
-      .hst-btn:hover { transform: translateY(-2px); }
-      .hst-btn svg { width: 16px; height: 16px; }
+      .hst-btn:hover {
+        transform: translateY(-4px);
+      }
 
-      .hst-btn-gold { background: var(--hst-gold); color: #2B0710; }
-      .hst-btn-gold:hover { background: #fff; }
+      .hst-btn-gold {
+        background: var(--gold);
+        color: var(--maroon-dark);
+      }
 
-      .hst-btn-outline { border-color: var(--hst-gold); color: var(--hst-gold-100); background: transparent; }
-      .hst-btn-outline:hover { background: var(--hst-gold); color: #2B0710; }
+      .hst-btn-gold:hover {
+        background: #fff;
+      }
 
-      .hst-btn-maroon { background: var(--hst-maroon-700); color: #fff; }
+      .hst-btn-outline {
+        border-color: var(--gold);
+        color: #fff;
+      }
+
+      .hst-btn-outline:hover {
+        background: var(--gold);
+        color: var(--maroon-dark);
+      }
 
       /* ================= HERO ================= */
 
       .hst-hero {
         position: relative;
-        padding: 130px 0 70px;
-        background: var(--hst-maroon-900);
-        color: var(--hst-cream);
+        padding: 145px 0 75px;
+        background: var(--maroon-dark);
+        color: white;
         overflow: hidden;
       }
 
-      .hst-hero-grid {
-        display: grid;
-        gap: 40px;
-        align-items: center;
-        grid-template-columns: 1fr;
+      .hst-hero::before {
+        content: '';
+        position: absolute;
+        width: 450px;
+        height: 450px;
+        top: -200px;
+        right: -100px;
+        border: 1px solid rgba(212,175,90,.2);
+        border-radius: 50%;
+        box-shadow:
+          0 0 0 45px rgba(212,175,90,.04),
+          0 0 0 90px rgba(212,175,90,.03);
       }
 
-      .hst-hero .hst-eyebrow { color: var(--hst-gold-100); }
+      .hst-hero-grid {
+        position: relative;
+        display: grid;
+        grid-template-columns: 1.05fr .95fr;
+        gap: 55px;
+        align-items: center;
+      }
+
+      .hst-hero .hst-eyebrow {
+        color: var(--gold-light);
+      }
 
       .hst-hero-title {
-        margin: 16px 0 0;
-        font-family: var(--hst-serif);
-        font-size: 36px;
+        margin-top: 20px;
+        font-family: var(--serif);
+        font-size: clamp(38px, 5vw, 60px);
         font-weight: 700;
-        line-height: 1.1;
+        line-height: 1.12;
+      }
+
+      .hst-hero-title span {
+        color: var(--gold);
       }
 
       .hst-hero-text {
-        max-width: 32rem;
-        margin: 20px 0 0;
+        max-width: 550px;
+        margin-top: 22px;
         color: #E9D9DA;
         font-size: 16px;
-        line-height: 1.7;
+        line-height: 1.9;
       }
 
       .hst-hero-actions {
@@ -147,641 +258,979 @@ function HostelStyles() {
         margin-top: 32px;
       }
 
-      .hst-hero-media {
-        height: 280px;
-        border: 1.5px solid var(--hst-gold);
-        border-radius: 18px;
+      .hst-hero-image {
+        height: 390px;
         overflow: hidden;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: var(--hst-gold-100);
-        font-size: 13px;
-        letter-spacing: .1em;
-        text-transform: uppercase;
-        background: #4A1424;
+        border: 2px solid var(--gold);
+        border-radius: 24px;
+        animation: hst-hero-image 1.2s ease both;
+        box-shadow: 0 25px 60px rgba(0,0,0,.3);
       }
 
-      .hst-hero-media img {
+      .hst-hero-image img {
         width: 100%;
         height: 100%;
         object-fit: cover;
+        transition: transform .7s ease;
       }
 
-      .hst-crumbs {
+      .hst-hero-image:hover img {
+        transform: scale(1.06);
+      }
+
+      .hst-breadcrumb {
+        position: relative;
         display: flex;
         align-items: center;
-        gap: 8px;
-        margin-top: 36px;
-        color: rgba(251, 247, 242, .55);
-        font-size: 14px;
+        gap: 9px;
+        margin-top: 45px;
+        color: rgba(255,255,255,.65);
+        font-size: 13px;
       }
 
-      .hst-crumbs a { color: inherit; text-decoration: none; }
-      .hst-crumbs a:hover { color: var(--hst-gold-100); }
-      .hst-crumbs svg { width: 16px; height: 16px; }
-      .hst-crumbs .hst-current { color: var(--hst-gold-100); }
-
-      /* ================= AVAILABILITY ================= */
-
-      .hst-card {
-        overflow: hidden;
-        border: 1px solid var(--hst-line);
-        border-radius: 16px;
-        background: #fff;
-        box-shadow: 0 1px 2px rgba(0, 0, 0, .05);
+      .hst-breadcrumb a {
+        color: inherit;
+        text-decoration: none;
       }
 
-      .hst-card-head {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 22px 28px;
+      .hst-breadcrumb span {
+        color: var(--gold);
       }
 
-      .hst-card-head.is-boys { background: var(--hst-maroon-700); color: var(--hst-cream); }
-      .hst-card-head.is-girls { background: var(--hst-gold); color: #2B0710; }
+      /* ================= OVERVIEW ================= */
 
-      .hst-card-title {
-        margin: 0;
-        font-family: var(--hst-serif);
-        font-size: 24px;
-        font-weight: 700;
+      .hst-overview {
+        background: white;
       }
 
-      .hst-card-tag {
-        font-size: 12px;
-        font-weight: 700;
-        letter-spacing: .08em;
-        text-transform: uppercase;
-      }
-
-      .hst-card-body { padding: 28px; }
-
-      .hst-stats {
+      .hst-overview-grid {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
-        gap: 12px;
+        gap: 25px;
+      }
+
+      .hst-overview-card {
+        padding: 32px 25px;
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        background: var(--cream);
         text-align: center;
+        transition: all .35s ease;
       }
 
-      .hst-stat-num {
-        color: var(--hst-maroon-700);
-        font-family: var(--hst-serif);
-        font-size: 36px;
-        font-weight: 700;
-        line-height: 1;
+      .hst-overview-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 18px 40px rgba(58,12,25,.12);
+        border-color: var(--gold);
       }
 
-      .hst-stat-num.is-vacant { color: var(--hst-gold-700); }
-
-      .hst-stat-label {
-        margin-top: 6px;
-        color: var(--hst-muted);
-        font-size: 12px;
-        letter-spacing: .08em;
-        text-transform: uppercase;
+      .hst-overview-icon {
+        display: flex;
+        width: 65px;
+        height: 65px;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 20px;
+        border-radius: 18px;
+        background: var(--maroon);
+        color: var(--gold);
+        transition: all .3s ease;
       }
 
-      .hst-bar {
-        height: 10px;
-        margin: 26px 0 8px;
-        overflow: hidden;
-        border-radius: 99px;
-        background: #F1E6D2;
+      .hst-overview-card:hover .hst-overview-icon {
+        transform: rotate(-8deg) scale(1.1);
+        background: var(--gold);
+        color: var(--maroon);
       }
 
-      .hst-bar-fill { height: 100%; transition: width 600ms ease; }
-      .hst-bar-fill.is-boys { background: var(--hst-maroon-700); }
-      .hst-bar-fill.is-girls { background: var(--hst-gold); }
+      .hst-overview-card h3 {
+        color: var(--maroon);
+        font-family: var(--serif);
+        font-size: 21px;
+      }
 
-      .hst-bar-note { color: var(--hst-muted); font-size: 12px; }
-
-      .hst-table-wrap { overflow-x: auto; }
-
-      .hst-table {
-        width: 100%;
-        border-collapse: collapse;
+      .hst-overview-card p {
+        margin-top: 12px;
+        color: var(--muted);
         font-size: 14px;
+        line-height: 1.8;
       }
 
-      .hst-table th,
-      .hst-table td {
-        padding: 14px 18px;
-        text-align: left;
-        border-bottom: 1px solid #EFE4D2;
-        white-space: nowrap;
+      /* ================= BOYS AND GIRLS HOSTEL ================= */
+
+      .hst-hostels {
+        background: var(--cream);
       }
 
-      .hst-table th {
-        background: #F6EEDF;
-        color: var(--hst-maroon-700);
-        font-size: 12px;
-        letter-spacing: .1em;
+      .hst-hostel-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 35px;
+      }
+
+      .hst-hostel-card {
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: 22px;
+        background: white;
+        box-shadow: 0 8px 25px rgba(58,12,25,.06);
+        transition:
+          transform .4s ease,
+          box-shadow .4s ease,
+          border-color .4s ease;
+      }
+
+      .hst-hostel-card:hover {
+        transform: translateY(-12px);
+        border-color: var(--gold);
+        box-shadow: 0 25px 50px rgba(58,12,25,.15);
+      }
+
+      .hst-hostel-image {
+        height: 270px;
+        overflow: hidden;
+      }
+
+      .hst-hostel-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform .7s ease;
+      }
+
+      .hst-hostel-card:hover .hst-hostel-image img {
+        transform: scale(1.08);
+      }
+
+      .hst-hostel-content {
+        padding: 30px;
+      }
+
+      .hst-hostel-label {
+        color: #98752E;
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: .18em;
         text-transform: uppercase;
       }
 
-      .hst-status {
-        display: inline-block;
-        padding: 4px 12px;
-        border-radius: 999px;
-        font-size: 12px;
+      .hst-hostel-title {
+        margin-top: 10px;
+        color: var(--maroon);
+        font-family: var(--serif);
+        font-size: 29px;
         font-weight: 700;
       }
 
-      .hst-status.is-open { background: #E6F1E4; color: #2D5A27; }
-      .hst-status.is-full { background: #F6E1E1; color: #8A1F1F; }
-
-      /* ================= FEATURES ================= */
-
-      .hst-features { background: #fff; }
-
-      .hst-feature-card {
-        padding: 32px;
-        border: 1px solid var(--hst-line);
-        border-radius: 16px;
-        background: var(--hst-cream);
+      .hst-hostel-description {
+        margin-top: 15px;
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.9;
       }
 
-      .hst-feature-title {
-        margin: 0;
-        color: var(--hst-maroon-700);
-        font-family: var(--hst-serif);
-        font-size: 24px;
-        font-weight: 700;
-      }
-
-      .hst-list {
+      .hst-facility-list {
         display: grid;
-        gap: 12px;
-        margin: 18px 0 0;
-        padding: 0;
-        list-style: none;
-        font-size: 15px;
-        line-height: 1.5;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+        margin-top: 25px;
+        padding-top: 23px;
+        border-top: 1px solid var(--line);
       }
 
-      .hst-list li { position: relative; padding-left: 22px; }
-
-      .hst-list li::before {
-        content: '';
-        position: absolute;
-        top: 8px;
-        left: 0;
-        width: 8px;
-        height: 8px;
-        background: var(--hst-gold);
-        transform: rotate(45deg);
+      .hst-facility-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        color: var(--ink);
+        font-size: 13px;
+        line-height: 1.6;
       }
 
-      /* ================= MESS ================= */
+      .hst-facility-item svg {
+        flex-shrink: 0;
+        color: #98752E;
+        margin-top: 2px;
+      }
 
-      .hst-mess-meta {
-        margin: 14px 0 0;
-        color: var(--hst-muted);
+      /* ================= MESS AND DINING ================= */
+
+      .hst-dining {
+        background: white;
+      }
+
+      .hst-dining-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 50px;
+        align-items: center;
+      }
+
+      .hst-dining-image {
+        height: 430px;
+        overflow: hidden;
+        border-radius: 22px;
+        box-shadow: 0 15px 40px rgba(58,12,25,.12);
+      }
+
+      .hst-dining-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform .6s ease;
+      }
+
+      .hst-dining-image:hover img {
+        transform: scale(1.06);
+      }
+
+      .hst-dining-content h2 {
+        margin-top: 12px;
+        color: var(--maroon);
+        font-family: var(--serif);
+        font-size: 38px;
+        line-height: 1.2;
+      }
+
+      .hst-dining-content > p {
+        margin-top: 18px;
+        color: var(--muted);
         font-size: 15px;
+        line-height: 1.9;
+      }
+
+      .hst-dining-points {
+        display: grid;
+        gap: 19px;
+        margin-top: 28px;
+      }
+
+      .hst-dining-point {
+        display: flex;
+        gap: 15px;
+        align-items: flex-start;
+        padding: 15px;
+        border-radius: 13px;
+        background: var(--cream);
+        transition: all .3s ease;
+      }
+
+      .hst-dining-point:hover {
+        transform: translateX(8px);
+        background: #F5EBD8;
+      }
+
+      .hst-dining-point-icon {
+        display: flex;
+        width: 43px;
+        height: 43px;
+        flex-shrink: 0;
+        align-items: center;
+        justify-content: center;
+        border-radius: 12px;
+        background: var(--maroon);
+        color: var(--gold);
+      }
+
+      .hst-dining-point h4 {
+        color: var(--maroon);
+        font-size: 15px;
+        font-weight: 700;
+      }
+
+      .hst-dining-point p {
+        margin-top: 5px;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.7;
+      }
+
+      /* ================= COMMON FACILITIES ================= */
+
+      .hst-facilities {
+        background: var(--cream);
+      }
+
+      .hst-facility-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 22px;
+      }
+
+      .hst-facility-card {
+        padding: 30px 25px;
+        border: 1px solid var(--line);
+        border-radius: 17px;
+        background: white;
+        transition: all .35s ease;
+      }
+
+      .hst-facility-card:hover {
+        transform: translateY(-9px);
+        border-color: var(--gold);
+        box-shadow: 0 18px 35px rgba(58,12,25,.11);
+      }
+
+      .hst-facility-card .hst-icon {
+        display: flex;
+        width: 55px;
+        height: 55px;
+        align-items: center;
+        justify-content: center;
+        border-radius: 15px;
+        background: var(--maroon);
+        color: var(--gold);
+        transition: all .35s ease;
+      }
+
+      .hst-facility-card:hover .hst-icon {
+        transform: rotate(8deg) scale(1.1);
+        background: var(--gold);
+        color: var(--maroon);
+      }
+
+      .hst-facility-card h3 {
+        margin-top: 20px;
+        color: var(--maroon);
+        font-family: var(--serif);
+        font-size: 20px;
+      }
+
+      .hst-facility-card p {
+        margin-top: 10px;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.8;
       }
 
       /* ================= CTA ================= */
 
       .hst-cta {
-        padding: 56px 0;
-        background: var(--hst-gold);
-        color: #2B0710;
+        padding: 75px 20px;
+        background: var(--gold);
         text-align: center;
       }
 
-      .hst-cta .hst-h2 { color: #2B0710; }
-      .hst-cta p { margin: 12px 0 24px; }
-      .hst-cta .hst-btn-maroon { background: var(--hst-maroon-900); }
+      .hst-cta h2 {
+        color: var(--maroon-dark);
+        font-family: var(--serif);
+        font-size: 38px;
+        font-weight: 700;
+      }
 
+      .hst-cta p {
+        max-width: 650px;
+        margin: 16px auto 28px;
+        color: #56321C;
+        font-size: 15px;
+        line-height: 1.8;
+      }
 
+      .hst-cta .hst-btn {
+        background: var(--maroon-dark);
+        color: white;
+      }
 
-/* ================= HOSTEL WARDENS ================= */
-
-.hst-wardens {
-  background: #fff;
-}
-
-.hst-warden-card {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 35px 25px;
-  border: 1px solid var(--hst-line);
-  border-radius: 16px;
-  background: var(--hst-cream);
-  text-align: center;
-  box-shadow: 0 5px 20px rgba(58, 12, 25, .06);
-  transition: transform .3s ease, box-shadow .3s ease;
-}
-
-.hst-warden-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 14px 30px rgba(58, 12, 25, .12);
-}
-
-.hst-warden-icon {
-  display: flex;
-  width: 75px;
-  height: 75px;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 18px;
-  border-radius: 50%;
-  color: var(--hst-gold);
-  background: var(--hst-maroon-900);
-  font-size: 30px;
-}
-
-.hst-warden-card.is-girls .hst-warden-icon {
-  color: var(--hst-maroon-900);
-  background: var(--hst-gold);
-}
-
-.hst-warden-title {
-  margin: 0 0 8px;
-  color: var(--hst-maroon-700);
-  font-family: var(--hst-serif);
-  font-size: 23px;
-}
-
-.hst-warden-role {
-  margin: 0 0 22px;
-  color: var(--hst-gold-700);
-  font-size: 13px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: .1em;
-}
-
-.hst-warden-name {
-  margin: 0 0 20px;
-  color: var(--hst-ink);
-  font-size: 18px;
-  font-weight: 700;
-}
-
-.hst-warden-contact {
-  display: grid;
-  width: 100%;
-  gap: 13px;
-  padding-top: 18px;
-  border-top: 1px solid var(--hst-line);
-}
-
-.hst-warden-contact a {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  color: var(--hst-maroon-700);
-  font-size: 14px;
-  text-decoration: none;
-  overflow-wrap: anywhere;
-  transition: color .2s ease;
-}
-
-.hst-warden-contact a:hover {
-  color: var(--hst-gold-700);
-}
-
-.hst-warden-contact span {
-  font-weight: 700;
-}
-
-
+      .hst-cta .hst-btn:hover {
+        background: white;
+        color: var(--maroon-dark);
+      }
 
       /* ================= RESPONSIVE ================= */
 
-      @media (min-width: 640px) {
-        .hst-wrap { padding-inline: 32px; }
-        .hst-hero-title { font-size: 48px; }
-        .hst-h2 { font-size: 36px; }
+      @media (max-width: 900px) {
+        .hst-hero-grid,
+        .hst-dining-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .hst-hero-image {
+          height: 350px;
+        }
+
+        .hst-hostel-grid {
+          gap: 20px;
+        }
+
+        .hst-overview-grid,
+        .hst-facility-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
       }
 
-      @media (min-width: 768px) {
-        .hst-grid2 { grid-template-columns: repeat(2, 1fr); }
-        .hst-hero-grid { grid-template-columns: repeat(2, 1fr); }
-        .hst-hero-media { height: 340px; }
-        .hst-section { padding-block: 80px; }
-      }
+      @media (max-width: 600px) {
+        .hst-section {
+          padding-block: 60px;
+        }
 
-      @media (min-width: 1024px) {
-        .hst-wrap { padding-inline: 48px; }
-        .hst-hero-title { font-size: 56px; }
+        .hst-wrap {
+          padding-inline: 19px;
+        }
+
+        .hst-hero {
+          padding-top: 115px;
+        }
+
+        .hst-hero-grid {
+          gap: 35px;
+        }
+
+        .hst-hero-title {
+          font-size: 39px;
+        }
+
+        .hst-hero-image {
+          height: 260px;
+        }
+
+        .hst-heading {
+          font-size: 30px;
+        }
+
+        .hst-overview-grid,
+        .hst-hostel-grid,
+        .hst-facility-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .hst-hostel-image {
+          height: 230px;
+        }
+
+        .hst-hostel-content {
+          padding: 23px;
+        }
+
+        .hst-hostel-title {
+          font-size: 25px;
+        }
+
+        .hst-facility-list {
+          grid-template-columns: 1fr;
+        }
+
+        .hst-dining-image {
+          height: 270px;
+        }
+
+        .hst-dining-content h2 {
+          font-size: 31px;
+        }
+
+        .hst-cta h2 {
+          font-size: 30px;
+        }
+
+        .hst-btn {
+          padding: 13px 20px;
+        }
       }
 
       @media (prefers-reduced-motion: reduce) {
-        .hst-btn,
-        .hst-bar-fill { transition: none; }
-        .hst-btn:hover { transform: none; }
+        .hst-page *,
+        .hst-page *::before,
+        .hst-page *::after {
+          animation: none !important;
+          transition: none !important;
+          scroll-behavior: auto !important;
+        }
       }
     `}</style>
   );
 }
 
 /* =========================================================
-   HELPERS
+   REUSABLE FACILITY CARD
    ========================================================= */
 
-function HostelCard({ block, tone }: { block: HostelBlock; tone: 'boys' | 'girls' }) {
-  const vacantRooms = Math.max(block.totalRooms - block.occupiedRooms, 0);
-  const percent =
-    block.totalRooms > 0
-      ? Math.min(Math.round((block.occupiedRooms / block.totalRooms) * 100), 100)
-      : 0;
-
+function FacilityCard({
+  icon: Icon,
+  title,
+  description,
+}: {
+  icon: React.ElementType;
+  title: string;
+  description: string;
+}) {
   return (
-    <div className="hst-card">
-      <div className={`hst-card-head is-${tone}`}>
-        <h3 className="hst-card-title">{block.name}</h3>
-        <span className="hst-card-tag">{vacantRooms > 0 ? 'Available' : 'Full'}</span>
+    <article className="hst-facility-card">
+      <div className="hst-icon">
+        <Icon size={25} />
       </div>
 
-      <div className="hst-card-body">
-        <div className="hst-stats">
-          <div>
-            <div className="hst-stat-num">{block.totalRooms}</div>
-            <div className="hst-stat-label">Total rooms</div>
-          </div>
-          <div>
-            <div className="hst-stat-num">{block.occupiedRooms}</div>
-            <div className="hst-stat-label">Occupied</div>
-          </div>
-          <div>
-            <div className="hst-stat-num is-vacant">{vacantRooms}</div>
-            <div className="hst-stat-label">Vacant</div>
-          </div>
-        </div>
-
-        <div className="hst-bar" role="img" aria-label={`${percent}% occupied`}>
-          <div className={`hst-bar-fill is-${tone}`} style={{ width: `${percent}%` }} />
-        </div>
-        <div className="hst-bar-note">{percent}% occupied</div>
-      </div>
-
-      <div className="hst-table-wrap">
-        <table className="hst-table">
-          <thead>
-            <tr>
-              <th>Room type</th>
-              <th>Beds vacant</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {block.roomTypes.map((room) => {
-              const open = room.vacantBeds > 0;
-              return (
-                <tr key={room.type}>
-                  <td>{room.type}</td>
-                  <td>
-                    {room.vacantBeds} / {room.totalBeds}
-                  </td>
-                  <td>
-                    <span className={`hst-status ${open ? 'is-open' : 'is-full'}`}>
-                      {open ? 'Open' : 'Full'}
-                    </span>
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </div>
-    </div>
+      <h3>{title}</h3>
+      <p>{description}</p>
+    </article>
   );
 }
 
 /* =========================================================
-   PAGE
+   HOSTEL PAGE
    ========================================================= */
 
 export default function Hostel() {
   const { openModal } = useAdmissionModal();
-  const { boys, girls, mess, contact, updatedOn, heroImage } = hostelData;
 
   return (
-    <div className="hst-page">
+    <main className="hst-page">
       <HostelStyles />
 
-      {/* Hero */}
+      {/* HERO SECTION */}
+
       <section data-header-theme="dark" className="hst-hero">
         <div className="hst-wrap">
           <div className="hst-hero-grid">
-            <div>
-              <p className="hst-eyebrow">Residential Life · 2026–27</p>
-              <h1 className="hst-hero-title">A safe home away from home</h1>
-              <p className="hst-hero-text">
-                Separate, supervised hostels for boys and girls with a college mess, study
-                spaces and round-the-clock support.
+
+            <div className="hst-fade-up">
+              <p className="hst-eyebrow">
+                Residential Life · 2026–27
               </p>
+
+              <h1 className="hst-hero-title">
+                A Place to Stay,
+                <br />
+                <span>A Place to Grow.</span>
+              </h1>
+
+              <p className="hst-hero-text">
+                Experience a comfortable and supportive residential
+                environment at St. Lourdes Engineering College.
+                Our separate boys and girls hostels provide students
+                with a welcoming atmosphere, essential facilities
+                and a peaceful place to live and learn.
+              </p>
+
               <div className="hst-hero-actions">
-                <a href="#availability" className="hst-btn hst-btn-gold">
-                  Check room availability
+                <a href="#hostels" className="hst-btn hst-btn-gold">
+                  Explore Hostels
+                  <ArrowRight size={17} />
                 </a>
-                <a href="#mess" className="hst-btn hst-btn-outline">
-                  View mess menu
+
+                <a href="#dining" className="hst-btn hst-btn-outline">
+                  Mess & Dining
                 </a>
               </div>
             </div>
 
-            <div className="hst-hero-media">
-              {heroImage ? <img src={heroImage} alt="Hostel campus" /> : 'Hostel photo'}
+            <div className="hst-hero-image">
+              <img
+                src="https://images.unsplash.com/photo-1555854877-bab0e564b8d5?auto=format&fit=crop&w=1200&q=85"
+                alt="Comfortable student accommodation"
+              />
             </div>
+
           </div>
 
-          <nav className="hst-crumbs" aria-label="Breadcrumb">
+          <nav className="hst-breadcrumb" aria-label="Breadcrumb">
             <Link to="/">Home</Link>
-            <ChevronRight aria-hidden="true" />
-            <span className="hst-current">Hostel</span>
+            <ChevronRight size={15} />
+            <span>Hostel</span>
           </nav>
         </div>
       </section>
 
-      {/* Availability */}
-      <section id="availability" className="hst-section">
+      {/* HOSTEL OVERVIEW */}
+
+      <section className="hst-section hst-overview">
         <div className="hst-wrap">
-          <div className="hst-head">
-            <p className="hst-eyebrow">Live Availability</p>
-            <h2 className="hst-h2">Rooms at a glance</h2>
-            <p className="hst-sub">Updated by the hostel office. Last updated: {updatedOn}</p>
-          </div>
 
-          <div className="hst-grid2">
-            <HostelCard block={boys} tone="boys" />
-            <HostelCard block={girls} tone="girls" />
-          </div>
-        </div>
-      </section>
+          <div className="hst-section-head hst-fade-up">
+            <p className="hst-eyebrow">Welcome to Campus Living</p>
 
-      {/* Features */}
-      <section className="hst-section hst-features">
-        <div className="hst-wrap">
-          <div className="hst-head">
-            <p className="hst-eyebrow">Facilities</p>
-            <h2 className="hst-h2">Boys and girls hostel features</h2>
-          </div>
+            <h2 className="hst-heading">
+              Comfortable Living, Better Learning
+            </h2>
 
-          <div className="hst-grid2">
-            {[boys, girls].map((block) => (
-              <div key={block.name} className="hst-feature-card">
-                <h3 className="hst-feature-title">{block.name}</h3>
-                <ul className="hst-list">
-                  {block.features.map((feature) => (
-                    <li key={feature}>{feature}</li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Mess */}
-      <section id="mess" className="hst-section">
-        <div className="hst-wrap">
-          <div className="hst-head">
-            <p className="hst-eyebrow">Dining</p>
-            <h2 className="hst-h2">Mess details and weekly menu</h2>
-            <p className="hst-mess-meta">
-              Timings: {mess.timings} · Monthly fee: {mess.monthlyFee}
+            <p className="hst-description">
+              Our hostel facilities are designed to provide students
+              with a safe, comfortable and disciplined residential
+              environment. We focus on creating a home-like atmosphere
+              that supports academic success, personal development
+              and meaningful friendships.
             </p>
           </div>
 
-          <div className="hst-card">
-            <div className="hst-table-wrap">
-              <table className="hst-table">
-                <thead>
-                  <tr>
-                    <th>Day</th>
-                    <th>Breakfast</th>
-                    <th>Lunch</th>
-                    <th>Dinner</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {mess.menu.map((row) => (
-                    <tr key={row.day}>
-                      <td>{row.day}</td>
-                      <td>{row.breakfast}</td>
-                      <td>{row.lunch}</td>
-                      <td>{row.dinner}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+          <div className="hst-overview-grid">
+
+            <article className="hst-overview-card hst-fade-up hst-delay-1">
+              <div className="hst-overview-icon">
+                <ShieldCheck size={30} />
+              </div>
+              <h3>Safe Environment</h3>
+              <p>
+                A supervised residential atmosphere with appropriate
+                security and student care arrangements.
+              </p>
+            </article>
+
+            <article className="hst-overview-card hst-fade-up hst-delay-2">
+              <div className="hst-overview-icon">
+                <Heart size={30} />
+              </div>
+              <h3>Home-like Comfort</h3>
+              <p>
+                A welcoming living environment that helps students
+                feel comfortable and connected.
+              </p>
+            </article>
+
+            <article className="hst-overview-card hst-fade-up hst-delay-3">
+              <div className="hst-overview-icon">
+                <GraduationCap size={30} />
+              </div>
+              <h3>Academic Support</h3>
+              <p>
+                A peaceful atmosphere that encourages concentration,
+                learning and personal growth.
+              </p>
+            </article>
+
           </div>
         </div>
       </section>
 
+      {/* BOYS AND GIRLS HOSTEL */}
 
-{/* HOSTEL WARDENS */}
-<section className="hst-section hst-wardens">
-  <div className="hst-wrap">
-
-    <div className="hst-head">
-      <p className="hst-eyebrow">Hostel Administration</p>
-
-      <h2 className="hst-h2">
-        Meet Our <span>Hostel Wardens</span>
-      </h2>
-
-      <p className="hst-sub">
-        Our hostel wardens provide guidance, supervision
-        and support to students throughout their stay.
-        Contact them for hostel-related assistance.
-      </p>
-    </div>
-
-    <div className="hst-grid2">
-
-      {/* Boys Warden */}
-      <article className="hst-warden-card">
-
-        <div className="hst-warden-icon">
-          <span aria-hidden="true">♂</span>
-        </div>
-
-        <h3 className="hst-warden-title">
-          Boys Hostel Warden
-        </h3>
-
-        <p className="hst-warden-role">
-          Boys Hostel Administration
-        </p>
-
-        <h4 className="hst-warden-name">
-          Boys Warden Name
-        </h4>
-
-        <div className="hst-warden-contact">
-          <a href="tel:+910000000000">
-            <span>☎</span>
-            +91 00000 00000
-          </a>
-
-          <a href="mailto:boyswarden@example.com">
-            <span>✉</span>
-            boyswarden@example.com
-          </a>
-        </div>
-
-      </article>
-
-      {/* Girls Warden */}
-      <article className="hst-warden-card is-girls">
-
-        <div className="hst-warden-icon">
-          <span aria-hidden="true">♀</span>
-        </div>
-
-        <h3 className="hst-warden-title">
-          Girls Hostel Warden
-        </h3>
-
-        <p className="hst-warden-role">
-          Girls Hostel Administration
-        </p>
-
-        <h4 className="hst-warden-name">
-          Girls Warden Name
-        </h4>
-
-        <div className="hst-warden-contact">
-          <a href="tel:+910000000001">
-            <span>☎</span>
-            +91 00000 00001
-          </a>
-
-          <a href="mailto:girlswarden@example.com">
-            <span>✉</span>
-            girlswarden@example.com
-          </a>
-        </div>
-
-      </article>
-
-    </div>
-  </div>
-</section>
-
-
-      {/* CTA */}
-      <section className="hst-cta">
+      <section id="hostels" className="hst-section hst-hostels">
         <div className="hst-wrap">
-          <h2 className="hst-h2">Reserve your hostel room</h2>
-          <p>
-            Warden contact: {contact.phone} · {contact.email}
-          </p>
-          <button type="button" onClick={openModal} className="hst-btn hst-btn-maroon">
-            Apply for hostel
-            <ArrowRight aria-hidden="true" />
-          </button>
+
+          <div className="hst-section-head hst-fade-up">
+            <p className="hst-eyebrow">Our Residential Facilities</p>
+
+            <h2 className="hst-heading">
+              Separate Hostels for Boys & Girls
+            </h2>
+
+            <p className="hst-description">
+              We provide separate residential facilities for boys
+              and girls, with essential amenities and a comfortable
+              atmosphere designed to support student well-being.
+            </p>
+          </div>
+
+          <div className="hst-hostel-grid">
+
+            {/* BOYS HOSTEL */}
+
+            <article className="hst-hostel-card hst-slide-left">
+              <div className="hst-hostel-image">
+                <img
+                  src="https://images.unsplash.com/photo-1555854877-bab0e564b8d5?auto=format&fit=crop&w=1000&q=85"
+                  alt="Boys hostel accommodation"
+                  loading="lazy"
+                />
+              </div>
+
+              <div className="hst-hostel-content">
+                <p className="hst-hostel-label">
+                  Residential Facility
+                </p>
+
+                <h3 className="hst-hostel-title">
+                  Boys Hostel
+                </h3>
+
+                <p className="hst-hostel-description">
+                  The boys hostel provides a comfortable and
+                  student-friendly residential environment.
+                  It is designed to support students in balancing
+                  their academic responsibilities and daily life
+                  through convenient accommodation and essential
+                  residential facilities.
+                </p>
+
+                <div className="hst-facility-list">
+                  <div className="hst-facility-item">
+                    <BedDouble size={18} />
+                    Comfortable accommodation
+                  </div>
+
+                  <div className="hst-facility-item">
+                    <ShieldCheck size={18} />
+                    Supervised environment
+                  </div>
+
+                  <div className="hst-facility-item">
+                    <BookOpen size={18} />
+                    Study-friendly atmosphere
+                  </div>
+
+                  <div className="hst-facility-item">
+                    <UtensilsCrossed size={18} />
+                    Mess and dining facilities
+                  </div>
+
+                  <div className="hst-facility-item">
+                    <Droplets size={18} />
+                    Drinking water facilities
+                  </div>
+
+                  <div className="hst-facility-item">
+                    <Wifi size={18} />
+                    Connectivity facilities
+                  </div>
+                </div>
+              </div>
+            </article>
+
+            {/* GIRLS HOSTEL */}
+
+            <article className="hst-hostel-card hst-slide-right hst-delay-1">
+              <div className="hst-hostel-image">
+                <img
+                  src="https://images.unsplash.com/photo-1611892440504-42a792e24d32?auto=format&fit=crop&w=1000&q=85"
+                  alt="Girls hostel accommodation"
+                  loading="lazy"
+                />
+              </div>
+
+              <div className="hst-hostel-content">
+                <p className="hst-hostel-label">
+                  Residential Facility
+                </p>
+
+                <h3 className="hst-hostel-title">
+                  Girls Hostel
+                </h3>
+
+                <p className="hst-hostel-description">
+                  The girls hostel offers a comfortable and
+                  supportive residential atmosphere where students
+                  can focus on their education and personal growth.
+                  Dedicated residential arrangements and appropriate
+                  supervision help create a secure and welcoming
+                  living environment.
+                </p>
+
+                <div className="hst-facility-list">
+                  <div className="hst-facility-item">
+                    <BedDouble size={18} />
+                    Comfortable accommodation
+                  </div>
+
+                  <div className="hst-facility-item">
+                    <ShieldCheck size={18} />
+                    Security and supervision
+                  </div>
+
+                  <div className="hst-facility-item">
+                    <BookOpen size={18} />
+                    Peaceful study environment
+                  </div>
+
+                  <div className="hst-facility-item">
+                    <UtensilsCrossed size={18} />
+                    Mess and dining facilities
+                  </div>
+
+                  <div className="hst-facility-item">
+                    <Droplets size={18} />
+                    Drinking water facilities
+                  </div>
+
+                  <div className="hst-facility-item">
+                    <Wifi size={18} />
+                    Connectivity facilities
+                  </div>
+                </div>
+              </div>
+            </article>
+
+          </div>
         </div>
       </section>
-    </div>
+
+      {/* MESS AND DINING */}
+
+      <section id="dining" className="hst-section hst-dining">
+        <div className="hst-wrap">
+
+          <div className="hst-dining-grid">
+
+            <div className="hst-dining-image hst-slide-left">
+              <img
+                src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=1200&q=85"
+                alt="Freshly prepared food and dining"
+                loading="lazy"
+              />
+            </div>
+
+            <div className="hst-dining-content hst-fade-up">
+              <p className="hst-eyebrow">Healthy Residential Living</p>
+
+              <h2>
+                Mess & Dining
+                <br />
+                <span>Facilities</span>
+              </h2>
+
+              <p>
+                Our hostel dining facilities aim to provide students
+                with a comfortable and hygienic place to enjoy their
+                daily meals. Food arrangements are designed with
+                attention to cleanliness, quality and the everyday
+                nutritional needs of students.
+              </p>
+
+              <p>
+                A well-maintained dining environment encourages
+                healthy eating habits and provides students with
+                an opportunity to enjoy their meals together.
+              </p>
+
+              <div className="hst-dining-points">
+
+                <div className="hst-dining-point">
+                  <div className="hst-dining-point-icon">
+                    <UtensilsCrossed size={21} />
+                  </div>
+                  <div>
+                    <h4>Nutritious Food</h4>
+                    <p>
+                      Food arrangements focused on balanced and
+                      satisfying everyday meals.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="hst-dining-point">
+                  <div className="hst-dining-point-icon">
+                    <Sparkles size={21} />
+                  </div>
+                  <div>
+                    <h4>Clean Dining Environment</h4>
+                    <p>
+                      Emphasis on cleanliness and proper dining
+                      area maintenance.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="hst-dining-point">
+                  <div className="hst-dining-point-icon">
+                    <Coffee size={21} />
+                  </div>
+                  <div>
+                    <h4>Daily Meal Arrangements</h4>
+                    <p>
+                      Dining arrangements to support students
+                      throughout their residential routine.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="hst-dining-point">
+                  <div className="hst-dining-point-icon">
+                    <Users size={21} />
+                  </div>
+                  <div>
+                    <h4>Comfortable Dining Space</h4>
+                    <p>
+                      A welcoming place for students to enjoy
+                      their meals together.
+                    </p>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* COMMON FACILITIES */}
+
+      <section className="hst-section hst-facilities">
+        <div className="hst-wrap">
+
+          <div className="hst-section-head hst-fade-up">
+            <p className="hst-eyebrow">More Than Accommodation</p>
+
+            <h2 className="hst-heading">
+              Hostel Facilities & Amenities
+            </h2>
+
+            <p className="hst-description">
+              Essential amenities and supportive facilities
+              contribute to a convenient and comfortable
+              residential experience for students.
+            </p>
+          </div>
+
+          <div className="hst-facility-grid">
+
+            <FacilityCard
+              icon={ShieldCheck}
+              title="Safety & Security"
+              description="A supervised residential environment with appropriate safety and security arrangements."
+            />
+
+            <FacilityCard
+              icon={Wifi}
+              title="Connectivity"
+              description="Connectivity facilities to support students' academic and communication needs."
+            />
+
+            <FacilityCard
+              icon={BookOpen}
+              title="Study Environment"
+              description="A peaceful atmosphere that encourages academic focus and independent learning."
+            />
+
+            <FacilityCard
+              icon={Droplets}
+              title="Drinking Water"
+              description="Drinking water arrangements to support students' everyday needs."
+            />
+
+            <FacilityCard
+              icon={UtensilsCrossed}
+              title="Dining Facilities"
+              description="Convenient dining arrangements with an emphasis on hygiene and food quality."
+            />
+
+            <FacilityCard
+              icon={Heart}
+              title="Student Well-being"
+              description="A supportive residential atmosphere that encourages comfort, care and community."
+            />
+
+          </div>
+        </div>
+      </section>
+
+      {/* CALL TO ACTION */}
+
+      <section className="hst-cta">
+        <div className="hst-wrap hst-fade-up">
+
+          <p className="hst-eyebrow">
+            Begin Your Campus Journey
+          </p>
+
+          <h2>
+            Make Our Hostel Your Second Home
+          </h2>
+
+          <p>
+            Enjoy a comfortable residential experience while
+            focusing on your education, building friendships
+            and creating memorable college experiences.
+          </p>
+
+          <button
+            type="button"
+            onClick={openModal}
+            className="hst-btn"
+          >
+            Apply for Admission
+            <ArrowRight size={18} />
+          </button>
+
+        </div>
+      </section>
+
+    </main>
   );
 }

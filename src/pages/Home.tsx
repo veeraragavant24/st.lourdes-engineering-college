@@ -347,11 +347,11 @@ export default function Home() {
           color: #d8ad45;
         }
 
-        .home-academics-heading p {
-          color: #6b6263;
-          font-size: 15px;
-          line-height: 1.9;
-        }
+      .home-academics-heading p {
+  color: #000000;
+  font-size: 15px;
+  line-height: 1.9;
+}
 
         /* =========================================
            ACADEMIC CARD GRID

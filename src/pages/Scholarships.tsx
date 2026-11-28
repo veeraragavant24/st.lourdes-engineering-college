@@ -1,5 +1,5 @@
-
-import React from "react";
+import React, { useEffect, useRef } from "react";
+import type { CSSProperties } from "react";
 import {
   Home,
   ChevronRight,
@@ -11,15 +11,48 @@ import {
   Award,
   Info,
   ArrowRight,
-  Mail,
-  Phone,
-  BookOpen,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 
+/* sets the stagger delay for a reveal element */
+const delay = (ms: number) => ({ "--reveal-delay": `${ms}ms` }) as CSSProperties;
+
 const Scholarships: React.FC = () => {
+  const pageRef = useRef<HTMLDivElement>(null);
+
+  // Scroll reveal: add "is-visible" when an element enters the screen and
+  // remove it when it leaves, so the animation replays on the next scroll.
+  useEffect(() => {
+    const root = pageRef.current;
+    if (!root) return;
+
+    const elements = root.querySelectorAll<HTMLElement>("[data-reveal]");
+
+    if (!("IntersectionObserver" in window)) {
+      elements.forEach((el) => el.classList.add("is-visible"));
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-visible");
+          } else {
+            entry.target.classList.remove("is-visible");
+          }
+        });
+      },
+      { threshold: 0.15, rootMargin: "0px 0px -40px 0px" }
+    );
+
+    elements.forEach((el) => observer.observe(el));
+
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <div className="scholarships-page">
+    <div className="scholarships-page" ref={pageRef}>
 
       {/* ================= HERO SECTION ================= */}
 
@@ -29,15 +62,15 @@ const Scholarships: React.FC = () => {
         <div className="scholarship-hero-inner">
 
           <div className="scholarship-breadcrumb">
-          <Link to="/">
-  <Home size={14} />
-  <span>Home</span>
-</Link>
+            <Link to="/">
+              <Home size={14} />
+              <span>Home</span>
+            </Link>
 
-<ChevronRight size={14} />
+            <ChevronRight size={14} />
 
-<Link to="/admission">Admission</Link>
-<ChevronRight size={14} />
+            <Link to="/admission">Admission</Link>
+            <ChevronRight size={14} />
 
             <span className="breadcrumb-active">Scholarships</span>
           </div>
@@ -59,7 +92,6 @@ const Scholarships: React.FC = () => {
               </p>
             </div>
 
-           {/* PASTE HERE */}
             <div className="ripple-medal" aria-hidden="true">
               <span className="ripple-ring" />
               <span className="ripple-ring" style={{ animationDelay: "1s" }} />
@@ -77,195 +109,215 @@ const Scholarships: React.FC = () => {
 
       <main className="scholarship-main">
 
-        {/* GOVERNMENT SCHOLARSHIPS */}
+        {/* GOVERNMENT SCHOLARSHIPS: slides in from the left */}
 
-        <section className="scholarship-card government-card">
+        <div className="scholarship-reveal-box government-wrap" data-reveal="left">
+          <section className="scholarship-card">
 
-          <div className="scholarship-card-heading">
+            <div className="scholarship-card-heading">
 
-            <div className="scholarship-heading-icon">
-              <Landmark size={39} strokeWidth={1.8} />
-            </div>
-
-            <h2>Government Scholarships</h2>
-
-          </div>
-
-          <div className="scholarship-list">
-
-            <div className="scholarship-list-item">
-
-              <div className="scholarship-item-icon">
-                <Users size={30} strokeWidth={1.7} />
+              <div className="scholarship-heading-icon">
+                <Landmark size={39} strokeWidth={1.8} />
               </div>
 
-              <div className="scholarship-item-divider"></div>
-
-              <div className="scholarship-item-content">
-                <h3>Educational Scholarship</h3>
-
-                <p>
-                  Adi Dravida, Tribal, Most Backward Denotified Communities,
-                  Backward Communities Welfare Scholarship
-                </p>
-              </div>
+              <h2>Government Scholarships</h2>
 
             </div>
 
-            <div className="scholarship-list-item">
+            <div className="scholarship-list">
 
-              <div className="scholarship-item-icon">
-                <GraduationCap size={34} strokeWidth={1.7} />
+              <div data-reveal="up" style={delay(150)}>
+                <div className="scholarship-list-item">
+
+                  <div className="scholarship-item-icon">
+                    <Users size={30} strokeWidth={1.7} />
+                  </div>
+
+                  <div className="scholarship-item-divider"></div>
+
+                  <div className="scholarship-item-content">
+                    <h3>Educational Scholarship</h3>
+
+                    <p>
+                      Adi Dravida, Tribal, Most Backward Denotified Communities,
+                      Backward Communities Welfare Scholarship
+                    </p>
+                  </div>
+
+                </div>
               </div>
 
-              <div className="scholarship-item-divider"></div>
+              <div data-reveal="up" style={delay(250)}>
+                <div className="scholarship-list-item">
 
-              <div className="scholarship-item-content">
-                <h3>
-                  First Graduate Education Scholarship for Professional Courses
-                </h3>
+                  <div className="scholarship-item-icon">
+                    <GraduationCap size={34} strokeWidth={1.7} />
+                  </div>
 
-                <p>Engineering</p>
+                  <div className="scholarship-item-divider"></div>
+
+                  <div className="scholarship-item-content">
+                    <h3>
+                      First Graduate Education Scholarship for Professional Courses
+                    </h3>
+
+                    <p>Engineering</p>
+                  </div>
+
+                </div>
+              </div>
+
+              <div data-reveal="up" style={delay(350)}>
+                <div className="scholarship-information">
+
+                  <div className="scholarship-item-icon">
+                    <Info size={29} />
+                  </div>
+
+                  <div className="scholarship-item-divider"></div>
+
+                  <p>
+                    For eligibility, application process and further guidance,
+                    please contact the College Office.
+                  </p>
+
+                </div>
               </div>
 
             </div>
-
-            <div className="scholarship-information">
-
-              <div className="scholarship-item-icon">
-                <Info size={29} />
-              </div>
-
-              <div className="scholarship-item-divider"></div>
-
-              <p>
-                For eligibility, application process and further guidance,
-                please contact the College Office.
-              </p>
-
-            </div>
-
-          </div>
-        </section>
+          </section>
+        </div>
 
         {/* LOWER SCHOLARSHIP CARDS */}
 
         <div className="scholarship-bottom-grid">
 
-          {/* NON GOVERNMENT */}
+          {/* NON GOVERNMENT: slides in from the left */}
 
-          <section className="scholarship-card small-scholarship-card">
+          <div className="scholarship-reveal-box" data-reveal="left">
+            <section className="scholarship-card small-scholarship-card">
 
-            <div className="scholarship-card-heading">
+              <div className="scholarship-card-heading">
 
-              <div className="scholarship-heading-icon">
-                <Handshake size={39} strokeWidth={1.8} />
-              </div>
-
-              <h2>Non-Government Scholarships</h2>
-
-            </div>
-
-            <div className="scholarship-list">
-
-              <div className="scholarship-list-item">
-
-                <div className="scholarship-item-icon">
-                  <Users size={30} strokeWidth={1.7} />
+                <div className="scholarship-heading-icon">
+                  <Handshake size={39} strokeWidth={1.8} />
                 </div>
 
-                <div className="scholarship-item-divider"></div>
-
-                <div className="scholarship-item-content">
-                  <h3>Scholarship from Various NGOs</h3>
-                </div>
+                <h2>Non-Government Scholarships</h2>
 
               </div>
 
-            </div>
-          </section>
+              <div className="scholarship-list">
 
-          {/* MANAGEMENT */}
+                <div data-reveal="up" style={delay(150)}>
+                  <div className="scholarship-list-item">
 
-          <section className="scholarship-card small-scholarship-card">
+                    <div className="scholarship-item-icon">
+                      <Users size={30} strokeWidth={1.7} />
+                    </div>
 
-            <div className="scholarship-card-heading">
+                    <div className="scholarship-item-divider"></div>
 
-              <div className="scholarship-heading-icon">
-                <GraduationCap size={41} strokeWidth={1.7} />
-              </div>
+                    <div className="scholarship-item-content">
+                      <h3>Scholarship from Various NGOs</h3>
+                    </div>
 
-              <h2>Management Scholarships</h2>
-
-            </div>
-
-            <div className="scholarship-list">
-
-              <div className="scholarship-list-item management-item">
-
-                <div className="scholarship-item-icon">
-                  <Layers size={29} strokeWidth={1.8} />
-                </div>
-
-                <div className="scholarship-item-divider"></div>
-
-                <div className="scholarship-item-content">
-                  <h3>Management Scholarship</h3>
+                  </div>
                 </div>
 
               </div>
+            </section>
+          </div>
 
-              <div className="scholarship-list-item management-item">
+          {/* MANAGEMENT: slides in from the right */}
 
-                <div className="scholarship-item-icon">
-                  <Award size={30} strokeWidth={1.7} />
+          <div className="scholarship-reveal-box" data-reveal="right" style={delay(120)}>
+            <section className="scholarship-card small-scholarship-card">
+
+              <div className="scholarship-card-heading">
+
+                <div className="scholarship-heading-icon">
+                  <GraduationCap size={41} strokeWidth={1.7} />
                 </div>
 
-                <div className="scholarship-item-divider"></div>
-
-                <div className="scholarship-item-content">
-                  <h3>Management Scholarship for Merit Students</h3>
-                </div>
+                <h2>Management Scholarships</h2>
 
               </div>
 
-            </div>
-          </section>
+              <div className="scholarship-list">
+
+                <div data-reveal="up" style={delay(150)}>
+                  <div className="scholarship-list-item management-item">
+
+                    <div className="scholarship-item-icon">
+                      <Layers size={29} strokeWidth={1.8} />
+                    </div>
+
+                    <div className="scholarship-item-divider"></div>
+
+                    <div className="scholarship-item-content">
+                      <h3>Management Scholarship</h3>
+                    </div>
+
+                  </div>
+                </div>
+
+                <div data-reveal="up" style={delay(250)}>
+                  <div className="scholarship-list-item management-item">
+
+                    <div className="scholarship-item-icon">
+                      <Award size={30} strokeWidth={1.7} />
+                    </div>
+
+                    <div className="scholarship-item-divider"></div>
+
+                    <div className="scholarship-item-content">
+                      <h3>Management Scholarship for Merit Students</h3>
+                    </div>
+
+                  </div>
+                </div>
+
+              </div>
+            </section>
+          </div>
 
         </div>
 
-        {/* ================= CONTACT BANNER ================= */}
+        {/* ================= CONTACT BANNER: content fades up ================= */}
 
-        <section className="scholarship-contact-banner">
+        <div className="scholarship-reveal-box" data-reveal="up">
+          <section className="scholarship-contact-banner">
 
-          <div className="scholarship-contact-decoration"></div>
+            <div className="scholarship-contact-decoration"></div>
 
-          <div className="scholarship-contact-icon">
-            <GraduationCap size={65} strokeWidth={1.3} />
-          </div>
+            <div className="scholarship-contact-icon">
+              <GraduationCap size={65} strokeWidth={1.3} />
+            </div>
 
-          <div className="scholarship-contact-divider"></div>
+            <div className="scholarship-contact-divider"></div>
 
-          <div className="scholarship-contact-content">
-            <h2>
-              Need help choosing the right scholarship?
-            </h2>
+            <div className="scholarship-contact-content">
+              <h2>
+                Need help choosing the right scholarship?
+              </h2>
 
-            <p>
-              Our admission team is here to guide you with eligibility,
-              application and scholarship support.
-            </p>
-          </div>
+              <p>
+                Our admission team is here to guide you with eligibility,
+                application and scholarship support.
+              </p>
+            </div>
 
-         <Link
-  to="/contact#contact-section"
-  className="scholarship-contact-button"
->
-  Contact Admissions
-  <ArrowRight size={21} />
-</Link>
+            <Link
+              to="/contact#contact-section"
+              className="scholarship-contact-button"
+            >
+              Contact Admissions
+              <ArrowRight size={21} />
+            </Link>
 
-        </section>
+          </section>
+        </div>
 
       </main>
 
@@ -279,35 +331,68 @@ const Scholarships: React.FC = () => {
            MAROON + GOLD PREMIUM THEME
         ========================================= */
 
-    .scholarships-page {
-  --sch-maroon: #74152f;
-  --sch-dark-maroon: #4a1026;
-  --sch-gold: #d9b052;
-  --sch-gold-light: #f9e8bd;
-  --sch-cream: #fcf9f4;
-  --sch-text: #4b343b;
+        .scholarships-page {
+          --sch-maroon: #74152f;
+          --sch-dark-maroon: #4a1026;
+          --sch-gold: #d9b052;
+          --sch-gold-light: #f9e8bd;
+          --sch-cream: #fcf9f4;
+          --sch-text: #4b343b;
 
-  width: 100%;
-  min-height: 100vh;
-  padding-top: 0;
-  background: var(--sch-cream);
-  color: var(--sch-text);
-  font-family: inherit;
-  overflow: hidden;
-}
+          width: 100%;
+          min-height: 100vh;
+          padding-top: 0;
+          background: var(--sch-cream);
+          color: var(--sch-text);
+          font-family: inherit;
+          overflow: hidden;
+        }
 
         .scholarships-page * {
           box-sizing: border-box;
         }
 
-        /* HERO */
-.scholarship-hero {
-  position: relative;
-  width: 100%;
-  min-height: 180px;
-  padding: 130px 7% 26px;
+        /* =========================================
+           SCROLL REVEAL (replays on every scroll)
+           left  : slides in from the left, then settles
+           right : slides in from the right, then settles
+           up    : content fades up
+        ========================================= */
 
-  
+        .scholarships-page [data-reveal] {
+          opacity: 0;
+          will-change: opacity, transform;
+          transition:
+            opacity .8s ease,
+            transform .9s cubic-bezier(.2, .7, .2, 1);
+          transition-delay: var(--reveal-delay, 0ms);
+        }
+
+        .scholarships-page [data-reveal="left"]  { transform: translateX(-80px); }
+        .scholarships-page [data-reveal="right"] { transform: translateX(80px); }
+        .scholarships-page [data-reveal="up"]    { transform: translateY(34px); }
+
+        .scholarships-page [data-reveal].is-visible {
+          opacity: 1;
+          transform: translate3d(0, 0, 0);
+        }
+
+        /* wrapper keeps the slide-in separate from the card's hover lift */
+        .scholarship-reveal-box {
+          height: 100%;
+        }
+
+        .government-wrap {
+          margin-bottom: 25px;
+        }
+
+        /* HERO */
+
+        .scholarship-hero {
+          position: relative;
+          width: 100%;
+          min-height: 180px;
+          padding: 130px 7% 26px;
           background:
             radial-gradient(
               ellipse at 75% 50%,
@@ -320,7 +405,6 @@ const Scholarships: React.FC = () => {
               #74152f 55%,
               #851b3b 100%
             );
-
           overflow: hidden;
         }
 
@@ -395,12 +479,12 @@ const Scholarships: React.FC = () => {
           font-weight: 700;
         }
 
-       .scholarship-hero-content {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  width: 100%;
-}
+        .scholarship-hero-content {
+          display: flex;
+          align-items: center;
+          justify-content: flex-start;
+          width: 100%;
+        }
 
         .scholarship-eyebrow {
           margin-bottom: 5px;
@@ -440,61 +524,6 @@ const Scholarships: React.FC = () => {
           line-height: 1.5;
         }
 
-        /* HERO ART */
-
-        .scholarship-hero-art {
-          position: relative;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          width: 260px;
-          height: 130px;
-          margin-right: 15px;
-          color: #e7c568;
-        }
-
-        .scholarship-cap-icon {
-          width: 125px;
-          height: 105px;
-          color: #e9c765;
-          filter: drop-shadow(0 5px 8px rgba(0,0,0,0.15));
-        }
-
-        .scholarship-medal {
-          position: absolute;
-          bottom: -4px;
-          left: 50%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          width: 58px;
-          height: 58px;
-          border: 2px solid #e9c765;
-          border-radius: 50%;
-          background: #74152f;
-          color: #e9c765;
-          transform: translateX(-50%);
-        }
-
-        .scholarship-laurel {
-          position: absolute;
-          top: 5px;
-          color: #e8c465;
-          font-size: 95px;
-          line-height: 1;
-          opacity: 0.9;
-        }
-
-        .scholarship-laurel-left {
-          left: 2px;
-          transform: rotate(-40deg);
-        }
-
-        .scholarship-laurel-right {
-          right: 2px;
-          transform: scaleX(-1) rotate(-40deg);
-        }
-
         /* MAIN CONTENT */
 
         .scholarship-main {
@@ -507,6 +536,9 @@ const Scholarships: React.FC = () => {
         /* CARDS */
 
         .scholarship-card {
+          position: relative;
+          height: 100%;
+          overflow: hidden;
           padding: 13px 28px 16px;
           border: 1px solid #e7c98e;
           border-radius: 17px;
@@ -517,19 +549,33 @@ const Scholarships: React.FC = () => {
           );
           box-shadow: 0 6px 18px rgba(91,53,24,0.06);
           transition:
-            transform 0.3s ease,
-            box-shadow 0.3s ease,
-            border-color 0.3s ease;
+            transform .35s cubic-bezier(.2, .7, .2, 1),
+            box-shadow .35s ease,
+            border-color .35s ease;
+        }
+
+        /* gold line that grows along the bottom edge on hover */
+        .scholarship-card::after {
+          content: "";
+          position: absolute;
+          left: 0;
+          bottom: 0;
+          width: 100%;
+          height: 3px;
+          background: linear-gradient(90deg, #d9b052, #f3d98b, #d9b052);
+          transform: scaleX(0);
+          transform-origin: left;
+          transition: transform .45s ease;
         }
 
         .scholarship-card:hover {
           border-color: #d8af60;
-          box-shadow: 0 12px 26px rgba(91,53,24,0.10);
-          transform: translateY(-3px);
+          box-shadow: 0 18px 36px rgba(91,53,24,0.15);
+          transform: translateY(-8px);
         }
 
-        .government-card {
-          margin-bottom: 25px;
+        .scholarship-card:hover::after {
+          transform: scaleX(1);
         }
 
         .scholarship-card-heading {
@@ -555,6 +601,14 @@ const Scholarships: React.FC = () => {
           );
           color: #74152f;
           box-shadow: 0 3px 8px rgba(128,84,25,0.10);
+          transition: transform .4s ease, background .3s ease, color .3s ease, box-shadow .3s ease;
+        }
+
+        .scholarship-card:hover .scholarship-heading-icon {
+          transform: rotate(-8deg) scale(1.08);
+          background: #74152f;
+          color: #f5d58b;
+          box-shadow: 0 8px 18px rgba(116,21,47,0.25);
         }
 
         .scholarship-card-heading h2 {
@@ -590,7 +644,8 @@ const Scholarships: React.FC = () => {
 
         .scholarship-list-item:hover {
           background: #f7e9d4;
-          transform: translateX(4px);
+          transform: translateX(6px);
+          box-shadow: 0 6px 14px rgba(91,53,24,0.08);
         }
 
         .scholarship-item-icon {
@@ -600,6 +655,15 @@ const Scholarships: React.FC = () => {
           width: 85px;
           min-width: 85px;
           color: #821d38;
+        }
+
+        .scholarship-item-icon svg {
+          transition: transform .35s ease;
+        }
+
+        .scholarship-list-item:hover .scholarship-item-icon svg,
+        .scholarship-information:hover .scholarship-item-icon svg {
+          transform: scale(1.15) rotate(-6deg);
         }
 
         .scholarship-item-divider {
@@ -631,7 +695,7 @@ const Scholarships: React.FC = () => {
 
         .scholarship-item-content p {
           margin: 2px 0 0;
-          color: #44363a;
+          color: #000000;
           font-size: 12px;
           line-height: 1.55;
         }
@@ -649,6 +713,12 @@ const Scholarships: React.FC = () => {
             #fff0cc,
             #fff8e9
           );
+          transition: all 0.3s ease;
+        }
+
+        .scholarship-information:hover {
+          transform: translateX(6px);
+          box-shadow: 0 6px 14px rgba(91,53,24,0.08);
         }
 
         .scholarship-information .scholarship-item-icon {
@@ -661,7 +731,7 @@ const Scholarships: React.FC = () => {
 
         .scholarship-information p {
           margin: 0;
-          color: #54443b;
+          color: #000000;
           font-size: 13px;
           font-style: italic;
           line-height: 1.6;
@@ -730,6 +800,16 @@ const Scholarships: React.FC = () => {
             );
           color: #fff;
           overflow: hidden;
+          transition:
+            transform .35s cubic-bezier(.2, .7, .2, 1),
+            box-shadow .35s ease,
+            border-color .35s ease;
+        }
+
+        .scholarship-contact-banner:hover {
+          transform: translateY(-6px);
+          border-color: rgba(245,209,123,0.8);
+          box-shadow: 0 18px 36px rgba(74,16,38,0.28);
         }
 
         .scholarship-contact-decoration {
@@ -752,6 +832,14 @@ const Scholarships: React.FC = () => {
           width: 95px;
           min-width: 95px;
           color: white;
+        }
+
+        .scholarship-contact-icon svg {
+          transition: transform .4s ease;
+        }
+
+        .scholarship-contact-banner:hover .scholarship-contact-icon svg {
+          transform: translateY(-4px) rotate(-6deg);
         }
 
         .scholarship-contact-divider {
@@ -860,12 +948,14 @@ const Scholarships: React.FC = () => {
 
         @media (max-width: 650px) {
 
+          .scholarships-page [data-reveal="left"]  { transform: translateX(-35px); }
+          .scholarships-page [data-reveal="right"] { transform: translateX(35px); }
+          .scholarships-page [data-reveal="up"]    { transform: translateY(24px); }
+
           .scholarship-hero {
             min-height: auto;
             padding: 100px 20px 35px;
           }
-
-      }
 
           .scholarship-breadcrumb {
             gap: 7px;
@@ -896,32 +986,6 @@ const Scholarships: React.FC = () => {
             font-size: 14px;
           }
 
-          .scholarship-hero-art {
-            width: 80px;
-            height: 80px;
-            margin-right: 0;
-          }
-
-          .scholarship-cap-icon {
-            width: 65px;
-            height: 65px;
-          }
-
-          .scholarship-medal {
-            bottom: -8px;
-            width: 35px;
-            height: 35px;
-          }
-
-          .scholarship-medal svg {
-            width: 27px;
-            height: 27px;
-          }
-
-          .scholarship-laurel {
-            font-size: 50px;
-          }
-
           .scholarship-main {
             padding: 22px 15px 40px;
           }
@@ -931,7 +995,7 @@ const Scholarships: React.FC = () => {
             border-radius: 13px;
           }
 
-          .government-card {
+          .government-wrap {
             margin-bottom: 18px;
           }
 
@@ -1083,10 +1147,6 @@ const Scholarships: React.FC = () => {
 
         @media (max-width: 380px) {
 
-          .scholarship-hero-art {
-            display: none;
-          }
-
           .scholarship-hero h1 {
             font-size: 33px;
           }
@@ -1106,17 +1166,7 @@ const Scholarships: React.FC = () => {
 
         }
 
-        /* ACCESSIBILITY */
-
-        @media (prefers-reduced-motion: reduce) {
-          .scholarship-card,
-          .scholarship-list-item,
-          .scholarship-contact-button,
-          .scholarship-contact-button svg {
-            transition: none;
-          }
-        }
-                  /* =========================================
+        /* =========================================
            RIPPLE MEDAL ANIMATION
         ========================================= */
 
@@ -1173,7 +1223,26 @@ const Scholarships: React.FC = () => {
           .ripple-core svg { width: 22px; height: 22px; }
         }
 
+        /* ACCESSIBILITY */
+
         @media (prefers-reduced-motion: reduce) {
+          .scholarships-page [data-reveal] {
+            opacity: 1;
+            transform: none;
+            transition: none;
+          }
+
+          .scholarship-card,
+          .scholarship-card::after,
+          .scholarship-heading-icon,
+          .scholarship-list-item,
+          .scholarship-information,
+          .scholarship-contact-banner,
+          .scholarship-contact-button,
+          .scholarship-contact-button svg {
+            transition: none;
+          }
+
           .ripple-ring { animation: none; opacity: 0; }
           .ripple-core { animation: none; }
         }

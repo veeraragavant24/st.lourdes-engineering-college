@@ -460,7 +460,7 @@ useEffect(() => {
         .wec-hero h1 {
           margin: 0;
           font-family: 'Playfair Display', Georgia, serif;
-          font-size: clamp(38px, 5.2vw, 65px);
+          font-size: clamp(28px, 4vw, 40px);
           font-weight: 700;
           line-height: 1.02;
           letter-spacing: -1px;
@@ -578,7 +578,7 @@ useEffect(() => {
           margin: 0 0 16px;
           color: var(--wec-maroon);
           font-family: 'Playfair Display', Georgia, serif;
-          font-size: clamp(26px, 3vw, 36px);
+          font-size: clamp(22px, 2vw, 30px);
           line-height: 1.25;
         }
 
@@ -586,7 +586,7 @@ useEffect(() => {
           margin: 0;
           font-size: 15px;
           line-height: 1.9;
-          color: #51434a;
+          color: #000000;
         }
 
         .wec-about-highlight {
@@ -619,7 +619,7 @@ useEffect(() => {
         }
 
         .wec-about-highlight div span {
-          color: #75646a;
+         color: #000000;
           font-size: 12px;
         }
 
@@ -652,12 +652,12 @@ useEffect(() => {
           margin: 0;
           color: var(--wec-maroon);
           font-family: 'Playfair Display', Georgia, serif;
-          font-size: clamp(27px, 3vw, 36px);
+          font-size: clamp(22px, 2vw, 30px);
         }
 
         .wec-heading-center > p {
           margin: 10px auto 0;
-          color: #78686c;
+          color: #000000;
           font-size: 13px;
           line-height: 1.7;
         }
@@ -700,9 +700,9 @@ useEffect(() => {
         .wec-objective-icon {
           display: grid;
           place-items: center;
-          width: 67px;
-          height: 67px;
-          margin: -35px auto 14px;
+          width: 58px;
+          height: 58px;
+          margin: -22px auto 14px;
           color: #fff4dc;
           background: linear-gradient(
             145deg,
@@ -723,7 +723,7 @@ useEffect(() => {
 
         .wec-objective-card p {
           margin: 0;
-          color: #51444a;
+          color: #000000;
           font-size: 13px;
           line-height: 1.7;
         }
@@ -849,7 +849,7 @@ useEffect(() => {
           justify-content: center;
           gap: 10px;
           margin-top: 23px;
-          color: #795a4d;
+          color: #000000;
           font-size: 12px;
           line-height: 1.6;
           text-align: center;
@@ -901,7 +901,7 @@ useEffect(() => {
           margin: 0;
           color: #fff5e8;
           font-family: 'Playfair Display', Georgia, serif;
-          font-size: clamp(24px, 3.2vw, 38px);
+          font-size: clamp(20px, 2vw, 30px);
           font-style: italic;
           line-height: 1.35;
         }

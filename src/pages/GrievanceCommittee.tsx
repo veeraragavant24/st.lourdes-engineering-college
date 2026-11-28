@@ -1,4 +1,3 @@
-
 import { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import {
@@ -14,88 +13,126 @@ import {
 const members = [
   { name: 'Dr. B. R. Ramesh Bapu.', role: 'Principal', position: 'Convenor', featured: true },
   { name: 'Dr. J. Sivamurugan', role: 'HoD / CSE', position: 'Co-ordinator' },
-  
   { name: 'Mr. Nagendra Pramoths', role: 'Assistant Professor', position: 'Member' },
-  { name: 'Mr.J.Maria Lenin Prathap ', role: 'HoD /  S&H', position: 'Member' },
+  { name: 'Mr.J.Maria Lenin Prathap', role: 'HoD / S&H', position: 'Member' },
   { name: 'Dr.S.Raja', role: 'Assistant Professor', position: 'Member' },
-  { name: 'Mr.M.John S Kumar', role: 'HoD / Cyber Security  ', position: 'Member' },
-  { name: 'Mrs.A.Agalya', role: 'Assistant Professor ', position: 'Member' },
+  { name: 'Mr.M.John S Kumar', role: 'HoD / Cyber Security', position: 'Member' },
+  { name: 'Mrs.A.Agalya', role: 'Assistant Professor', position: 'Member' },
 ];
 
 export default function GrievanceCommittee() {
   const pageRef = useRef<HTMLElement | null>(null);
 
-  // Scroll reveal: cards alternate left/right and settle into position.
+  /*
+    SCROLL REVEAL
+    - Hero + heading  -> fade up
+    - Featured card   -> fade up
+    - Other cards     -> alternate: left -> settle, right -> settle
+    - Concern panel   -> right -> settle
+  */
   useEffect(() => {
     const page = pageRef.current;
     if (!page) return;
 
-    const revealElements = page.querySelectorAll<HTMLElement>(
-      '.grc-hero .grc-container, .grc-heading, .grc-member, .grc-concern'
+    const timers: number[] = [];
+
+    // Assign animation direction + stagger delay
+    const assign = (selector: string, fn: (el: HTMLElement, i: number) => void) => {
+      page.querySelectorAll<HTMLElement>(selector).forEach(fn);
+    };
+
+    assign('.grc-hero .grc-container, .grc-heading', (el) => {
+      el.classList.add('grc-reveal-up');
+    });
+
+    assign('.grc-member', (el, i) => {
+      if (el.classList.contains('featured')) {
+        el.classList.add('grc-reveal-up');
+      } else {
+        // i = 1,2,3... (featured is 0) -> odd = left, even = right
+        el.classList.add(i % 2 === 1 ? 'grc-reveal-left' : 'grc-reveal-right');
+        el.style.transitionDelay = `${((i - 1) % 2) * 120}ms`;
+      }
+    });
+
+    assign('.grc-concern', (el) => {
+      el.classList.add('grc-reveal-right');
+      el.style.transitionDelay = '150ms';
+    });
+
+    const targets = page.querySelectorAll<HTMLElement>(
+      '.grc-reveal-up, .grc-reveal-left, .grc-reveal-right'
     );
 
+    // Force the browser to apply the hidden start state before revealing
+    void page.getBoundingClientRect();
+    void page.offsetHeight;
+
+    const show = (el: HTMLElement) => {
+      el.classList.add('grc-reveal-visible');
+
+      // After the entrance finishes, switch to fast hover transitions
+      const delay = parseInt(el.style.transitionDelay || '0', 10);
+      const id = window.setTimeout(() => {
+        el.style.transitionDelay = '';
+        el.classList.add('grc-reveal-done');
+      }, 900 + delay);
+      timers.push(id);
+    };
+
     if (!('IntersectionObserver' in window)) {
-      revealElements.forEach((element) =>
-        element.classList.add('grc-reveal-visible')
-      );
-      return;
+      targets.forEach(show);
+      return () => timers.forEach((t) => window.clearTimeout(t));
     }
 
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            entry.target.classList.add('grc-reveal-visible');
-          } else {
-            entry.target.classList.remove('grc-reveal-visible');
+            show(entry.target as HTMLElement);
+            observer.unobserve(entry.target); // animate once
           }
         });
       },
-      {
-        threshold: 0.12,
-        rootMargin: '0px 0px -35px 0px',
-      }
+      { threshold: 0.12, rootMargin: '0px 0px -35px 0px' }
     );
 
-    revealElements.forEach((element, index) => {
-      if (element.classList.contains('grc-member')) {
-        element.classList.add(
-          index % 2 === 0 ? 'grc-reveal-left' : 'grc-reveal-right'
-        );
-        element.style.transitionDelay = `${(index % 4) * 90}ms`;
-      } else if (element.classList.contains('grc-concern')) {
-        element.classList.add('grc-reveal-right');
-      } else {
-        element.classList.add('grc-reveal-up');
-      }
+    targets.forEach((el) => observer.observe(el));
 
-      observer.observe(element);
-    });
+    // Safety net: if the observer never fires, reveal everything
+    timers.push(
+      window.setTimeout(() => {
+        targets.forEach((el) => {
+          if (!el.classList.contains('grc-reveal-visible')) show(el);
+        });
+      }, 2500)
+    );
 
-    return () => observer.disconnect();
+    return () => {
+      observer.disconnect();
+      timers.forEach((t) => window.clearTimeout(t));
+    };
   }, []);
 
   return (
     <main ref={pageRef} className="grc">
       <style>{`
-      .grc {
-  --wine: #671329;
-  --wine-dark: #3c0918;
-  --gold: #e5b843;
-  --cream: #fffaf3;
-  --navy: #0c1c35;
-  --muted: #696064;
+        .grc {
+          --wine: #671329;
+          --wine-dark: #3c0918;
+          --gold: #e5b843;
+          --cream: #fffaf3;
+          --navy: #0c1c35;
+          --muted: #696064;
 
- 
-  width: 100%;
-  padding-top: 0;
-  background: var(--cream);
-  color: #35111c;
-  font-family: Inter, Arial, sans-serif;
-  overflow: hidden;
-}
+          width: 100%;
+          background: var(--cream);
+          color: #35111c;
+          font-family: Inter, Arial, sans-serif;
+          overflow-x: hidden;
+        }
+
         .grc * { box-sizing: border-box; }
-
         .grc a { text-decoration: none; }
 
         .grc-container {
@@ -103,14 +140,14 @@ export default function GrievanceCommittee() {
           margin-inline: auto;
         }
 
-        /* HERO */
-       .grc-hero {
-  position: relative;
-  isolation: isolate;
-  display: flex;
-  align-items: center;
-  min-height: 280px;
- padding: 130px 0 42px;
+        /* ---------- HERO ---------- */
+        .grc-hero {
+          position: relative;
+          isolation: isolate;
+          display: flex;
+          align-items: center;
+          min-height: 280px;
+          padding: 130px 0 42px;
           color: white;
           background:
             linear-gradient(
@@ -168,7 +205,7 @@ export default function GrievanceCommittee() {
         .grc-hero-description {
           max-width: 620px;
           margin: 10px 0 0;
-          color: rgba(255,255,255,.85);
+          color: rgba(255, 255, 255, .85);
           font-size: 13px;
           line-height: 1.7;
         }
@@ -179,19 +216,17 @@ export default function GrievanceCommittee() {
           align-items: center;
           gap: 8px;
           margin-top: 15px;
-          color: rgba(255,255,255,.75);
+          color: rgba(255, 255, 255, .75);
           font-size: 11px;
         }
 
-        .grc-breadcrumb a { color: #fff; }
+        .grc-breadcrumb a { color: #fff; transition: color .2s ease; }
         .grc-breadcrumb a:hover { color: var(--gold); }
         .grc-breadcrumb svg { color: var(--gold); }
         .grc-breadcrumb span { color: var(--gold); }
 
-        /* SECTION HEADING */
-        .grc-content {
-          padding: 29px 0 23px;
-        }
+        /* ---------- SECTION HEADING ---------- */
+        .grc-content { padding: 29px 0 24px; }
 
         .grc-heading {
           margin-bottom: 19px;
@@ -224,12 +259,12 @@ export default function GrievanceCommittee() {
         .grc-heading p {
           max-width: 590px;
           margin: 8px auto 0;
-          color: var(--muted);
+          color: #000;
           font-size: 12px;
           line-height: 1.7;
         }
 
-        /* MEMBER CARDS + CONTACT PANEL */
+        /* ---------- LAYOUT ---------- */
         .grc-layout {
           display: grid;
           grid-template-columns: minmax(0, 1fr) 255px;
@@ -244,7 +279,10 @@ export default function GrievanceCommittee() {
           gap: 10px;
         }
 
+        /* ---------- MEMBER CARD ---------- */
         .grc-member {
+          position: relative;
+          overflow: hidden;
           display: flex;
           align-items: center;
           gap: 10px;
@@ -255,21 +293,31 @@ export default function GrievanceCommittee() {
           border-radius: 9px;
           background: linear-gradient(135deg, #fffefd, #fff7ed);
           box-shadow: 0 4px 11px rgba(57, 21, 25, .075);
-          transition: transform .22s ease, border-color .22s ease,
-            box-shadow .22s ease;
-        }
-
-        .grc-member:hover {
-          transform: translateY(-3px);
-          border-color: #d9ab42;
-          box-shadow: 0 8px 18px rgba(57, 21, 25, .12);
+          transition:
+            transform .3s ease,
+            border-color .3s ease,
+            box-shadow .3s ease;
         }
 
         .grc-member.featured {
           grid-column: 1 / -1;
           min-height: 70px;
-          border: 1px solid #e7ad31;
+          border-color: #e7ad31;
           box-shadow: 0 4px 12px rgba(132, 83, 13, .13);
+        }
+
+        /* gold bar that grows on hover */
+        .grc-member::before {
+          content: "";
+          position: absolute;
+          left: 0;
+          top: 0;
+          width: 3px;
+          height: 100%;
+          background: linear-gradient(180deg, #f4d477, #c58a22);
+          transform: scaleY(0);
+          transform-origin: bottom;
+          transition: transform .3s ease;
         }
 
         .grc-avatar {
@@ -282,6 +330,7 @@ export default function GrievanceCommittee() {
           border-radius: 50%;
           background: linear-gradient(140deg, #861b36, #4b0b20);
           color: #f1c44c;
+          transition: transform .35s ease, box-shadow .35s ease;
         }
 
         .grc-member.featured .grc-avatar {
@@ -297,10 +346,7 @@ export default function GrievanceCommittee() {
           background: linear-gradient(#e3b23c, #d8a047);
         }
 
-        .grc-member-copy {
-          min-width: 0;
-          flex: 1;
-        }
+        .grc-member-copy { min-width: 0; flex: 1; }
 
         .grc-member h3 {
           margin: 0;
@@ -314,7 +360,7 @@ export default function GrievanceCommittee() {
 
         .grc-member p {
           margin: 2px 0 0;
-          color: #63595b;
+          color: #000;
           font-size: 11px;
         }
 
@@ -329,9 +375,32 @@ export default function GrievanceCommittee() {
           color: #4b2510;
           font-size: 10px;
           font-weight: 800;
+          transition: transform .3s ease, box-shadow .3s ease;
         }
 
-        /* CONCERN PANEL */
+        /* card hover */
+        .grc-member:hover {
+          transform: translateY(-5px);
+          border-color: #d9ab42;
+          box-shadow: 0 12px 25px rgba(57, 21, 25, .15);
+        }
+
+        .grc-member:hover::before {
+          transform: scaleY(1);
+          transform-origin: top;
+        }
+
+        .grc-member:hover .grc-avatar {
+          transform: scale(1.09) rotate(-5deg);
+          box-shadow: 0 5px 13px rgba(229, 184, 67, .35);
+        }
+
+        .grc-member:hover .grc-role {
+          transform: translateY(-2px);
+          box-shadow: 0 4px 10px rgba(0, 0, 0, .12);
+        }
+
+        /* ---------- CONCERN PANEL ---------- */
         .grc-concern {
           position: relative;
           isolation: isolate;
@@ -345,6 +414,10 @@ export default function GrievanceCommittee() {
           border-radius: 10px;
           background: linear-gradient(150deg, #851c39, #500b20 75%);
           color: white;
+          transition:
+            transform .35s ease,
+            box-shadow .35s ease,
+            border-color .35s ease;
         }
 
         .grc-concern::after {
@@ -367,6 +440,10 @@ export default function GrievanceCommittee() {
           height: 50px;
           margin: 0 auto 12px;
           color: var(--gold);
+        }
+
+        .grc-concern-icon svg {
+          transition: transform .35s ease;
         }
 
         .grc-concern-icon svg:first-child {
@@ -399,7 +476,7 @@ export default function GrievanceCommittee() {
 
         .grc-concern p {
           margin: 0;
-          color: rgba(255,255,255,.89);
+          color: rgba(255, 255, 255, .89);
           font-size: 12px;
           line-height: 1.65;
         }
@@ -416,121 +493,36 @@ export default function GrievanceCommittee() {
           color: #43101d;
           font-size: 10px;
           font-weight: 800;
-          transition: transform .2s ease, box-shadow .2s ease;
+          transition:
+            transform .25s ease,
+            box-shadow .25s ease,
+            filter .25s ease;
+        }
+
+        .grc-concern:hover {
+          transform: translateY(-5px);
+          border-color: rgba(244, 201, 91, .75);
+          box-shadow: 0 15px 32px rgba(60, 9, 24, .25);
+        }
+
+        .grc-concern:hover .grc-concern-icon svg:first-child {
+          transform: translateY(-3px) rotate(-7deg);
+        }
+
+        .grc-concern:hover .grc-concern-icon svg:last-child {
+          transform: translate(3px, 2px) rotate(7deg);
         }
 
         .grc-contact-link:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 5px 15px rgba(0, 0, 0, .18);
+          transform: translateY(-3px) scale(1.03);
+          box-shadow: 0 7px 18px rgba(0, 0, 0, .22);
+          filter: brightness(1.05);
         }
 
-        /* FOOTER SPACING */
-        .grc-content {
-          padding-bottom: 24px;
-        }
-
-        /* RESPONSIVE */
-        @media (min-width: 1500px) {
-          .grc-hero { min-height: 280px; }
-          .grc-content { padding-top: 38px; }
-        }
-
-        @media (max-width: 760px) {
-          .grc-container {
-            width: calc(100% - 36px);
-          }
-
-          .grc-hero {
-            min-height: 255px;
-            padding: 110px 0px -100px;
-            background-position: 58% center;
-          }
-
-          .grc-layout {
-            grid-template-columns: minmax(0, 1fr);
-          }
-
-          .grc-concern {
-            min-height: 0;
-            padding: 23px;
-          }
-
-          .grc-concern-icon {
-            margin-left: 0;
-          }
-
-          .grc-concern h2 { font-size: 24px; }
-
-          .grc-contact-link {
-            font-size: 11px;
-          }
-        }
-
-        @media (max-width: 480px) {
-          .grc-container {
-            width: calc(100% - 28px);
-          }
-
-          .grc-hero {
-            min-height: 245px;
-            padding: 32px 0;
-          }
-
-          .grc-hero h1 {
-            font-size: 32px;
-            letter-spacing: -.5px;
-          }
-
-          .grc-hero-description {
-            font-size: 12px;
-          }
-
-          .grc-content {
-            padding-top: 26px;
-          }
-
-          .grc-heading h2 { font-size: 26px; }
-
-          .grc-heading p { font-size: 11px; }
-
-          .grc-member-grid {
-            grid-template-columns: minmax(0, 1fr);
-            gap: 9px;
-          }
-
-          .grc-member.featured {
-            grid-column: auto;
-          }
-
-          .grc-member {
-            min-height: 65px;
-          }
-
-          .grc-member h3 { font-size: 12px; }
-
-          .grc-role {
-            padding: 5px 8px;
-            font-size: 9px;
-          }
-
-          .grc-concern {
-            padding: 22px;
-          }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-          .grc *,
-          .grc *::before,
-          .grc *::after {
-            transition: none !important;
-          }
-        }
-
-        /* SCROLL REVEAL: FADE + LEFT/RIGHT SLIDE */
-
+        /* ---------- SCROLL REVEAL ---------- */
+        .grc .grc-reveal-up,
         .grc .grc-reveal-left,
-        .grc .grc-reveal-right,
-        .grc .grc-reveal-up {
+        .grc .grc-reveal-right {
           opacity: 0;
           transition:
             opacity .8s ease,
@@ -538,145 +530,101 @@ export default function GrievanceCommittee() {
           will-change: opacity, transform;
         }
 
-        .grc .grc-reveal-left {
-          transform: translateX(-65px);
-        }
-
-        .grc .grc-reveal-right {
-          transform: translateX(65px);
-        }
-
-        .grc .grc-reveal-up {
-          transform: translateY(30px);
-        }
+        .grc .grc-reveal-up    { transform: translateY(32px); }
+        .grc .grc-reveal-left  { transform: translateX(-65px); }  /* left -> settle  */
+        .grc .grc-reveal-right { transform: translateX(65px); }   /* right -> settle */
 
         .grc .grc-reveal-visible {
           opacity: 1;
           transform: translate(0, 0);
         }
 
-        /* CARD HOVER EFFECTS */
-
-        .grc .grc-member {
-          position: relative;
-          overflow: hidden;
+        /* After entrance ends, restore fast hover transitions */
+        .grc .grc-member.grc-reveal-done {
+          will-change: auto;
           transition:
             transform .3s ease,
             border-color .3s ease,
-            box-shadow .3s ease,
-            background .3s ease;
+            box-shadow .3s ease;
         }
 
-        .grc .grc-member::before {
-          content: "";
-          position: absolute;
-          left: 0;
-          top: 0;
-          width: 3px;
-          height: 100%;
-          background: linear-gradient(180deg, #f4d477, #c58a22);
-          transform: scaleY(0);
-          transform-origin: bottom;
-          transition: transform .3s ease;
-        }
-
-        .grc .grc-member:hover {
-          transform: translateY(-5px);
-          border-color: #d9ab42;
-          box-shadow: 0 12px 25px rgba(57, 21, 25, .15);
-        }
-
-        .grc .grc-member:hover::before {
-          transform: scaleY(1);
-          transform-origin: top;
-        }
-
-        .grc .grc-avatar {
-          transition: transform .35s ease, box-shadow .35s ease;
-        }
-
-        .grc .grc-member:hover .grc-avatar {
-          transform: scale(1.09) rotate(-5deg);
-          box-shadow: 0 5px 13px rgba(229, 184, 67, .25);
-        }
-
-        .grc .grc-role {
-          transition: transform .3s ease, box-shadow .3s ease;
-        }
-
-        .grc .grc-member:hover .grc-role {
-          transform: translateY(-2px);
-          box-shadow: 0 4px 10px rgba(0, 0, 0, .12);
-        }
-
-        /* CONCERN PANEL HOVER */
-
-        .grc .grc-concern {
+        .grc .grc-concern.grc-reveal-done {
+          will-change: auto;
           transition:
             transform .35s ease,
             box-shadow .35s ease,
             border-color .35s ease;
         }
 
-        .grc .grc-concern:hover {
-          transform: translateY(-5px);
-          border-color: rgba(244, 201, 91, .75);
-          box-shadow: 0 15px 32px rgba(60, 9, 24, .2);
+        /* Hover must beat the reveal-visible transform */
+        .grc .grc-member.grc-reveal-visible:hover  { transform: translateY(-5px); }
+        .grc .grc-concern.grc-reveal-visible:hover { transform: translateY(-5px); }
+
+        /* ---------- RESPONSIVE ---------- */
+        @media (min-width: 1500px) {
+          .grc-content { padding-top: 38px; }
         }
 
-        .grc .grc-concern-icon svg {
-          transition: transform .35s ease;
-        }
+        @media (max-width: 760px) {
+          .grc-container { width: calc(100% - 36px); }
 
-        .grc .grc-concern:hover .grc-concern-icon svg:first-child {
-          transform: translateY(-3px) rotate(-7deg);
-        }
-
-        .grc .grc-concern:hover .grc-concern-icon svg:last-child {
-          transform: translate(3px, 2px) rotate(7deg);
-        }
-
-        .grc .grc-contact-link {
-          transition:
-            transform .25s ease,
-            box-shadow .25s ease,
-            filter .25s ease;
-        }
-
-        .grc .grc-contact-link:hover {
-          transform: translateY(-3px) scale(1.03);
-          box-shadow: 0 7px 18px rgba(0, 0, 0, .22);
-          filter: brightness(1.05);
-        }
-
-        /* ACCESSIBILITY */
-
-        @media (prefers-reduced-motion: reduce) {
-          .grc .grc-reveal-left,
-          .grc .grc-reveal-right,
-          .grc .grc-reveal-up,
-          .grc .grc-reveal-visible {
-            opacity: 1 !important;
-            transform: none !important;
-            transition: none !important;
+          .grc-hero {
+            min-height: 255px;
+            padding: 110px 0 36px;
+            background-position: 58% center;
           }
 
-          .grc .grc-member,
-          .grc .grc-concern,
-          .grc .grc-avatar,
-          .grc .grc-role,
-          .grc .grc-contact-link {
-            transition: none !important;
+          .grc-layout { grid-template-columns: minmax(0, 1fr); }
+
+          .grc-concern { padding: 23px; }
+          .grc-concern-icon { margin-left: 0; }
+          .grc-concern h2 { font-size: 24px; }
+          .grc-contact-link { font-size: 11px; }
+
+          .grc .grc-reveal-left  { transform: translateX(-40px); }
+          .grc .grc-reveal-right { transform: translateX(40px); }
+        }
+
+        @media (max-width: 480px) {
+          .grc-container { width: calc(100% - 28px); }
+
+          .grc-hero {
+            min-height: 245px;
+            padding: 100px 0 32px;
           }
+
+          .grc-hero h1 {
+            font-size: 32px;
+            letter-spacing: -.5px;
+          }
+
+          .grc-hero-description { font-size: 12px; }
+          .grc-content { padding-top: 26px; }
+          .grc-heading h2 { font-size: 26px; }
+          .grc-heading p { font-size: 11px; }
+
+          .grc-member-grid {
+            grid-template-columns: minmax(0, 1fr);
+            gap: 9px;
+          }
+
+          .grc-member.featured { grid-column: auto; }
+          .grc-member { min-height: 65px; }
+          .grc-member h3 { font-size: 12px; }
+
+          .grc-role {
+            padding: 5px 8px;
+            font-size: 9px;
+          }
+
+          .grc-concern { padding: 22px; }
         }
       `}</style>
 
-      {/* Hero section */}
+      {/* Hero */}
       <section className="grc-hero" data-header-theme="dark">
         <div className="grc-container">
-          <p className="grc-eyebrow">
-            Student Support &amp; Governance
-          </p>
+          <p className="grc-eyebrow">Student Support &amp; Governance</p>
 
           <h1>Grievance Redressal Committee</h1>
 
@@ -687,7 +635,7 @@ export default function GrievanceCommittee() {
           </p>
 
           <nav className="grc-breadcrumb" aria-label="Breadcrumb">
-            <Link to="/">
+            <Link to="/" aria-label="Home">
               <Home size={12} />
             </Link>
             <Link to="/">Home</Link>
@@ -723,9 +671,7 @@ export default function GrievanceCommittee() {
               {members.map((member) => (
                 <article
                   key={member.name}
-                  className={`grc-member ${
-                    member.featured ? 'featured' : ''
-                  }`}
+                  className={`grc-member ${member.featured ? 'featured' : ''}`}
                 >
                   <div className="grc-avatar" aria-hidden="true">
                     <UserRound size={21} fill="currentColor" />
@@ -738,13 +684,12 @@ export default function GrievanceCommittee() {
                     <p>{member.role}</p>
                   </div>
 
-              {(member.featured || member.position === 'Co-ordinator') && (
-  <span className="grc-role">
-    {member.featured && <Crown size={12} fill="currentColor" />}
-    {member.position}
-  </span>
-)}
-                 
+                  {(member.featured || member.position === 'Co-ordinator') && (
+                    <span className="grc-role">
+                      {member.featured && <Crown size={12} fill="currentColor" />}
+                      {member.position}
+                    </span>
+                  )}
                 </article>
               ))}
             </div>

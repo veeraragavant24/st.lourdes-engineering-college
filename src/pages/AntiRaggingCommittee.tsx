@@ -460,7 +460,7 @@ export default function AntiRaggingCommittee() {
 
         .ar-hero-text h1 {
           font-family: 'Playfair Display', serif;
-          font-size: clamp(38px, 5vw, 66px);
+          font-size: clamp(28px, 4vw, 40px);
           font-weight: 700;
           line-height: 1.08;
           letter-spacing: 1px;
@@ -486,7 +486,7 @@ export default function AntiRaggingCommittee() {
 
         .ar-hero-text > p {
           max-width: 530px;
-          font-size: 17px;
+          font-size: 16px;
           line-height: 1.7;
           color: #f8eaf0;
           margin-bottom: 22px;
@@ -579,7 +579,7 @@ export default function AntiRaggingCommittee() {
         .ar-about-content > p {
           font-size: 15px;
           line-height: 1.85;
-          color: #51454a;
+         color: #000000;
           margin: 0;
         }
 
@@ -654,7 +654,7 @@ export default function AntiRaggingCommittee() {
         }
 
         .ar-heading-description {
-          color: #715d60;
+         color: #000000;
           font-size: 14px;
           margin: 5px 0 0;
         }

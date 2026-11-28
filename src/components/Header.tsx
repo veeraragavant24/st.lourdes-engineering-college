@@ -76,7 +76,7 @@ const navItems: NavItem[] = [
     label: 'Campus Life',
     to: '/gallery',
     children: [
-      { label: 'Gallery', to: '/gallery' },
+      
 { label: 'Facilities', to: '/facilities' },
     ],
   },

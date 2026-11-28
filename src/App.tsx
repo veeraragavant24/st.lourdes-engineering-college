@@ -13,7 +13,7 @@ import Home from '@/pages/Home';
 import About from '@/pages/About';
 import Admission from '@/pages/Admission';
 import Placement from '@/pages/Placement';
-import Gallery from '@/pages/Gallery';
+
 import Contact from '@/pages/Contact';
 import Academics from '@/pages/academics';
 import Management from './pages/Management';
@@ -91,7 +91,7 @@ function AppLayout() {
           <Route path="/about" element={<About />} />
           <Route path="/admission" element={<Admission />} />
           <Route path="/placement" element={<Placement />} />
-          <Route path="/gallery" element={<Gallery />} />
+          
           <Route path="/contact" element={<Contact />} />
           <Route path="/faculty" element={<Faculty />} />
           <Route path="/principal" element={<Principal />} />

@@ -1,3 +1,5 @@
+import { useEffect, useRef } from 'react';
+import type { CSSProperties } from 'react';
 import { Link } from 'react-router-dom';
 import {
   ClipboardList,
@@ -38,6 +40,7 @@ function AdmissionStyles() {
         --adm-ivory: #FBF9F5;
         --adm-ivory-rgb: 251, 249, 245;
         --adm-charcoal-rgb: 43, 43, 43;
+        overflow-x: clip;
       }
 
       .adm-page *,
@@ -45,6 +48,33 @@ function AdmissionStyles() {
       .adm-page *::after {
         box-sizing: border-box;
       }
+
+      /* ================= SCROLL REVEAL (replays on every scroll) =================
+         data-reveal="left"  : slides in from the left, then settles
+         data-reveal="right" : slides in from the right, then settles
+         data-reveal="up"    : content fades up
+      ============================================================================ */
+
+      .adm-page [data-reveal] {
+        opacity: 0;
+        will-change: opacity, transform;
+        transition:
+          opacity .8s ease,
+          transform .9s cubic-bezier(.2, .7, .2, 1);
+        transition-delay: var(--reveal-delay, 0ms);
+      }
+
+      .adm-page [data-reveal="left"]  { transform: translateX(-80px); }
+      .adm-page [data-reveal="right"] { transform: translateX(80px); }
+      .adm-page [data-reveal="up"]    { transform: translateY(38px); }
+
+      .adm-page [data-reveal].is-visible {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+      }
+
+      /* wrapper used so the slide-in never clashes with the card's hover lift */
+      .adm-reveal-box { height: 100%; }
 
       /* ================= SHARED ================= */
 
@@ -108,7 +138,11 @@ function AdmissionStyles() {
         border-radius: 50%;
         background: var(--adm-maroon-50);
         color: var(--adm-maroon-600);
-        transition: background-color 300ms ease, color 300ms ease;
+        transition:
+          background-color 300ms ease,
+          color 300ms ease,
+          transform 400ms ease,
+          box-shadow 300ms ease;
       }
 
       /* ================= TNEA BANNER ================= */
@@ -132,6 +166,12 @@ function AdmissionStyles() {
         border: 1px solid rgba(var(--adm-gold-rgb), .3);
         border-radius: 16px;
         background: rgba(var(--adm-maroon-900-rgb), .4);
+        transition: border-color 300ms ease, box-shadow 300ms ease;
+      }
+
+      .adm-banner-card:hover {
+        border-color: rgba(var(--adm-gold-rgb), .7);
+        box-shadow: 0 14px 32px rgba(0, 0, 0, .25);
       }
 
       .adm-banner-code {
@@ -157,6 +197,12 @@ function AdmissionStyles() {
       .adm-btn-icon {
         width: 16px;
         height: 16px;
+        transition: transform 250ms ease;
+      }
+
+      .adm-banner-btn:hover .adm-btn-icon,
+      .adm-cta-actions button:hover .adm-btn-icon {
+        transform: translateX(5px);
       }
 
       /* ================= ADMISSION PROCESS ================= */
@@ -169,18 +215,46 @@ function AdmissionStyles() {
 
       .adm-step {
         position: relative;
+        height: 100%;
+        overflow: hidden;
         padding: 24px;
-        border: 1px solid rgba(var(--adm-gold-rgb), .1);
+        border: 1px solid rgba(var(--adm-gold-rgb), .25);
         border-radius: 16px;
         background: var(--adm-ivory);
         box-shadow: 0 1px 2px rgba(0, 0, 0, .05);
-        transition: transform 300ms ease, box-shadow 300ms ease;
+        transition:
+          transform 350ms cubic-bezier(.2, .7, .2, 1),
+          box-shadow 350ms ease,
+          border-color 350ms ease;
+      }
+
+      /* gold line that grows along the bottom edge on hover */
+      .adm-step::after,
+      .adm-elig-card::after,
+      .adm-prog-card::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        height: 3px;
+        background: linear-gradient(90deg, var(--adm-gold), #f3d98b, var(--adm-gold));
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform 400ms ease;
+      }
+
+      .adm-step:hover::after,
+      .adm-elig-card:hover::after,
+      .adm-prog-card:hover::after {
+        transform: scaleX(1);
       }
 
       .adm-step:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, .1),
-                    0 8px 10px -6px rgba(0, 0, 0, .1);
+        transform: translateY(-8px);
+        border-color: rgba(var(--adm-gold-rgb), .7);
+        box-shadow: 0 20px 30px -8px rgba(74, 16, 34, .18),
+                    0 8px 12px -6px rgba(74, 16, 34, .12);
       }
 
       .adm-step-number {
@@ -192,6 +266,12 @@ function AdmissionStyles() {
         font-size: 36px;
         font-weight: 700;
         line-height: 1;
+        transition: color 350ms ease, transform 350ms ease;
+      }
+
+      .adm-step:hover .adm-step-number {
+        color: rgba(var(--adm-gold-rgb), .55);
+        transform: scale(1.12);
       }
 
       .adm-step-icon {
@@ -207,6 +287,8 @@ function AdmissionStyles() {
       .adm-step:hover .adm-step-icon {
         background: var(--adm-maroon-600);
         color: var(--adm-gold);
+        transform: rotate(-8deg) scale(1.1);
+        box-shadow: 0 8px 18px rgba(110, 24, 50, .25);
       }
 
       .adm-step-title {
@@ -219,7 +301,7 @@ function AdmissionStyles() {
 
       .adm-step-text {
         margin: 8px 0 0;
-        color: rgba(var(--adm-charcoal-rgb), .6);
+        color: #000000;
         font-size: 14px;
         line-height: 1.625;
       }
@@ -233,11 +315,24 @@ function AdmissionStyles() {
       }
 
       .adm-elig-card {
+        position: relative;
+        height: 100%;
+        overflow: hidden;
         padding: 28px;
-        border: 1px solid rgba(var(--adm-gold-rgb), .1);
+        border: 1px solid rgba(var(--adm-gold-rgb), .25);
         border-radius: 16px;
         background: #fff;
         box-shadow: 0 1px 2px rgba(0, 0, 0, .05);
+        transition:
+          transform 350ms cubic-bezier(.2, .7, .2, 1),
+          box-shadow 350ms ease,
+          border-color 350ms ease;
+      }
+
+      .adm-elig-card:hover {
+        transform: translateY(-8px);
+        border-color: rgba(var(--adm-gold-rgb), .7);
+        box-shadow: 0 20px 30px -8px rgba(74, 16, 34, .16);
       }
 
       .adm-elig-title {
@@ -253,6 +348,12 @@ function AdmissionStyles() {
         height: 1px;
         margin-top: 16px;
         background: rgba(var(--adm-gold-rgb), .3);
+        transition: width 400ms ease, background-color 400ms ease;
+      }
+
+      .adm-elig-card:hover .adm-elig-rule {
+        width: 96px;
+        background: var(--adm-gold);
       }
 
       .adm-elig-list {
@@ -268,7 +369,7 @@ function AdmissionStyles() {
         display: flex;
         align-items: flex-start;
         gap: 12px;
-        color: rgba(var(--adm-charcoal-rgb), .7);
+        color: #000000;
         font-size: 14px;
         line-height: 1.5;
       }
@@ -279,6 +380,11 @@ function AdmissionStyles() {
         height: 20px;
         margin-top: 2px;
         color: var(--adm-gold);
+        transition: transform 300ms ease;
+      }
+
+      .adm-elig-item:hover svg {
+        transform: scale(1.25);
       }
 
       .adm-note {
@@ -290,6 +396,12 @@ function AdmissionStyles() {
         border: 1px solid rgba(var(--adm-gold-rgb), .2);
         border-radius: 12px;
         background: var(--adm-gold-50);
+        transition: box-shadow 300ms ease, border-color 300ms ease;
+      }
+
+      .adm-note:hover {
+        border-color: rgba(var(--adm-gold-rgb), .6);
+        box-shadow: 0 8px 20px rgba(184, 146, 47, .15);
       }
 
       .adm-note svg {
@@ -302,7 +414,7 @@ function AdmissionStyles() {
 
       .adm-note p {
         margin: 0;
-        color: rgba(var(--adm-charcoal-rgb), .7);
+        color: #000000;
         font-size: 14px;
         line-height: 1.5;
       }
@@ -316,22 +428,28 @@ function AdmissionStyles() {
       }
 
       .adm-prog-card {
+        position: relative;
         display: flex;
         align-items: center;
         gap: 16px;
+        height: 100%;
+        overflow: hidden;
         padding: 20px;
-        border: 1px solid rgba(var(--adm-gold-rgb), .1);
+        border: 1px solid rgba(var(--adm-gold-rgb), .25);
         border-radius: 12px;
         background: var(--adm-ivory);
         box-shadow: 0 1px 2px rgba(0, 0, 0, .05);
         text-decoration: none;
-        transition: border-color 300ms ease, box-shadow 300ms ease;
+        transition:
+          transform 350ms cubic-bezier(.2, .7, .2, 1),
+          border-color 350ms ease,
+          box-shadow 350ms ease;
       }
 
       .adm-prog-card:hover {
-        border-color: rgba(var(--adm-gold-rgb), .3);
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, .1),
-                    0 2px 4px -2px rgba(0, 0, 0, .1);
+        transform: translateY(-6px);
+        border-color: rgba(var(--adm-gold-rgb), .7);
+        box-shadow: 0 16px 28px -6px rgba(74, 16, 34, .16);
       }
 
       .adm-prog-icon {
@@ -347,6 +465,8 @@ function AdmissionStyles() {
       .adm-prog-card:hover .adm-prog-icon {
         background: var(--adm-maroon-600);
         color: var(--adm-gold);
+        transform: rotate(-8deg) scale(1.1);
+        box-shadow: 0 8px 18px rgba(110, 24, 50, .25);
       }
 
       .adm-prog-body {
@@ -373,7 +493,7 @@ function AdmissionStyles() {
         align-items: center;
         gap: 8px;
         margin: 4px 0 0;
-        color: rgba(var(--adm-charcoal-rgb), .5);
+        color: #000000;
         font-size: 12px;
       }
 
@@ -388,11 +508,11 @@ function AdmissionStyles() {
         width: 20px;
         height: 20px;
         color: var(--adm-gold);
-        transition: transform 200ms ease;
+        transition: transform 250ms ease;
       }
 
       .adm-prog-card:hover .adm-prog-arrow {
-        transform: translateX(4px);
+        transform: translateX(6px);
       }
 
       /* ================= ENQUIRY CTA ================= */
@@ -422,6 +542,19 @@ function AdmissionStyles() {
         margin-top: 32px;
       }
 
+      .adm-cta-actions .btn-gold,
+      .adm-cta-actions .btn-outline-gold,
+      .adm-banner-btn {
+        transition: transform 300ms ease, box-shadow 300ms ease;
+      }
+
+      .adm-cta-actions .btn-gold:hover,
+      .adm-cta-actions .btn-outline-gold:hover,
+      .adm-banner-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 22px rgba(0, 0, 0, .22);
+      }
+
       .adm-cta-contacts {
         display: flex;
         flex-wrap: wrap;
@@ -439,11 +572,12 @@ function AdmissionStyles() {
         color: inherit;
         font-size: 14px;
         text-decoration: none;
-        transition: color 200ms ease;
+        transition: color 200ms ease, transform 250ms ease;
       }
 
       .adm-cta-link:hover {
         color: var(--adm-gold-100);
+        transform: translateY(-2px);
       }
 
       .adm-cta-link svg {
@@ -453,6 +587,12 @@ function AdmissionStyles() {
       }
 
       /* ================= RESPONSIVE ================= */
+
+      @media (max-width: 640px) {
+        .adm-page [data-reveal="left"]  { transform: translateX(-35px); }
+        .adm-page [data-reveal="right"] { transform: translateX(35px); }
+        .adm-page [data-reveal="up"]    { transform: translateY(26px); }
+      }
 
       @media (min-width: 640px) {
         .adm-container,
@@ -485,15 +625,28 @@ function AdmissionStyles() {
       /* ================= ACCESSIBILITY ================= */
 
       @media (prefers-reduced-motion: reduce) {
+        .adm-page [data-reveal] {
+          opacity: 1;
+          transform: none;
+          transition: none;
+        }
+
         .adm-step,
+        .adm-step::after,
+        .adm-elig-card,
+        .adm-elig-card::after,
         .adm-prog-card,
+        .adm-prog-card::after,
         .adm-prog-arrow,
         .adm-icon-circle,
-        .adm-cta-link {
+        .adm-cta-link,
+        .adm-btn-icon {
           transition: none;
         }
 
         .adm-step:hover,
+        .adm-elig-card:hover,
+        .adm-prog-card:hover,
         .adm-prog-card:hover .adm-prog-arrow {
           transform: none;
         }
@@ -548,20 +701,50 @@ const eligibility = [
   },
 ];
 
+/* helper: sets the stagger delay for a reveal element */
+const delay = (ms: number) => ({ '--reveal-delay': `${ms}ms` }) as CSSProperties;
+
 /* =========================================================
    PAGE
    ========================================================= */
 
 export default function Admission() {
   const { openModal } = useAdmissionModal();
+  const pageRef = useRef<HTMLDivElement>(null);
 
+  // Scroll reveal: add "is-visible" when an element enters the screen and
+  // remove it when it leaves, so the animation replays on the next scroll.
+  useEffect(() => {
+    const root = pageRef.current;
+    if (!root) return;
 
-  console.log('ADMISSION FILE LOADED v2');   // <-- add this line
+    const elements = root.querySelectorAll<HTMLElement>('[data-reveal]');
 
-  
+    if (!('IntersectionObserver' in window)) {
+      elements.forEach((el) => el.classList.add('is-visible'));
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+          } else {
+            entry.target.classList.remove('is-visible');
+          }
+        });
+      },
+      { threshold: 0.15, rootMargin: '0px 0px -40px 0px' }
+    );
+
+    elements.forEach((el) => observer.observe(el));
+
+    return () => observer.disconnect();
+  }, []);
 
   return (
-    <div className="adm-page">
+    <div className="adm-page" ref={pageRef}>
       <AdmissionStyles />
 
       <PageHero
@@ -572,21 +755,23 @@ export default function Admission() {
         breadcrumb="Admission"
       />
 
-      {/* TNEA Code banner */}
+      {/* TNEA Code banner: slides in from the left */}
       <section className="adm-banner">
         <div className="adm-container">
-          <div className="adm-banner-card">
-            <div>
-              <p className="eyebrow adm-eyebrow-light">TNEA Counselling Code</p>
-              <p className="adm-banner-code">{siteConfig.tneaCode}</p>
-              <p className="adm-banner-note">
-                Use this code during TNEA counselling for B.E. / B.Tech. admissions.
-              </p>
+          <div data-reveal="left">
+            <div className="adm-banner-card">
+              <div>
+                <p className="eyebrow adm-eyebrow-light">TNEA Counselling Code</p>
+                <p className="adm-banner-code">{siteConfig.tneaCode}</p>
+                <p className="adm-banner-note">
+                  Use this code during TNEA counselling for B.E. / B.Tech. admissions.
+                </p>
+              </div>
+              <button onClick={openModal} className="btn-gold adm-banner-btn">
+                Apply for Admission
+                <ArrowRight className="adm-btn-icon" />
+              </button>
             </div>
-            <button onClick={openModal} className="btn-gold adm-banner-btn">
-              Apply for Admission
-              <ArrowRight className="adm-btn-icon" />
-            </button>
           </div>
         </div>
       </section>
@@ -594,7 +779,7 @@ export default function Admission() {
       {/* Admission Process */}
       <section className="section-pad adm-section-white">
         <div className="adm-container">
-          <div className="adm-section-head">
+          <div className="adm-section-head" data-reveal="up">
             <p className="eyebrow">Step by Step</p>
             <h2 className="adm-h2 adm-h2-lg">Admission Process</h2>
             <div className="adm-divider" />
@@ -604,13 +789,21 @@ export default function Admission() {
             {steps.map((step, i) => {
               const Icon = step.icon;
               return (
-                <div key={step.title} className="adm-step">
-                  <span className="adm-step-number">{i + 1}</span>
-                  <div className="adm-icon-circle adm-step-icon">
-                    <Icon strokeWidth={1.5} />
+                // outer box slides in, inner card handles the hover
+                <div
+                  key={step.title}
+                  className="adm-reveal-box"
+                  data-reveal={i % 2 === 0 ? 'left' : 'right'}
+                  style={delay(i * 100)}
+                >
+                  <div className="adm-step">
+                    <span className="adm-step-number">{i + 1}</span>
+                    <div className="adm-icon-circle adm-step-icon">
+                      <Icon strokeWidth={1.5} />
+                    </div>
+                    <h3 className="adm-step-title">{step.title}</h3>
+                    <p className="adm-step-text">{step.text}</p>
                   </div>
-                  <h3 className="adm-step-title">{step.title}</h3>
-                  <p className="adm-step-text">{step.text}</p>
                 </div>
               );
             })}
@@ -621,35 +814,44 @@ export default function Admission() {
       {/* Eligibility Criteria */}
       <section id="eligibility" className="section-pad adm-section-ivory">
         <div className="adm-container">
-          <div className="adm-section-head">
+          <div className="adm-section-head" data-reveal="up">
             <p className="eyebrow">Qualifications</p>
             <h2 className="adm-h2">Eligibility Criteria</h2>
             <div className="adm-divider" />
           </div>
 
           <div className="adm-elig-grid">
-            {eligibility.map((cat) => (
-              <div key={cat.level} className="adm-elig-card">
-                <h3 className="adm-elig-title">{cat.level}</h3>
-                <div className="adm-elig-rule" />
-                <ul className="adm-elig-list">
-                  {cat.points.map((point) => (
-                    <li key={point} className="adm-elig-item">
-                      <CheckCircle2 strokeWidth={1.5} />
-                      {point}
-                    </li>
-                  ))}
-                </ul>
+            {eligibility.map((cat, i) => (
+              <div
+                key={cat.level}
+                className="adm-reveal-box"
+                data-reveal={i % 2 === 0 ? 'left' : 'right'}
+              >
+                <div className="adm-elig-card">
+                  <h3 className="adm-elig-title">{cat.level}</h3>
+                  <div className="adm-elig-rule" />
+                  <ul className="adm-elig-list">
+                    {cat.points.map((point) => (
+                      <li key={point} className="adm-elig-item">
+                        <CheckCircle2 strokeWidth={1.5} />
+                        {point}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               </div>
             ))}
           </div>
 
-          <div className="adm-note">
-            <Info strokeWidth={1.5} />
-            <p>
-              Eligibility criteria are indicative and based on Anna University norms. Final criteria
-              are subject to the university's official admission notification for the academic year.
-            </p>
+          <div data-reveal="up">
+            <div className="adm-note">
+              <Info strokeWidth={1.5} />
+              <p>
+                Eligibility criteria are indicative and based on Anna University norms. Final
+                criteria are subject to the university's official admission notification for the
+                academic year.
+              </p>
+            </div>
           </div>
         </div>
       </section>
@@ -657,44 +859,54 @@ export default function Admission() {
       {/* Programs available for admission */}
       <section id="tnea" className="section-pad adm-section-white">
         <div className="adm-container">
-          <div className="adm-section-head">
+          <div className="adm-section-head" data-reveal="up">
             <p className="eyebrow">Programs Available</p>
             <h2 className="adm-h2">Programs for Admission</h2>
             <div className="adm-divider" />
           </div>
 
           <div className="adm-prog-grid">
-            {programs.map((p) => (
-<Link key={p.id} to={`/academics?programme#${p.slug}`} className="adm-prog-card">
-                <div className="adm-icon-circle adm-prog-icon">
-                  <Award strokeWidth={1.5} />
-                </div>
-                <div className="adm-prog-body">
-                  <p className="adm-prog-name">{p.name}</p>
-                  <p className="adm-prog-meta">
-                    <CalendarDays strokeWidth={1.5} />
-                    {p.duration} &middot; {p.level}
-                  </p>
-                </div>
-                <ArrowRight className="adm-prog-arrow" />
-              </Link>
+            {programs.map((p, i) => (
+              <div
+                key={p.id}
+                className="adm-reveal-box"
+                data-reveal={i % 2 === 0 ? 'left' : 'right'}
+                style={delay((i % 3) * 100)}
+              >
+                <Link to={`/academics?programme#${p.slug}`} className="adm-prog-card">
+                  <div className="adm-icon-circle adm-prog-icon">
+                    <Award strokeWidth={1.5} />
+                  </div>
+                  <div className="adm-prog-body">
+                    <p className="adm-prog-name">{p.name}</p>
+                    <p className="adm-prog-meta">
+                      <CalendarDays strokeWidth={1.5} />
+                      {p.duration} &middot; {p.level}
+                    </p>
+                  </div>
+                  <ArrowRight className="adm-prog-arrow" />
+                </Link>
+              </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Enquiry CTA */}
+      {/* Enquiry CTA: content fades up piece by piece */}
       <section id="enquiry" className="section-pad adm-cta">
         <div className="adm-container-narrow">
-          <p className="eyebrow adm-eyebrow-light">Need Help?</p>
-          <h2 className="adm-h2 adm-h2-light">Submit Your Admission Enquiry</h2>
-          <div className="adm-divider" />
-          <p className="adm-cta-text">
+          <div data-reveal="up">
+            <p className="eyebrow adm-eyebrow-light">Need Help?</p>
+            <h2 className="adm-h2 adm-h2-light">Submit Your Admission Enquiry</h2>
+            <div className="adm-divider" />
+          </div>
+
+          <p className="adm-cta-text" data-reveal="up" style={delay(120)}>
             Have questions about programs, eligibility, or the admission process? Our admissions
             team is here to guide you. Fill out the enquiry form and we'll get back to you.
           </p>
 
-          <div className="adm-cta-actions">
+          <div className="adm-cta-actions" data-reveal="up" style={delay(220)}>
             <button onClick={openModal} className="btn-gold">
               Open Enquiry Form
               <ArrowRight className="adm-btn-icon" />
@@ -704,7 +916,7 @@ export default function Admission() {
             </Link>
           </div>
 
-          <div className="adm-cta-contacts">
+          <div className="adm-cta-contacts" data-reveal="up" style={delay(320)}>
             <a
               href={`tel:${siteConfig.phones[0].replace(/\s/g, '')}`}
               className="adm-cta-link"

@@ -211,7 +211,7 @@ function HeroStyles() {
         display: none;
         position: absolute;
         right: 400px;
-        bottom: 620px;
+        bottom: 412px;
         z-index: 10;
         cursor: pointer;
         transition: transform 350ms ease;

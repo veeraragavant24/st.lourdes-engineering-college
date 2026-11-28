@@ -9,38 +9,45 @@ const mission =
 
 export default function AboutSection() {
   return (
-    <section className="section-pad bg-ivory">
-      <div className="mx-auto max-w-7xl px-5 sm:px-8">
-        <div className="mb-12 lg:mb-16">
-  <p className="eyebrow">Approvals &amp; Affiliation</p>
-              <div className="mt-3 h-[3px] w-12 bg-gradient-to-r from-gold to-transparent" />
+<section className="section-pad bg-ivory">
+  <div className="mx-auto max-w-7xl px-5 sm:px-8">
+    <div className="mb-12 lg:mb-16">
+      <p className="eyebrow text-center">
+        Approvals &amp; Affiliation
+      </p>
 
-              <div className="mt-5 grid gap-4 sm:grid-cols-2">
-                <div className="flex flex-col items-center rounded-2xl border border-gold/30 bg-white p-5 text-center shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
-                  <img
-                    src="/about/anna-university-logo.png"
-                    alt="Anna University"
-                    className="h-20 w-auto object-contain"
-                    loading="lazy"
-                  />
-                  <p className="mt-4 font-serif text-sm font-semibold uppercase tracking-wider text-maroon-700">
-                    Anna University
-                  </p>
-                </div>
+      
 
-                <div className="flex flex-col items-center rounded-2xl border border-gold/30 bg-white p-5 text-center shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
-                  <img
-                    src="/about/aicte-logo.png"
-                    alt="AICTE"
-                    className="h-20 w-auto object-contain"
-                    loading="lazy"
-                  />
-                  <p className="mt-4 font-serif text-sm font-semibold uppercase tracking-wider text-maroon-700">
-                    All India Council For Technical Education (AICTE)
-                  </p>
-                </div>
-              </div>
-            </div>
+      <div className="mt-5 grid max-w-2xl grid-cols-1 gap-4 sm:grid-cols-2 mx-auto">
+        {/* Anna University */}
+        <div className="flex flex-col items-center justify-center rounded-xl border border-gold/30 bg-white p-3 text-center shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
+          <img
+            src="/about/anna-university-logo.png"
+            alt="Anna University"
+            className="h-14 w-auto object-contain"
+            loading="lazy"
+          />
+
+          <p className="mt-2 font-serif text-xs font-semibold uppercase tracking-wider text-maroon-700">
+            Anna University
+          </p>
+        </div>
+
+        {/* AICTE */}
+        <div className="flex flex-col items-center justify-center rounded-xl border border-gold/30 bg-white p-3 text-center shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
+          <img
+            src="/about/aicte-logo.png"
+            alt="AICTE"
+            className="h-14 w-auto object-contain"
+            loading="lazy"
+          />
+
+          <p className="mt-2 font-serif text-xs font-semibold uppercase tracking-wider text-maroon-700">
+            All India Council For Technical Education (AICTE)
+          </p>
+        </div>
+      </div>
+    </div>
         {/* WELCOME: image left, content right */}
         <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
           {/* LEFT: Image */}
@@ -68,8 +75,8 @@ export default function AboutSection() {
 
             <div className="mt-5 h-[3px] w-16 bg-gradient-to-r from-gold to-transparent" />
 
-            <p className="mt-6 text-base leading-8 text-charcoal/75">
-           ST. Lourdes Engineering College is a pioneering institution in Chennai. ST. Lourdes Engineering College founded by Ln. Dr. S. Peter, which is one of the reputed Engineering Colleges started under self-financing scheme in the year 2009. ST. Lourdes Engineering College is one among the best Christian Minority Institutions in Chennai and this institution is established under Loordhu Ammal Educational Trust. ST. Lourdes Engineering College is located in NH45, at the best and peaceful place in Chennai city.
+<p className="mt-6 text-base leading-8 text-black">
+             ST. Lourdes Engineering College is a pioneering institution in Chennai. ST. Lourdes Engineering College founded by Ln. Dr. S. Peter, which is one of the reputed Engineering Colleges started under self-financing scheme in the year 2009. ST. Lourdes Engineering College is one among the best Christian Minority Institutions in Chennai and this institution is established under Loordhu Ammal Educational Trust. ST. Lourdes Engineering College is located in NH45, at the best and peaceful place in Chennai city.
             </p>
 
             <Link
@@ -82,36 +89,7 @@ export default function AboutSection() {
           </div>
         </div>
 
-        {/* VISION & MISSION */}
-        <div className="mt-16 grid gap-7 md:grid-cols-2">
-          {[
-            { icon: Eye, title: 'Our Vision', text: vision },
-            { icon: Target, title: 'Our Mission', text: mission },
-          ].map(({ icon: Icon, title, text }) => (
-            <div
-              key={title}
-              className="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-maroon-600 to-maroon-800 p-8 text-white shadow-lg transition-all duration-300 hover:-translate-y-1.5 hover:shadow-2xl sm:p-9"
-            >
-              <div
-                className="pointer-events-none absolute -right-12 -top-12 h-40 w-40 rounded-full border border-gold/20"
-                aria-hidden="true"
-              />
-
-              <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-gold/25 bg-white/10 text-gold">
-                <Icon className="h-7 w-7" strokeWidth={1.5} />
-              </div>
-
-              <h3 className="mt-6 font-serif text-2xl font-bold text-white">
-                {title}
-              </h3>
-
-              <div className="mt-3.5 h-0.5 w-12 bg-gold" />
-
-              <p className="mt-4 text-[15px] leading-7 text-white/80">{text}</p>
-            </div>
-          ))}
         </div>
-      </div>
     </section>
   );
 }

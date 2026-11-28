@@ -349,7 +349,7 @@ function PlacementDetailsSection() {
 
           <div className="placement-heading-line" />
 
-          <p className="mx-auto mt-5 max-w-3xl text-sm leading-7 text-charcoal/65 sm:text-base">
+          <p className="mx-auto mt-5 max-w-3xl text-sm leading-7 text-black sm:text-base">
             {aboutIntro}
           </p>
         </div>
@@ -866,7 +866,7 @@ export default function Placement() {
 
             <div className="placement-heading-line" />
 
-            <p className="mx-auto mt-5 max-w-2xl text-sm leading-7 text-charcoal/65">
+            <p className="mx-auto mt-5 max-w-2xl text-sm leading-7 text-black">
               A structured journey that helps students build confidence,
               develop professional skills and prepare for recruitment.
             </p>
